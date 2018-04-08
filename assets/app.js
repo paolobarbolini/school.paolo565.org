@@ -35,21 +35,6 @@ p {
 }
 `
 
-var parseHtml = function(html) {
-    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
-    const element = newHTMLDocument.createElement('div')
-    element.innerHTML = html;
-
-    const scripts = element.getElementsByTagName('script');
-    var i = scripts.length;
-    while (i--) {
-      scripts[i].parentNode.removeChild(scripts[i]);
-    }
-
-
-    return element;
-}
-
 var onScheduleClick = function() {
     const iframe = document.querySelector("#embedded-schedule");
 
@@ -79,30 +64,30 @@ var onScheduleClick = function() {
 }
 
 var filterList = function(list, query) {
+    const escapedQuery = escapeRegExp(query);
+
     qee(list, "li", entry => {
         const text = entry.dataset.originalText;
+
         if(query == "") {
             entry.innerHTML = text;
             entry.classList.remove("hidden");
             return;
         }
 
-        if(text.includes(query)) {
-            entry.classList.remove("hidden");
-
-            var newText = "";
-            const splitted = text.split(query);
-            splitted.forEach((entry, index, array)=> {
-                newText += entry;
-
-                if((index + 1) != array.length) {
-                    newText += "<span class=\"highlighted-text\">" + query + "</span>";
-                }
-            });
-            entry.innerHTML = newText;
-        } else {
+        if(text.search(new RegExp(escapedQuery, "i")) == -1) {
             entry.classList.add("hidden");
+            return;
         }
+
+        const i = text.toLowerCase().indexOf(query.toLowerCase());
+        const queryReplacement = text.substring(i, i + query.length);
+
+        const regEx = new RegExp(escapedQuery, "ig");
+        const newText = text.replace(regEx, '<span class="highlighted-text">' + queryReplacement + "</span>");
+        entry.innerHTML = newText;
+
+        entry.classList.remove("hidden");
     });
 };
 

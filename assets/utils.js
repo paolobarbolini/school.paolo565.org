@@ -19,3 +19,22 @@ window.joinUrl = function(baseUrl, url) {
 window.urlPath = function(url) {
     return new URL(url).pathname;
 }
+
+window.parseHtml = function(html) {
+    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
+    const element = newHTMLDocument.createElement('div')
+    element.innerHTML = html;
+
+    const scripts = element.getElementsByTagName('script');
+    var i = scripts.length;
+    while (i--) {
+      scripts[i].parentNode.removeChild(scripts[i]);
+    }
+
+
+    return element;
+}
+
+window.escapeRegExp = function(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
