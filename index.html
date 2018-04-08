@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>New Istituto Gobetti</title>
+
+  <!--<link rel="manifest" href="/manifest.json">-->
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+    <div class="page" id="loading">
+        <i class="fas fa-spinner fa-pulse centered"></i>
+    </div>
+
+    <div class="page hidden" id="school-schedules">
+        <h2 class="title">Orari Scolastici</h2>
+
+        <input style="width: 300px;margin-left: auto;margin-right: auto;" placeholder="Cerca..." type="text">
+
+        <div class="list-columns">
+            <div class="list-column">
+                <h3 class="title">Classi</h3>
+
+                <ul id="classes">
+                </ul>
+            </div>
+
+            <div class="list-column">
+                <h3 class="title">Docenti</h3>
+
+                <ul id="teachers">
+                </ul>
+            </div>
+
+            <div class="list-column">
+                <h3 class="title">Aule</h3>
+
+                <ul id="classrooms">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="page hidden" id="school-schedule">
+        <h2 class="title">Orario</h2>
+
+        <iframe id="embedded-schedule" scrollable="no">
+        </iframe>
+    </div>
+
+    <!--
+    <footer>
+        <ul>
+            <li>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></a></li>
+        </ul>
+    </footer>
+    -->
+
+    <script src="assets/utils.js" defer></script>
+    <script src="assets/pages.js" defer></script>
+    <script src="assets/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+html {
+    padding-bottom: 10px;
+}
+
+body {
+    max-width: 100%;
+    background: #f3f3f3;
+
+    font-family: opensans;
+    font-size: 13pt;
+    line-height: 1.5;
+    color: #303030;
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+}
+
+/***********
+PAGE PARTS
+***********/
+
+.page {
+    padding: 20px;
+    display: grid;
+}
+
+.title {
+    text-align: center;
+}
+
+.page > .title {
+    margin-top: 0;
+}
+
+/*
+Things
+*/
+.hidden {
+    display: none;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    margin: auto;
+}
+
+/***********
+LOADING PAGE
+***********/
+
+#loading i {
+    font-size: 3em;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+}
+
+/***************
+SCHOOL SCHEDULES
+***************/
+
+#school-schedules ul {
+    list-style: none;
+}
+
+.list-columns {
+    width: 100%;
+}
+
+.list-column {
+    width: 33%;
+    min-width: 300px;
+    float: left;
+}
+
+.list-column ul {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.list-column li {
+    padding: 10px 15px;
+    margin: 0;
+    margin-bottom: 5px;
+
+    background-color: rgba(27, 31, 35, 0.15);
+    border-radius: 3px;
+}
+
+.list-column li:hover {
+    background-color: rgba(27, 31, 35, 0.25);
+    transition: background-color 0.3s
+}
+
+.list-column p {
+    margin: 0;
+}
+
+/**************
+SCHOOL SCHEDULE
+**************/
+
+#school-schedule {
+    padding: 0;
+    padding-top: 20px;
+}
+
+#embedded-schedule {
+    top: 80px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    border: 0;
+}
+
+
+/*
+FOOTER
+*/
+
+footer {
+    background-color: #3f3f3f;
+    padding: 30px 10px;
+    text-align: center;
+
+    font-weight: 700;
+    color: #a6a4a4;
+}
+
+footer a {
+    color: #cccbcb;
+    font-weight: 700;
+
+    margin: 0;
+    padding: 0;
+}
+
+footer a:hover {
+    color:#fffefe;
+}
+
+footer ul {
+    list-style-type: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+footer li {
+    margin-bottom: 10px;
+}
