@@ -1,5 +1,3 @@
-const range = document.createRange();
-
 const scheduleCss = `
 * {
     font-weight: bold;
@@ -37,10 +35,25 @@ p {
 }
 `
 
+var parseHtml = function(html) {
+    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
+    const element = newHTMLDocument.createElement('div')
+    element.innerHTML = html;
+
+    const scripts = element.getElementsByTagName('script');
+    const i = scripts.length;
+    while (i--) {
+      scripts[i].parentNode.removeChild(scripts[i]);
+    }
+
+
+    return element;
+}
+
 var onScheduleClick = function() {
     fetch('https://crossorigin.me/' + this.dataset.url).then(response => {
         response.text().then(text => {
-            const body = range.createContextualFragment(text);
+            const body = parseHtml(text);
             body.querySelector("style").innerHTML = scheduleCss;
 
             var div = document.createElement('div');
@@ -108,7 +121,8 @@ window.onload = function() {
     // Request the home page
     fetch('https://crossorigin.me/http://www.istitutogobetti.it').then(response => {
         response.text().then(text => {
-            const body = range.createContextualFragment(text);
+            const body = parseHtml(text);
+
             qee(body, "#jsn-pleft a", homepageLink => {
                 if(homepageLink.innerHTML.indexOf("Orario") == -1) {
                     return;
@@ -122,7 +136,8 @@ window.onload = function() {
                 const articlePageLink = joinUrl("http://www.istitutogobetti.it", homepageLink.getAttribute("href"));
                 fetch('https://crossorigin.me/' + articlePageLink).then(response => {
                     response.text().then(text => {
-                        const body = range.createContextualFragment(text);
+                        const body = parseHtml(text);
+
                         qee(body, "#jsn-mainbody a", articleLink => {
                             const articleHref = articleLink.getAttribute("href");
                             const articleAbsUrl = joinUrl(articlePageLink, articleHref);
@@ -135,7 +150,7 @@ window.onload = function() {
                             // Request the schedule list
                             fetch('https://crossorigin.me/' + articleAbsUrl).then(response => {
                                 response.text().then(text => {
-                                    const body = range.createContextualFragment(text);
+                                    const body = parseHtml(text);
                                     const schedulePages = body.querySelectorAll("a");
 
                                     const classes = q("#classes");
