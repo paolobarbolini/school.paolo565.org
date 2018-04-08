@@ -21,11 +21,11 @@ window.urlPath = function(url) {
 }
 
 window.parseHtml = function(html) {
-    const newHTMLDocument = document.implementation.createHTMLDocument('preview');
-    const element = newHTMLDocument.createElement('div')
+    const newHTMLDocument = document.implementation.createHTMLDocument("preview");
+    const element = newHTMLDocument.createElement("div")
     element.innerHTML = html;
 
-    const scripts = element.getElementsByTagName('script');
+    const scripts = element.getElementsByTagName("script");
     var i = scripts.length;
     while (i--) {
       scripts[i].parentNode.removeChild(scripts[i]);

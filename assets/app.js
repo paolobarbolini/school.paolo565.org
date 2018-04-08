@@ -3,7 +3,7 @@ const scheduleCss = `
     font-weight: bold;
     text-decoration: none;
     text-transform: uppercase;
-    font-family: 'Designosaur';
+    font-family: "Designosaur";
     font-size: 9pt;
 }
 .nodecBlack {
@@ -38,16 +38,16 @@ p {
 var onScheduleClick = function() {
     const iframe = document.querySelector("#embedded-schedule");
 
-    fetch('https://crossorigin.me/' + this.dataset.url).then(response => {
+    fetch("https://crossorigin.me/" + this.dataset.url).then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
             body.querySelector("style").innerHTML = scheduleCss;
 
-            var div = document.createElement('div');
+            var div = document.createElement("div");
             div.appendChild(body.cloneNode(true));
 
             
-            iframe.contentWindow.document.open('text/html', 'replace');
+            iframe.contentWindow.document.open("text/html", "replace");
             iframe.contentWindow.document.write(div.innerHTML);
             iframe.contentWindow.document.close();
         });
@@ -56,7 +56,7 @@ var onScheduleClick = function() {
     const hash = "!/" + this.dataset.type + "/" + this.dataset.originalText;
     window.history.pushState({}, this.dataset.originalText, "#" + hash);
 
-    iframe.contentWindow.document.open('text/html', 'replace');
+    iframe.contentWindow.document.open("text/html", "replace");
     iframe.contentWindow.document.write("");
     iframe.contentWindow.document.close();
 
@@ -105,7 +105,7 @@ window.onload = function() {
 
     const embeddedSchedule = document.getElementById("embedded-schedule");
     embeddedSchedule.onload = function() {
-        embeddedSchedule.style.height = embeddedSchedule.contentWindow.document.body.offsetHeight + 20 + 'px';
+        embeddedSchedule.style.height = embeddedSchedule.contentWindow.document.body.offsetHeight + 20 + "px";
     };
 
     /* ============================================================ */
@@ -113,7 +113,7 @@ window.onload = function() {
     /* ============================================================ */
 
     // Request the home page
-    fetch('https://crossorigin.me/http://www.istitutogobetti.it').then(response => {
+    fetch("https://crossorigin.me/http://www.istitutogobetti.it").then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
 
@@ -128,7 +128,7 @@ window.onload = function() {
 
                 // Request the schedule article
                 const articlePageLink = joinUrl("http://www.istitutogobetti.it", homepageLink.getAttribute("href"));
-                fetch('https://crossorigin.me/' + articlePageLink).then(response => {
+                fetch("https://crossorigin.me/" + articlePageLink).then(response => {
                     response.text().then(text => {
                         const body = parseHtml(text);
 
@@ -142,7 +142,7 @@ window.onload = function() {
                             }
 
                             // Request the schedule list
-                            fetch('https://crossorigin.me/' + articleAbsUrl).then(response => {
+                            fetch("https://crossorigin.me/" + articleAbsUrl).then(response => {
                                 response.text().then(text => {
                                     const body = parseHtml(text);
                                     const schedulePages = body.querySelectorAll("a");
@@ -155,10 +155,10 @@ window.onload = function() {
                                         const schedulePageHref = schedulePage.getAttribute("href");  
                                         const schedulePageAbsUrl = joinUrl(articleAbsUrl, schedulePageHref);
 
-                                        const liElement = document.createElement('li');
+                                        const liElement = document.createElement("li");
                                         liElement.innerHTML = liElement.dataset.originalText = schedulePage.innerHTML;
                                         liElement.dataset.url = schedulePageAbsUrl;
-                                        liElement.addEventListener('click', onScheduleClick);
+                                        liElement.addEventListener("click", onScheduleClick);
 
                                         if(schedulePageAbsUrl.indexOf("Classi/") != -1) {
                                             classes.appendChild(liElement);
@@ -201,8 +201,6 @@ window.onload = function() {
     /* Going Back */
     /* ============================================================ */
     if(window.history) {
-        console.log("History loaded");
-
         window.onpopstate = function(e) {
             if(Pages.back()) {
                 return;

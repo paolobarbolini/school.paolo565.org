@@ -17,9 +17,22 @@ body {
     overflow-x: hidden;
 }
 
-/***********
-PAGE PARTS
-***********/
+.hidden {
+    display: none !important;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    margin: auto;
+}
+
+/* ============================================================ */
+/* Page Parts */
+/* ============================================================ */
 
 .page {
     padding: 20px;
@@ -34,25 +47,9 @@ PAGE PARTS
     margin-top: 0;
 }
 
-/*
-Things
-*/
-.hidden {
-    display: none;
-}
-
-.centered {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    margin: auto;
-}
-
-/***********
-LOADING PAGE
-***********/
+/* ============================================================ */
+/* Loading Page */
+/* ============================================================ */
 
 #loading i {
     font-size: 3em;
@@ -61,9 +58,9 @@ LOADING PAGE
     width: 100%;
 }
 
-/***************
-SCHOOL SCHEDULES
-***************/
+/* ============================================================ */
+/* Schedule List */
+/* ============================================================ */
 
 #search-box {
     width: 300px;
@@ -113,9 +110,9 @@ SCHOOL SCHEDULES
     font-weight: bold;
 }
 
-/**************
-SCHOOL SCHEDULE
-**************/
+/* ============================================================ */
+/* Schedule */
+/* ============================================================ */
 
 #school-schedule {
     padding: 0;
@@ -133,9 +130,9 @@ SCHOOL SCHEDULE
 }
 
 
-/*
-FOOTER
-*/
+/* ============================================================ */
+/* Footer */
+/* ============================================================ */
 
 footer {
     background-color: #3f3f3f;
