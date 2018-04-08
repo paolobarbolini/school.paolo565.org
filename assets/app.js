@@ -1,6 +1,6 @@
 const range = document.createRange();
 
-var scheduleCss = `
+const scheduleCss = `
 * {
     font-weight: bold;
     text-decoration: none;
@@ -56,9 +56,35 @@ var onScheduleClick = function() {
     Pages.push("#school-schedule");
 }
 
-var renderList = function(classes, ) {
+var filterList = function(list, query) {
+    const clean = query == "";
 
-}
+    qee(list, "li", entry => {
+        const text = entry.dataset.originalText;
+        if(clean) {
+            entry.innerHTML = text;
+            entry.classList.remove("hidden");
+            return;
+        }
+
+        if(text.includes(query)) {
+            entry.classList.remove("hidden");
+
+            var newText = "";
+            const splitted = text.split(query);
+            splitted.forEach((entry, i)=> {
+                newText += entry;
+
+                if (i != (splitted.length - 1)) {
+                    newText += "<span style=\"font-weight: bold;\">" + query + "</span>";
+                }
+            });
+            entry.innerHTML = newText;
+        } else {
+            entry.classList.add("hidden");
+        }
+    });
+};
 
 window.onload = function() {
 
@@ -122,23 +148,16 @@ window.onload = function() {
                                         const schedulePageHref = schedulePage.getAttribute("href");  
                                         const schedulePageAbsUrl = joinUrl(articleAbsUrl, schedulePageHref);
 
+                                        const liElement = document.createElement('li');
+                                        liElement.innerHTML = liElement.dataset.originalText = schedulePage.innerHTML;
+                                        liElement.dataset.url = schedulePageAbsUrl;
+                                        liElement.addEventListener('click', onScheduleClick);
+
                                         if(schedulePageAbsUrl.indexOf("Classi/") != -1) {
-                                            var liElement = document.createElement('li');
-                                            liElement.textContent = schedulePage.innerHTML;
-                                            liElement.dataset.url = schedulePageAbsUrl;
-                                            liElement.addEventListener('click', onScheduleClick);
                                             classes.appendChild(liElement);
                                         } else if(schedulePageAbsUrl.indexOf("Docenti/") != -1) {
-                                            var liElement = document.createElement('li');
-                                            liElement.textContent = schedulePage.innerHTML;
-                                            liElement.dataset.url = schedulePageAbsUrl;
-                                            liElement.addEventListener('click', onScheduleClick);
                                             teachers.appendChild(liElement);
                                         } else if(schedulePageAbsUrl.indexOf("Aule/") != -1) {
-                                            var liElement = document.createElement('li');
-                                            liElement.textContent = schedulePage.innerHTML;
-                                            liElement.dataset.url = schedulePageAbsUrl;
-                                            liElement.addEventListener('click', onScheduleClick);
                                             classrooms.appendChild(liElement);
                                         }
 
@@ -154,4 +173,16 @@ window.onload = function() {
             });
         });
     });
+
+    /* ============================================================ */
+    /* Search */
+    /* ============================================================ */
+    const searchBox = q("#search-box");
+    searchBox.oninput = function() {
+        const searchQuery = searchBox.value;
+
+        filterList(q("#classes"), searchQuery);
+        filterList(q("#teachers"), searchQuery);
+        filterList(q("#classrooms"), searchQuery);
+    };
 };
