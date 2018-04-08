@@ -31,7 +31,6 @@ window.parseHtml = function(html) {
       scripts[i].parentNode.removeChild(scripts[i]);
     }
 
-
     return element;
 }
 
