@@ -41,7 +41,7 @@ var parseHtml = function(html) {
     element.innerHTML = html;
 
     const scripts = element.getElementsByTagName('script');
-    const i = scripts.length;
+    var i = scripts.length;
     while (i--) {
       scripts[i].parentNode.removeChild(scripts[i]);
     }
@@ -51,6 +51,8 @@ var parseHtml = function(html) {
 }
 
 var onScheduleClick = function() {
+    const iframe = document.querySelector("#embedded-schedule");
+
     fetch('https://crossorigin.me/' + this.dataset.url).then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
@@ -59,12 +61,19 @@ var onScheduleClick = function() {
             var div = document.createElement('div');
             div.appendChild(body.cloneNode(true));
 
-            const iframe = document.querySelector("#embedded-schedule");
+            
             iframe.contentWindow.document.open('text/html', 'replace');
             iframe.contentWindow.document.write(div.innerHTML);
             iframe.contentWindow.document.close();
         });
     });
+
+    const hash = "!/" + this.dataset.type + "/" + this.dataset.originalText;
+    window.history.pushState({}, this.dataset.originalText, "#" + hash);
+
+    iframe.contentWindow.document.open('text/html', 'replace');
+    iframe.contentWindow.document.write("");
+    iframe.contentWindow.document.close();
 
     Pages.push("#school-schedule");
 }
@@ -168,10 +177,13 @@ window.onload = function() {
 
                                         if(schedulePageAbsUrl.indexOf("Classi/") != -1) {
                                             classes.appendChild(liElement);
+                                            liElement.dataset.type = "classi";
                                         } else if(schedulePageAbsUrl.indexOf("Docenti/") != -1) {
                                             teachers.appendChild(liElement);
+                                            liElement.dataset.type = "docenti";
                                         } else if(schedulePageAbsUrl.indexOf("Aule/") != -1) {
                                             classrooms.appendChild(liElement);
+                                            liElement.dataset.type = "aule";
                                         }
 
                                         if((index + 1) == array.length) {
@@ -199,4 +211,20 @@ window.onload = function() {
         filterList(q("#teachers"), searchQuery);
         filterList(q("#classrooms"), searchQuery);
     };
+
+    /* ============================================================ */
+    /* Going Back */
+    /* ============================================================ */
+    if(window.history) {
+        console.log("History loaded");
+
+        window.onpopstate = function(e) {
+            if(Pages.back()) {
+                return;
+            }
+
+            window.history.back();
+            return;
+        }
+    }
 };

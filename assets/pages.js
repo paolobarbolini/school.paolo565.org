@@ -61,11 +61,12 @@ window.Pages = {
     back: function(only) {
         // Only pop some pages
         if (only !== undefined && only !== this.stack[this.stack.length - 1]) {
-            return;
+            return false;
         }
 
         var current = this.stack.pop();
         this.set(current, this.stack[this.stack.length - 1]);
+        return true;
     },
 
     current: function() {
