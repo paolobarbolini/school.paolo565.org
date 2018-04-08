@@ -57,11 +57,9 @@ var onScheduleClick = function() {
 }
 
 var filterList = function(list, query) {
-    const clean = query == "";
-
     qee(list, "li", entry => {
         const text = entry.dataset.originalText;
-        if(clean) {
+        if(query == "") {
             entry.innerHTML = text;
             entry.classList.remove("hidden");
             return;
@@ -72,11 +70,11 @@ var filterList = function(list, query) {
 
             var newText = "";
             const splitted = text.split(query);
-            splitted.forEach((entry, i)=> {
+            splitted.forEach((entry, index, array)=> {
                 newText += entry;
 
-                if (i != (splitted.length - 1)) {
-                    newText += "<span style=\"font-weight: bold;\">" + query + "</span>";
+                if((index + 1) != array.length) {
+                    newText += "<span class=\"highlighted-text\">" + query + "</span>";
                 }
             });
             entry.innerHTML = newText;
@@ -178,8 +176,9 @@ window.onload = function() {
     /* Search */
     /* ============================================================ */
     const searchBox = q("#search-box");
+    searchBox.value = "";
     searchBox.oninput = function() {
-        const searchQuery = searchBox.value;
+        const searchQuery = searchBox.value.trim();
 
         filterList(q("#classes"), searchQuery);
         filterList(q("#teachers"), searchQuery);

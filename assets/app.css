@@ -65,6 +65,12 @@ LOADING PAGE
 SCHOOL SCHEDULES
 ***************/
 
+#search-box {
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #school-schedules ul {
     list-style: none;
 }
@@ -101,6 +107,10 @@ SCHOOL SCHEDULES
 
 .list-column p {
     margin: 0;
+}
+
+.highlighted-text {
+    font-weight: bold;
 }
 
 /**************
