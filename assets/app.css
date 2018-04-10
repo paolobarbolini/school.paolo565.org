@@ -1,6 +1,6 @@
 body {
     max-width: 100%;
-    background: #f3f3f3;
+    background: #ededed;
 
     font-family: opensans;
     font-size: 13pt;
@@ -51,6 +51,8 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
+    margin-left: -20px;
+    width: 40px;
 }
 
 .loading-bar {
@@ -91,6 +93,14 @@ body {
     40% {
         transform: scale(1);
     }
+}
+
+#loading-status {
+    top: 58%;
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
 }
 
 /* ============================================================ */

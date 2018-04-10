@@ -112,6 +112,9 @@ window.onload = function() {
     /* Load schedules */
     /* ============================================================ */
 
+    const loadingStatus = q("#loading-status");
+    loadingStatus.innerText = "Caricamento in corso...";
+
     // Request the home page
     fetch("https://crossorigin.me/http://www.istitutogobetti.it").then(response => {
         response.text().then(text => {
@@ -125,6 +128,8 @@ window.onload = function() {
                 if(homepageLink.innerHTML.indexOf("lezioni") == -1) {
                     return;
                 }
+
+                loadingStatus.innerText = "Ci siamo quasi...";
 
                 // Request the schedule article
                 const articlePageLink = joinUrl("http://www.istitutogobetti.it", homepageLink.getAttribute("href"));
@@ -140,6 +145,8 @@ window.onload = function() {
                             if(!cleanUrl.startsWith("/web_orario") && !cleanUrl.startsWith("/weborario")) {
                                 return;
                             }
+
+                            loadingStatus.innerText = "Ancora qualche secondo...";
 
                             // Request the schedule list
                             fetch("https://crossorigin.me/" + articleAbsUrl).then(response => {

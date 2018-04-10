@@ -1,0 +1,16 @@
+{
+  "name": "Istituto Gobetti App",
+  "short_name": "Istituto Gobetti App",
+  "icons": [
+    {
+      "src": "/assets/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ededed",
+  "theme_color": "#ed731c",
+  "orientation": "any"
+}
