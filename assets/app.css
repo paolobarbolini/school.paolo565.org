@@ -198,7 +198,6 @@ body {
 
 #school-schedule {
     padding: 0;
-    padding-top: 20px;
 }
 
 #embedded-schedule {
@@ -209,41 +208,4 @@ body {
     position: absolute;
     border: 0;
     left: 0;
-}
-
-
-/* ============================================================ */
-/* Footer */
-/* ============================================================ */
-
-footer {
-    background-color: #3f3f3f;
-    padding: 30px 10px;
-    text-align: center;
-
-    font-weight: 700;
-    color: #a6a4a4;
-}
-
-footer a {
-    color: #cccbcb;
-    font-weight: 700;
-
-    margin: 0;
-    padding: 0;
-}
-
-footer a:hover {
-    color:#fffefe;
-}
-
-footer ul {
-    list-style-type: none;
-
-    margin: 0;
-    padding: 0;
-}
-
-footer li {
-    margin-bottom: 10px;
 }
