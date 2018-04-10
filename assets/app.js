@@ -35,43 +35,15 @@ p {
 }
 `
 
-var onScheduleClick = function() {
-    const iframe = document.querySelector("#embedded-schedule");
-
-    fetch("https://crossorigin.me/" + this.dataset.url).then(response => {
-        response.text().then(text => {
-            const body = parseHtml(text);
-            body.querySelector("style").innerHTML = scheduleCss;
-
-            var div = document.createElement("div");
-            div.appendChild(body.cloneNode(true));
-
-            
-            iframe.contentWindow.document.open("text/html", "replace");
-            iframe.contentWindow.document.write(div.innerHTML);
-            iframe.contentWindow.document.close();
-        });
-    });
-
-    const hash = "!/" + this.dataset.type + "/" + this.dataset.originalText;
-    window.history.pushState({}, this.dataset.originalText, "#" + hash);
-
-    iframe.contentWindow.document.open("text/html", "replace");
-    iframe.contentWindow.document.write("");
-    iframe.contentWindow.document.close();
-
-    Pages.push("#school-schedule");
-}
-
 var filterList = function(list, query) {
     const escapedQuery = escapeRegExp(query);
 
-    qee(list, "li", entry => {
+    qee(list, ".schedule-list-item", entry => {
         const text = entry.dataset.originalText;
 
         if(query == "") {
-            entry.innerHTML = text;
             entry.classList.remove("hidden");
+            entry.querySelector("a").innerHTML = text;
             return;
         }
 
@@ -85,9 +57,9 @@ var filterList = function(list, query) {
 
         const regEx = new RegExp(escapedQuery, "ig");
         const newText = text.replace(regEx, '<span class="highlighted-text">' + queryReplacement + "</span>");
-        entry.innerHTML = newText;
 
         entry.classList.remove("hidden");
+        entry.querySelector("a").innerHTML = newText;
     });
 };
 
@@ -163,9 +135,9 @@ window.onload = function() {
                                         const schedulePageAbsUrl = joinUrl(articleAbsUrl, schedulePageHref);
 
                                         const liElement = document.createElement("li");
-                                        liElement.innerHTML = liElement.dataset.originalText = schedulePage.innerHTML;
+                                        liElement.classList.add("schedule-list-item");
+                                        liElement.dataset.originalText = schedulePage.innerHTML;
                                         liElement.dataset.url = schedulePageAbsUrl;
-                                        liElement.addEventListener("click", onScheduleClick);
 
                                         if(schedulePageAbsUrl.indexOf("Classi/") != -1) {
                                             classes.appendChild(liElement);
@@ -177,6 +149,12 @@ window.onload = function() {
                                             classrooms.appendChild(liElement);
                                             liElement.dataset.type = "aule";
                                         }
+
+                                        const aElement = document.createElement("a");
+                                        aElement.href = "#/" + liElement.dataset.type + "/" + liElement.dataset.originalText;
+                                        aElement.innerHTML = liElement.dataset.originalText;
+
+                                        liElement.appendChild(aElement);
 
                                         if((index + 1) == array.length) {
                                             Pages.push("#school-schedules");
@@ -192,21 +170,70 @@ window.onload = function() {
     });
 
     /* ============================================================ */
+    /* Page changer */
+    /* ============================================================ */
+
+    window.onhashchange = function() {
+        const hash = window.location.hash.substring(1);
+
+        if(hash.startsWith("/classi/") || hash.startsWith("/docenti/") || hash.startsWith("/classi/")) {
+            // Show a schedule
+
+            const splitted = hash.split("/");
+            const name = decodeURIComponent(splitted[splitted.length - 1]);
+            const type = splitted[1];
+
+            const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
+            if(selectedScheduleInfo == null) {
+                Pages.push("#school-schedules");
+                return;
+            }
+
+            const iframe = document.querySelector("#embedded-schedule");
+    
+            fetch("https://crossorigin.me/" + selectedScheduleInfo.dataset.url).then(response => {
+                response.text().then(text => {
+                    const body = parseHtml(text);
+                    body.querySelector("style").innerHTML = scheduleCss;
+        
+                    var div = document.createElement("div");
+                    div.appendChild(body.cloneNode(true));
+        
+                    
+                    iframe.contentWindow.document.open("text/html", "replace");
+                    iframe.contentWindow.document.write(div.innerHTML);
+                    iframe.contentWindow.document.close();
+                });
+            });
+        
+            iframe.contentWindow.document.open("text/html", "replace");
+            iframe.contentWindow.document.write("");
+            iframe.contentWindow.document.close();
+        
+            Pages.push("#school-schedule");
+        } else {
+            Pages.push("#school-schedules");
+        }
+    };
+
+    /* ============================================================ */
     /* Search */
     /* ============================================================ */
+
     const searchBox = q("#search-box");
     searchBox.value = "";
     searchBox.oninput = function() {
         const searchQuery = searchBox.value.trim();
 
-        filterList(q("#classes"), searchQuery);
-        filterList(q("#teachers"), searchQuery);
-        filterList(q("#classrooms"), searchQuery);
+        qe(".list-column ul", column => {
+            filterList(column, searchQuery);
+        });
     };
 
     /* ============================================================ */
     /* Going Back */
     /* ============================================================ */
+
     if(window.history) {
         window.onpopstate = function(e) {
             if(Pages.back()) {
