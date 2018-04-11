@@ -52,12 +52,9 @@ body {
 }
 
 .page-contents {
-    padding: 20px;
-
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 90%;
 }
 
 .title {
@@ -145,15 +142,19 @@ body {
     list-style: none;
 }
 
+.list-columns-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .list-columns {
-    width: 100%;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+
+    max-width: 100vw;
 }
 
 .list-column {
-    min-width: 200px;
+    min-width: 300px;
     max-width: 500px;
     flex: 1;
 }
@@ -162,6 +163,10 @@ body {
     margin: 0;
     padding: 0;
     margin-left: 10px;
+}
+
+.list-column ul:last-of-type {
+    margin-right: 10px;
 }
 
 .list-column p {
