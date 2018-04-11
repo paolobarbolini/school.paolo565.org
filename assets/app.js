@@ -88,7 +88,7 @@ window.onload = function() {
     loadingStatus.innerText = "Caricamento in corso...";
 
     // Request the home page
-    fetch("https://crossorigin.me/http://www.istitutogobetti.it").then(response => {
+    fetch("https://cors-anywhere.herokuapp.com/http://www.istitutogobetti.it").then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
 
@@ -105,7 +105,7 @@ window.onload = function() {
 
                 // Request the schedule article
                 const articlePageLink = joinUrl("http://www.istitutogobetti.it", homepageLink.getAttribute("href"));
-                fetch("https://crossorigin.me/" + articlePageLink).then(response => {
+                fetch("https://cors-anywhere.herokuapp.com/" + articlePageLink).then(response => {
                     response.text().then(text => {
                         const body = parseHtml(text);
 
@@ -121,7 +121,7 @@ window.onload = function() {
                             loadingStatus.innerText = "Ancora qualche secondo...";
 
                             // Request the schedule list
-                            fetch("https://crossorigin.me/" + articleAbsUrl).then(response => {
+                            fetch("https://cors-anywhere.herokuapp.com/" + articleAbsUrl).then(response => {
                                 response.text().then(text => {
                                     const body = parseHtml(text);
                                     const schedulePages = body.querySelectorAll("a");
@@ -191,7 +191,7 @@ window.onload = function() {
 
             const iframe = document.querySelector("#embedded-schedule");
     
-            fetch("https://crossorigin.me/" + selectedScheduleInfo.dataset.url).then(response => {
+            fetch("https://cors-anywhere.herokuapp.com/" + selectedScheduleInfo.dataset.url).then(response => {
                 response.text().then(text => {
                     const body = parseHtml(text);
                     body.querySelector("style").innerHTML = scheduleCss;
