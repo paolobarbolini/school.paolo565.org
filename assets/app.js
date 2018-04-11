@@ -1,3 +1,6 @@
+const corsProxy = "https://cors-anywhere.herokuapp.com/";
+const schoolUrl = "http://www.istitutogobetti.it";
+
 const scheduleCss = `
 * {
     font-weight: bold;
@@ -63,6 +66,49 @@ var filterList = function(list, query) {
     });
 };
 
+var loadFromHash = function() {
+    const hash = window.location.hash.substring(1);
+
+    if(hash.startsWith("/classi/") || hash.startsWith("/docenti/") || hash.startsWith("/classi/")) {
+        // Show a schedule
+
+        const splitted = hash.split("/");
+        const name = decodeURIComponent(splitted[splitted.length - 1]);
+        const type = splitted[1];
+
+        const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
+        if(selectedScheduleInfo == null) {
+            Pages.push("#school-schedules");
+            return;
+        }
+
+        const iframe = document.querySelector("#embedded-schedule");
+
+        fetch(corsProxy + selectedScheduleInfo.dataset.url).then(response => {
+            response.text().then(text => {
+                const body = parseHtml(text);
+                body.querySelector("style").innerHTML = scheduleCss;
+    
+                var div = document.createElement("div");
+                div.appendChild(body.cloneNode(true));
+    
+                
+                iframe.contentWindow.document.open("text/html", "replace");
+                iframe.contentWindow.document.write(div.innerHTML);
+                iframe.contentWindow.document.close();
+            });
+        });
+    
+        iframe.contentWindow.document.open("text/html", "replace");
+        iframe.contentWindow.document.write("");
+        iframe.contentWindow.document.close();
+    
+        Pages.push("#school-schedule");
+    } else {
+        Pages.push("#school-schedules");
+    }
+}
+
 window.onload = function() {
 
     /* ============================================================ */
@@ -74,6 +120,8 @@ window.onload = function() {
     /* ============================================================ */
     /* Resize the iframe */
     /* ============================================================ */
+
+    //TODO: Remove this hack
 
     const embeddedSchedule = document.getElementById("embedded-schedule");
     embeddedSchedule.onload = function() {
@@ -88,7 +136,7 @@ window.onload = function() {
     loadingStatus.innerText = "Caricamento in corso...";
 
     // Request the home page
-    fetch("https://cors-anywhere.herokuapp.com/http://www.istitutogobetti.it").then(response => {
+    fetch(corsProxy + schoolUrl).then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
 
@@ -104,8 +152,8 @@ window.onload = function() {
                 loadingStatus.innerText = "Ci siamo quasi...";
 
                 // Request the schedule article
-                const articlePageLink = joinUrl("http://www.istitutogobetti.it", homepageLink.getAttribute("href"));
-                fetch("https://cors-anywhere.herokuapp.com/" + articlePageLink).then(response => {
+                const articlePageLink = joinUrl(schoolUrl, homepageLink.getAttribute("href"));
+                fetch(corsProxy + articlePageLink).then(response => {
                     response.text().then(text => {
                         const body = parseHtml(text);
 
@@ -121,7 +169,7 @@ window.onload = function() {
                             loadingStatus.innerText = "Ancora qualche secondo...";
 
                             // Request the schedule list
-                            fetch("https://cors-anywhere.herokuapp.com/" + articleAbsUrl).then(response => {
+                            fetch(corsProxy + articleAbsUrl).then(response => {
                                 response.text().then(text => {
                                     const body = parseHtml(text);
                                     const schedulePages = body.querySelectorAll("a");
@@ -157,7 +205,7 @@ window.onload = function() {
                                         liElement.appendChild(aElement);
 
                                         if((index + 1) == array.length) {
-                                            Pages.push("#school-schedules");
+                                            loadFromHash();
                                         }
                                     });
                                 });
@@ -173,48 +221,7 @@ window.onload = function() {
     /* Page changer */
     /* ============================================================ */
 
-    window.onhashchange = function() {
-        const hash = window.location.hash.substring(1);
-
-        if(hash.startsWith("/classi/") || hash.startsWith("/docenti/") || hash.startsWith("/classi/")) {
-            // Show a schedule
-
-            const splitted = hash.split("/");
-            const name = decodeURIComponent(splitted[splitted.length - 1]);
-            const type = splitted[1];
-
-            const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
-            if(selectedScheduleInfo == null) {
-                Pages.push("#school-schedules");
-                return;
-            }
-
-            const iframe = document.querySelector("#embedded-schedule");
-    
-            fetch("https://cors-anywhere.herokuapp.com/" + selectedScheduleInfo.dataset.url).then(response => {
-                response.text().then(text => {
-                    const body = parseHtml(text);
-                    body.querySelector("style").innerHTML = scheduleCss;
-        
-                    var div = document.createElement("div");
-                    div.appendChild(body.cloneNode(true));
-        
-                    
-                    iframe.contentWindow.document.open("text/html", "replace");
-                    iframe.contentWindow.document.write(div.innerHTML);
-                    iframe.contentWindow.document.close();
-                });
-            });
-        
-            iframe.contentWindow.document.open("text/html", "replace");
-            iframe.contentWindow.document.write("");
-            iframe.contentWindow.document.close();
-        
-            Pages.push("#school-schedule");
-        } else {
-            Pages.push("#school-schedules");
-        }
-    };
+    window.onhashchange = loadFromHash;
 
     /* ============================================================ */
     /* Search */
