@@ -84,7 +84,7 @@ var loadFromHash = function() {
 
         const iframe = document.querySelector("#embedded-schedule");
 
-        fetch(corsProxy + selectedScheduleInfo.dataset.url).then(response => {
+        fetchRetry(corsProxy + selectedScheduleInfo.dataset.url).then(response => {
             response.text().then(text => {
                 const body = parseHtml(text);
                 body.querySelector("style").innerHTML = scheduleCss;
@@ -136,7 +136,7 @@ window.onload = function() {
     loadingStatus.innerText = "Caricamento in corso...";
 
     // Request the home page
-    fetch(corsProxy + schoolUrl).then(response => {
+    fetchRetry(corsProxy + schoolUrl).then(response => {
         response.text().then(text => {
             const body = parseHtml(text);
 
@@ -153,7 +153,7 @@ window.onload = function() {
 
                 // Request the schedule article
                 const articlePageLink = joinUrl(schoolUrl, homepageLink.getAttribute("href"));
-                fetch(corsProxy + articlePageLink).then(response => {
+                fetchRetry(corsProxy + articlePageLink).then(response => {
                     response.text().then(text => {
                         const body = parseHtml(text);
 
@@ -169,7 +169,7 @@ window.onload = function() {
                             loadingStatus.innerText = "Ancora qualche secondo...";
 
                             // Request the schedule list
-                            fetch(corsProxy + articleAbsUrl).then(response => {
+                            fetchRetry(corsProxy + articleAbsUrl).then(response => {
                                 response.text().then(text => {
                                     const body = parseHtml(text);
                                     const schedulePages = body.querySelectorAll("a");

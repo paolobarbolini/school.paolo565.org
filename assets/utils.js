@@ -37,3 +37,37 @@ window.parseHtml = function(html) {
 window.escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
+
+window.fetchRetry = function(url) {
+    var limit = 2;
+    const delay = 1000;
+
+    return new Promise((resolve, reject) => {
+        function success(response) {
+            if(!response.ok) {
+                throw new Error("Invalid response code: " + response.status);
+            }
+
+            resolve(response);
+        }
+
+        function failure(error) {
+            limit--;
+            if(limit) {
+                setTimeout(fetchUrl, delay)
+            } else {
+                reject(error);
+            }
+        }
+        function finalHandler(finalError) {
+            throw finalError;
+        }
+        function fetchUrl() {
+            return fetch(url)
+                .then(success)
+                .catch(failure)
+                .catch(finalHandler);
+        }
+        fetchUrl();
+    });
+}
