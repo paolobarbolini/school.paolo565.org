@@ -69,7 +69,7 @@ var filterList = function(list, query) {
 var loadFromHash = function() {
     const hash = window.location.hash.substring(1);
 
-    if(hash.startsWith("/classi/") || hash.startsWith("/docenti/") || hash.startsWith("/classi/")) {
+    if(hash.startsWith("/classi/") || hash.startsWith("/docenti/") || hash.startsWith("/aule/")) {
         // Show a schedule
 
         const splitted = hash.split("/");
@@ -78,6 +78,7 @@ var loadFromHash = function() {
 
         const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
         if(selectedScheduleInfo == null) {
+            window.location.hash = "/";
             Pages.push("#school-schedules");
             return;
         }
@@ -104,6 +105,8 @@ var loadFromHash = function() {
         iframe.contentWindow.document.close();
     
         Pages.push("#school-schedule");
+    } else if(hash.startsWith("/about")) {
+        Pages.push("#about");
     } else {
         Pages.push("#school-schedules");
     }
