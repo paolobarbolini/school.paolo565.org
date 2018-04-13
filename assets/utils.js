@@ -38,9 +38,8 @@ window.escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
-window.fetchRetry = function(url) {
-    var limit = 2;
-    const delay = 1000;
+window.fetchRetry = function(urls, suffix) {
+    var i = 0;
 
     return new Promise((resolve, reject) => {
         function success(response) {
@@ -52,9 +51,8 @@ window.fetchRetry = function(url) {
         }
 
         function failure(error) {
-            limit--;
-            if(limit) {
-                setTimeout(fetchUrl, delay)
+            if(i < urls.length) {
+                fetchUrl();
             } else {
                 reject(error);
             }
@@ -63,7 +61,7 @@ window.fetchRetry = function(url) {
             throw finalError;
         }
         function fetchUrl() {
-            return fetch(url)
+            return fetch(urls[i++] + suffix)
                 .then(success)
                 .catch(failure)
                 .catch(finalHandler);
