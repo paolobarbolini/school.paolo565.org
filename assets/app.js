@@ -43,11 +43,13 @@ p {
 
 var filterList = function(list, query) {
     const escapedQuery = escapeRegExp(query);
+    var visibleCount = 0;
 
     qee(list, ".schedule-list-item", entry => {
         const text = entry.dataset.originalText;
 
         if(query == "") {
+            visibleCount++;
             entry.classList.remove("hidden");
             entry.querySelector("a").innerHTML = text;
             return;
@@ -64,9 +66,16 @@ var filterList = function(list, query) {
         const regEx = new RegExp(escapedQuery, "ig");
         const newText = text.replace(regEx, '<span class="highlighted-text">' + queryReplacement + "</span>");
 
+        visibleCount++;
         entry.classList.remove("hidden");
         entry.querySelector("a").innerHTML = newText;
     });
+
+    if(visibleCount > 0) {
+        list.parentElement.classList.remove("hidden");
+    } else {
+        list.parentElement.classList.add("hidden");
+    }
 };
 
 var loadFromHash = function() {
