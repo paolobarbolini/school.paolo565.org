@@ -5,4 +5,4 @@ Try it here: [school.paolo565.org](https://school.paolo565.org).
 
 The data is loaded client side from my school's website via the service [CORS Anywhere](https://cors-anywhere.herokuapp.com)
 
-App icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) licensed by [http://creativecommons.org/licenses/by/3.0/](CC 3.0 BY)
+App icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
