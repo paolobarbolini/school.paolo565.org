@@ -26,6 +26,10 @@ body {
     margin: auto;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 /* ============================================================ */
 /* Page Parts */
 /* ============================================================ */
@@ -57,12 +61,38 @@ body {
     margin-right: auto;
 }
 
+.centered-page-contents {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(95% - 20px);
+}
+
 .title {
     text-align: center;
 }
 
 .page > .title {
     margin-top: 0;
+}
+
+/* ============================================================ */
+/* Unsupported Device */
+/* ============================================================ */
+
+#unsupported-device {
+    text-align: center;
+}
+
+#unsupported-device p,
+#unsupported-device ul {
+    margin: 0;
+    padding: 0;
+}
+
+#unsupported-device .bold {
+    margin-top: 10px;
 }
 
 /* ============================================================ */

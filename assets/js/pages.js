@@ -1,6 +1,6 @@
 window.Pages = {
 
-    stack: ["#loading"],
+    stack: ["#unsupported-device"],
     show_callbacks: {},
     hide_callbacks: {},
 

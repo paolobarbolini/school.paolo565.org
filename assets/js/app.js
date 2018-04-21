@@ -125,6 +125,13 @@ var loadFromHash = function() {
 }
 
 window.onload = function() {
+    /* ============================================================ */
+    /* Check browser compatibility */
+    /* ============================================================ */
+
+    if(!window.fetch) {
+        return;
+    }
 
     /* ============================================================ */
     /* Init pages */
@@ -149,6 +156,8 @@ window.onload = function() {
 
     const loadingStatus = q("#loading-status");
     loadingStatus.innerText = "Caricamento in corso...";
+
+    Pages.push("#loading");
 
     // Request the home page
     fetchRetry(corsProxy, schoolUrl).then(response => {
