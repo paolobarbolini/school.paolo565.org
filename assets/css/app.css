@@ -253,3 +253,23 @@ body {
     padding: 10px;
     text-align: center;
 }
+
+#about .page-contents p {
+    margin: 0;
+}
+
+#about .page-contents p:first-of-type {
+    margin-top: 20px;
+}
+
+#about .page-contents hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#about ol {
+    margin: 0;
+    padding: 0;
+    margin-left: 16px;
+    text-align: left;
+}
