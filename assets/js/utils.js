@@ -1,18 +1,23 @@
+const corsProxies = [
+    "https://cors-anywhere.herokuapp.com/",
+    "https://crossorigin.me/",
+];
+
 window.q = function(query) {
     return document.querySelector(query);
 }
 
 window.qe = function(query, func) {
-    var elements = document.querySelectorAll(query);
-    elements.forEach(func);
+    const elements = document.querySelectorAll(query);
+    return elements.forEach(func);
 }
 
 window.qee = function(element, query, func) {
-    var elements = element.querySelectorAll(query);
-    elements.forEach(func);
+    const elements = element.querySelectorAll(query);
+    return elements.forEach(func);
 }
 
-window.joinUrl = function(baseUrl, url) {
+window.joinUrls = function(baseUrl, url) {
     return new URL(url, baseUrl).href;
 }
 
@@ -28,7 +33,7 @@ window.parseHtml = function(html) {
     const scripts = element.getElementsByTagName("script");
     var i = scripts.length;
     while (i--) {
-      scripts[i].parentNode.removeChild(scripts[i]);
+        scripts[i].parentNode.removeChild(scripts[i]);
     }
 
     return element;
@@ -38,34 +43,27 @@ window.escapeRegExp = function(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
-window.fetchRetry = function(urls, suffix) {
-    var i = 0;
+window.fetchCors = async function(url) {
+    var nextCorsProxy = 0;
+    var fails = 0;
 
-    return new Promise((resolve, reject) => {
-        function success(response) {
+    while(true) {
+        try {
+            const response = await fetch(corsProxies[nextCorsProxy] + url);
             if(!response.ok) {
-                throw new Error("Invalid response code: " + response.status);
+                nextCorsProxy--;
+                throw new Error("Invalid response: " + response.status);
             }
 
-            resolve(response);
-        }
+            return response;
+        } catch(err) {
+            console.log(err);
+            fails++;
+            nextCorsProxy++;
 
-        function failure(error) {
-            if(i < urls.length) {
-                fetchUrl();
-            } else {
-                reject(error);
+            if(fails > 1) {
+                throw err;
             }
-        }
-        function finalHandler(finalError) {
-            throw finalError;
-        }
-        function fetchUrl() {
-            return fetch(urls[i++] + suffix)
-                .then(success)
-                .catch(failure)
-                .catch(finalHandler);
-        }
-        fetchUrl();
-    });
+        };
+    }
 }
