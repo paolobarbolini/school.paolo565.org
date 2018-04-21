@@ -126,7 +126,11 @@ var loadSchedules = async function(firstLoad = false) {
     loadFromHash();
 
     if(firstLoad) {
-        loadSchedules(false);
+        try {
+            loadSchedules(false);
+        } catch(err) {
+            console.log(err);
+        }
     }
 }
 
@@ -206,7 +210,7 @@ window.onload = function() {
     try {
         loadSchedules(true);
     } catch(err) {
-        alert(err);
         loadingStatus.innerText = "Impossibile caricare la lista degli orari.";
+        console.log(err);
     }
 };
