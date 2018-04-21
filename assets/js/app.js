@@ -119,11 +119,11 @@ var loadSchedules = async function(firstLoad = false) {
         generateScheduleItem(item);
     });
 
-    if(!firstLoad) {
+    if(firstLoad) {
+        loadFromHash();
+    } else {
         filterColumns();
     }
-
-    loadFromHash();
 
     if(firstLoad) {
         try {
