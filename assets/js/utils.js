@@ -27,7 +27,7 @@ window.urlPath = function(url) {
 
 window.parseHtml = function(html) {
     const newHTMLDocument = document.implementation.createHTMLDocument("preview");
-    const element = newHTMLDocument.createElement("div")
+    const element = newHTMLDocument.createElement("div");
     element.innerHTML = html;
 
     const scripts = element.getElementsByTagName("script");
@@ -61,7 +61,7 @@ window.fetchCors = async function(url) {
             fails++;
             nextCorsProxy++;
 
-            if(fails > 1) {
+            if(fails > 2 || nextCorsProxy >= corsProxies.length) {
                 throw err;
             }
         };
