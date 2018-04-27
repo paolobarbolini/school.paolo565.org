@@ -222,6 +222,9 @@ body {
 .schedule-list-item a {
     color: #303030;
     text-decoration: none;
+    display: block;
+    height: 100%;
+    width: 100%;
 }
 
 /* ============================================================ */
