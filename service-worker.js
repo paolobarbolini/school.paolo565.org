@@ -1,4 +1,4 @@
-const cacheName = "istitutogobettiapp-v1";
+const cacheName = "istitutogobettiapp-v2";
 
 const expectedCaches = [
     cacheName,
@@ -8,7 +8,6 @@ var cacheFiles = [
     "/",
     "/assets/css/app.css",
     "/assets/js/utils.js",
-    "/assets/js/pages.js",
     "/assets/js/istitutogobetti.js",
     "/assets/js/app.js",
 ];

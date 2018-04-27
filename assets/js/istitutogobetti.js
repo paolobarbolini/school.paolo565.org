@@ -143,7 +143,7 @@ var displayScheduleItem = async function(name, type) {
     const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
     if(selectedScheduleInfo == null) {
         window.location.hash = "/";
-        Pages.push("#school-schedules");
+        openPage("#school-schedules");
         return;
     }
 
@@ -152,7 +152,7 @@ var displayScheduleItem = async function(name, type) {
     iframe.contentWindow.document.write("");
     iframe.contentWindow.document.close();
 
-    Pages.push("#school-schedule");
+    openPage("#school-schedule");
 
     // Load the table from the cache
     var text = localStorage.getItem("scheduleitem-" + name + "-" + type);

@@ -3,6 +3,8 @@ const corsProxies = [
     "https://crossorigin.me/",
 ];
 
+var currentlyOpenPage = "#unsupported-device";
+
 window.q = function(query) {
     return document.querySelector(query);
 }
@@ -66,4 +68,10 @@ window.fetchCors = async function(url) {
             }
         };
     }
+}
+
+window.openPage = function(query) {
+    q(query).classList.remove("hidden");
+    q(currentlyOpenPage).classList.add("hidden");
+    currentlyOpenPage = query;
 }

@@ -88,9 +88,9 @@ var loadFromHash = async function() {
 
         displayScheduleItem(name, type);
     } else if(hash.startsWith("/about")) {
-        Pages.push("#about");
+        openPage("#about");
     } else {
-        Pages.push("#school-schedules");
+        openPage("#school-schedules");
     }
 }
 
@@ -170,21 +170,6 @@ window.onload = function() {
     searchBox.oninput = filterColumns;
 
     /* ============================================================ */
-    /* Going Back */
-    /* ============================================================ */
-
-    if(window.history) {
-        window.onpopstate = function(e) {
-            if(Pages.back()) {
-                return;
-            }
-
-            window.history.back();
-            return;
-        }
-    }
-
-    /* ============================================================ */
     /* Service Worker */
     /* ============================================================ */
 
@@ -199,7 +184,7 @@ window.onload = function() {
     window.loadingStatus = q("#loading-status");
     loadingStatus.innerText = "Caricamento in corso...";
 
-    Pages.push("#loading");
+    openPage("#loading");
 
     try {
         loadSchedules(true);
