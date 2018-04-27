@@ -157,6 +157,7 @@ const displayScheduleItem = async function(name, type) {
     }
 
     updateScheduleIframe("");
+    q("#school-schedule-title").innerText = name;
 
     openPage("#school-schedule");
 
