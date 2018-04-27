@@ -1,10 +1,10 @@
-const cacheName = "istitutogobettiapp-v2";
+const cacheName = "istitutogobettiapp-v3";
 
 const expectedCaches = [
     cacheName,
 ];
 
-var cacheFiles = [
+const cacheFiles = [
     "/",
     "/assets/css/app.css",
     "/assets/js/utils.js",

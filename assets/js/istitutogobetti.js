@@ -1,8 +1,10 @@
+"use strict";
+
 const schoolUrl = "http://www.istitutogobetti.it";
 
-var getArticlePageLink = async function(allowCache = true) {
+const getArticlePageLink = async function(allowCache = true) {
     if(allowCache) {
-        var articlePageLink = localStorage.getItem("articlepage-url");
+        const articlePageLink = localStorage.getItem("articlepage-url");
         if(articlePageLink) {
             return articlePageLink;
         }
@@ -13,6 +15,7 @@ var getArticlePageLink = async function(allowCache = true) {
     const homePageText = await homePageResponse.text();
     const homeBody = parseHtml(homePageText);
 
+    let partialArticlePageLink;
     await qee(homeBody, "#jsn-pleft a", homePageLink => {
         const linkText = homePageLink.innerHTML;
 
@@ -28,14 +31,14 @@ var getArticlePageLink = async function(allowCache = true) {
     }
 
     // Request the schedule article
-    articlePageLink = joinUrls(schoolUrl, partialArticlePageLink);
+    const articlePageLink = joinUrls(schoolUrl, partialArticlePageLink);
     localStorage.setItem("articlepage-url", articlePageLink);
     return articlePageLink;
 }
 
-var getSchedulePageLink = async function(articlePageLink, allowCache = true) {
+const getSchedulePageLink = async function(articlePageLink, allowCache = true) {
     if(allowCache) {
-        var schedulePageLink = localStorage.getItem("schedulepage-url");
+        const schedulePageLink = localStorage.getItem("schedulepage-url");
         if(schedulePageLink) {
             return schedulePageLink;
         }
@@ -45,6 +48,7 @@ var getSchedulePageLink = async function(articlePageLink, allowCache = true) {
     const articlePageText = await articlePageResponse.text();
     const articlePageBody = parseHtml(articlePageText);
 
+    let schedulePageLink;
     await qee(articlePageBody, "#jsn-mainbody a", articleLink => {
         const articleHref = articleLink.getAttribute("href");
         const articleAbsUrl = joinUrls(articlePageLink, articleHref);
@@ -65,7 +69,7 @@ var getSchedulePageLink = async function(articlePageLink, allowCache = true) {
     return schedulePageLink;
 }
 
-var getScheduleItems = async function(schedulePageLink, allowCache = true) {
+const getScheduleItems = async function(schedulePageLink, allowCache = true) {
     // Try loading the schedule list from the cache
     if(allowCache) {
         const cachedScheduleItems = localStorage.getItem("schedule-items");
@@ -86,6 +90,7 @@ var getScheduleItems = async function(schedulePageLink, allowCache = true) {
         const schedulePageHref = schedulePage.getAttribute("href");  
         const schedulePageAbsUrl = joinUrls(schedulePageLink, schedulePageHref);
 
+        let list, type;
         if(schedulePageAbsUrl.indexOf("Classi/") != -1) {
             list = "#classes";
             type = "classi";
@@ -111,7 +116,7 @@ var getScheduleItems = async function(schedulePageLink, allowCache = true) {
     return scheduleItems;
 }
 
-var generateScheduleItem = function(item) {
+const generateScheduleItem = function(item) {
     const liElement = document.createElement("li");
     liElement.classList.add("schedule-list-item");
     liElement.dataset.originalText = item["name"];
@@ -126,11 +131,11 @@ var generateScheduleItem = function(item) {
     q(item["list"]).appendChild(liElement);
 }
 
-var partiallyGenerateScheduleItem = function(html) {
+const partiallyGenerateScheduleItem = function(html) {
     const body = parseHtml(html);
     body.querySelector("style").innerHTML = scheduleCss;
 
-    var div = document.createElement("div");
+    const div = document.createElement("div");
     div.appendChild(body.cloneNode(true));
 
     const iframe = document.querySelector("#embedded-schedule");
@@ -139,7 +144,7 @@ var partiallyGenerateScheduleItem = function(html) {
     iframe.contentWindow.document.close();
 }
 
-var displayScheduleItem = async function(name, type) {
+const displayScheduleItem = async function(name, type) {
     const selectedScheduleInfo = q("li[data-original-text=\"" + name + "\"][data-type=\"" + type + "\"]");
     if(selectedScheduleInfo == null) {
         window.location.hash = "/";
@@ -155,7 +160,7 @@ var displayScheduleItem = async function(name, type) {
     openPage("#school-schedule");
 
     // Load the table from the cache
-    var text = localStorage.getItem("scheduleitem-" + name + "-" + type);
+    let text = localStorage.getItem("scheduleitem-" + name + "-" + type);
     if(text) {
         partiallyGenerateScheduleItem(text);
     }

@@ -1,3 +1,5 @@
+"use strict";
+
 const corsProxies = [
     "https://cors-anywhere.herokuapp.com/",
     "https://crossorigin.me/",
@@ -33,7 +35,7 @@ window.parseHtml = function(html) {
     element.innerHTML = html;
 
     const scripts = element.getElementsByTagName("script");
-    var i = scripts.length;
+    let i = scripts.length;
     while (i--) {
         scripts[i].parentNode.removeChild(scripts[i]);
     }
@@ -46,8 +48,8 @@ window.escapeRegExp = function(str) {
 }
 
 window.fetchCors = async function(url) {
-    var nextCorsProxy = 0;
-    var fails = 0;
+    let nextCorsProxy = 0;
+    let fails = 0;
 
     while(true) {
         try {
