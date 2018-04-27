@@ -131,6 +131,13 @@ const generateScheduleItem = function(item) {
     q(item["list"]).appendChild(liElement);
 }
 
+const updateScheduleIframe = function(html) {
+    const iframe = q("#embedded-schedule");
+    iframe.contentWindow.document.open("text/html", "replace");
+    iframe.contentWindow.document.write(html);
+    iframe.contentWindow.document.close();
+}
+
 const partiallyGenerateScheduleItem = function(html) {
     const body = parseHtml(html);
     body.querySelector("style").innerHTML = scheduleCss;
@@ -138,10 +145,7 @@ const partiallyGenerateScheduleItem = function(html) {
     const div = document.createElement("div");
     div.appendChild(body.cloneNode(true));
 
-    const iframe = document.querySelector("#embedded-schedule");
-    iframe.contentWindow.document.open("text/html", "replace");
-    iframe.contentWindow.document.write(div.innerHTML);
-    iframe.contentWindow.document.close();
+    updateScheduleIframe(div.innerHTML);
 }
 
 const displayScheduleItem = async function(name, type) {
@@ -152,22 +156,19 @@ const displayScheduleItem = async function(name, type) {
         return;
     }
 
-    const iframe = document.querySelector("#embedded-schedule");
-    iframe.contentWindow.document.open("text/html", "replace");
-    iframe.contentWindow.document.write("");
-    iframe.contentWindow.document.close();
+    updateScheduleIframe("");
 
     openPage("#school-schedule");
 
     // Load the table from the cache
-    let text = localStorage.getItem("scheduleitem-" + name + "-" + type);
-    if(text) {
-        partiallyGenerateScheduleItem(text);
+    const cachedHtml = localStorage.getItem("scheduleitem-" + name + "-" + type);
+    if(cachedHtml) {
+        partiallyGenerateScheduleItem(cachedHtml);
     }
 
     // Load from the network and update the existing table if it's already there.
     const response = await fetchCors(selectedScheduleInfo.dataset.url);
-    text = await response.text();
+    const text = await response.text();
     localStorage.setItem("scheduleitem-" + name + "-" + type, text);
     partiallyGenerateScheduleItem(text);
 }
