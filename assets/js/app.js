@@ -37,9 +37,9 @@ p {
 }
 `
 
-const setLoadingStatus = function(loadingStatus) {
-    var loadingStatus = q("#loading-status");
-    loadingStatus.innerText = loadingStatus;
+const setLoadingStatus = function(text) {
+    const loadingStatus = q("#loading-status");
+    loadingStatus.innerText = text;
 }
 
 const filterColumns = function() {
