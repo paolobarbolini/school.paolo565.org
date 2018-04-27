@@ -68,7 +68,7 @@ const filterColumns = function() {
     
             const i = text.toLowerCase().indexOf(searchQuery.toLowerCase());
             const queryReplacement = text.substring(i, i + searchQuery.length);
-            const newText = text.replace(regEx, '<span class="highlighted-text">' + queryReplacement + "</span>");
+            const newText = text.replace(regEx, '<b>' + queryReplacement + "</b>");
     
             visibleCount++;
             entry.classList.remove("hidden");
