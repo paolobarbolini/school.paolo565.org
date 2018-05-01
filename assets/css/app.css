@@ -26,10 +26,6 @@ body {
     margin: auto;
 }
 
-.bold {
-    font-weight: bold;
-}
-
 /* ============================================================ */
 /* Page Parts */
 /* ============================================================ */
@@ -89,10 +85,6 @@ body {
 #unsupported-device ul {
     margin: 0;
     padding: 0;
-}
-
-#unsupported-device .bold {
-    margin-top: 10px;
 }
 
 /* ============================================================ */
@@ -313,6 +305,7 @@ body {
 
 #about .page-contents {
     padding: 10px;
+    max-width: 1000px;
     text-align: center;
 }
 
