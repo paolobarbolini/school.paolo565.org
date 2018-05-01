@@ -1,42 +1,5 @@
 "use strict";
 
-const scheduleCss = `
-* {
-    font-weight: bold;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-family: "Designosaur";
-    font-size: 9pt;
-}
-.nodecBlack {
-    color: #000000;
-}
-.nodecWhite {
-    color: #FFFFFF;
-}
-td {
-    padding: 10px;
-}
-center:first-of-type,
-center:last-of-type,
-.mathema p,
-#mathema {
-    display: none;
-}
-.nodecBlack, .nodecWhite {
-  max-height: 20px;
-}
- #nodecBlack, #nodecWhite {
-  height: 10px;
-  max-height: 10px;
-}
-p {
-  margin: 0;
-  margin-top: 5px;
-  padding: 0;
-}
-`
-
 const setLoadingStatus = function(text) {
     const loadingStatus = q("#loading-status");
     loadingStatus.innerText = text;
@@ -153,8 +116,6 @@ window.onload = function() {
     /* ============================================================ */
     /* Iframe resizer */
     /* ============================================================ */
-
-    // TODO: Remove this hack
 
     const embeddedSchedule = document.getElementById("embedded-schedule");
     embeddedSchedule.onload = function() {

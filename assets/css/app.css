@@ -236,8 +236,75 @@ body {
 }
 
 #embedded-schedule {
-    width: 100vw;
-    border: 0;
+    overflow-y: auto;
+    width: calc(100vw - 40px);
+    max-width: 1500px;
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+    #embedded-schedule {
+        width: 100vw;
+        margin-bottom: 0;
+    }
+}
+
+#embedded-schedule table {
+    width: 100%;
+}
+
+/* ============================================================ */
+/* Schedule Table CSS */
+/* ============================================================ */
+
+#embedded-schedule * {
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: "Designosaur";
+    font-size: 9pt;
+}
+
+#embedded-schedule .nodecBlack {
+    color: #000000;
+}
+
+#embedded-schedule .nodecWhite {
+    color: #FFFFFF;
+}
+
+#embedded-schedule td {
+    padding: 10px;
+    white-space: nowrap;
+}
+
+#embedded-schedule table,
+#embedded-schedule tr,
+#embedded-schedule td {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+#embedded-schedule .mathema p,
+#embedded-schedule #mathema {
+    display: none;
+}
+
+#embedded-schedule .nodecBlack,
+#embedded-schedule .nodecWhite {
+  max-height: 20px;
+}
+
+#embedded-schedule #nodecBlack,
+#embedded-schedule #nodecWhite {
+  height: 10px;
+}
+
+#embedded-schedule p {
+  margin: 0;
+  padding: 0;
+  margin-top: 5px;
 }
 
 /* ============================================================ */

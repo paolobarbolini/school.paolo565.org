@@ -29,16 +29,14 @@ window.urlPath = function(url) {
     return new URL(url).pathname;
 }
 
-window.parseHtml = function(html) {
+window.parseHtml = async function(html) {
     const newHTMLDocument = document.implementation.createHTMLDocument("preview");
     const element = newHTMLDocument.createElement("div");
     element.innerHTML = html;
 
-    const scripts = element.getElementsByTagName("script");
-    let i = scripts.length;
-    while (i--) {
-        scripts[i].parentNode.removeChild(scripts[i]);
-    }
+    await qee(element, "script", script => {
+        script.parentElement.removeChild(script);
+    });
 
     return element;
 }
@@ -73,6 +71,10 @@ window.fetchCors = async function(url) {
 }
 
 window.openPage = function(query) {
+    if(query == currentlyOpenPage) {
+        return;
+    }
+
     q(query).classList.remove("hidden");
     q(currentlyOpenPage).classList.add("hidden");
     currentlyOpenPage = query;

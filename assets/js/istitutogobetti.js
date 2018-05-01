@@ -13,7 +13,7 @@ const getArticlePageLink = async function(allowCache = true) {
     // Request the home page
     const homePageResponse = await fetchCors(schoolUrl);
     const homePageText = await homePageResponse.text();
-    const homeBody = parseHtml(homePageText);
+    const homeBody = await parseHtml(homePageText);
 
     let partialArticlePageLink;
     await qee(homeBody, "#jsn-pleft a", homePageLink => {
@@ -46,7 +46,7 @@ const getSchedulePageLink = async function(articlePageLink, allowCache = true) {
 
     const articlePageResponse = await fetchCors(articlePageLink);
     const articlePageText = await articlePageResponse.text();
-    const articlePageBody = parseHtml(articlePageText);
+    const articlePageBody = await parseHtml(articlePageText);
 
     let schedulePageLink;
     await qee(articlePageBody, "#jsn-mainbody a", articleLink => {
@@ -82,11 +82,11 @@ const getScheduleItems = async function(schedulePageLink, allowCache = true) {
     // Request the schedule list
     const schedulePageResponse = await fetchCors(schedulePageLink);
     const schedulePageText = await schedulePageResponse.text();
-    const schedulePageBody = parseHtml(schedulePageText);
+    const schedulePageBody = await parseHtml(schedulePageText);
 
     const scheduleItems = [];
 
-    await qee(schedulePageBody, "a", (schedulePage, index, array) => {
+    await qee(schedulePageBody, "a", schedulePage => {
         const schedulePageHref = schedulePage.getAttribute("href");  
         const schedulePageAbsUrl = joinUrls(schedulePageLink, schedulePageHref);
 
@@ -131,21 +131,46 @@ const generateScheduleItem = function(item) {
     q(item["list"]).appendChild(liElement);
 }
 
-const updateScheduleIframe = function(html) {
-    const iframe = q("#embedded-schedule");
-    iframe.contentWindow.document.open("text/html", "replace");
-    iframe.contentWindow.document.write(html);
-    iframe.contentWindow.document.close();
-}
+const allowedEmbeddedTags = [
+    "table",
+    "tbody",
+    "tr",
+    "td",
+    "p",
+    "a",
+];
 
-const partiallyGenerateScheduleItem = function(html) {
-    const body = parseHtml(html);
-    body.querySelector("style").innerHTML = scheduleCss;
+const buildEmbeddedSchedule = async function(html) {
+    const body = await parseHtml(html);
+    const schedule = body.querySelectorAll("center")[1];
 
-    const div = document.createElement("div");
-    div.appendChild(body.cloneNode(true));
+    await qee(schedule, "*", element => {
+        const name = element.tagName.toLowerCase();
+        if(allowedEmbeddedTags.indexOf(name) == -1) {
+            element.parentElement.removeChild(element);
+        }
+    });
 
-    updateScheduleIframe(div.innerHTML);
+    await qee(schedule, "table, tr", element => {
+        while(element.attributes.length > 0) {
+            const name = element.attributes[0].name;
+            element.removeAttribute(name);
+        }
+    });
+
+    await qee(schedule, "a", element => {
+        const fullUrl = element.getAttribute("href");
+        if(!fullUrl.startsWith("../") || !fullUrl.endsWith(".html")) {
+            alert("Skipping: " + fullUrl);
+            return;
+        }
+        const url = fullUrl.substring(2, fullUrl.length - 5);
+        const hashUrl = "#" + url.substring(0, url.lastIndexOf("/")).toLowerCase() + url.substring(url.lastIndexOf("/"));
+        element.href = hashUrl;
+    });
+
+    const scheduleEl = q("#embedded-schedule");
+    scheduleEl.innerHTML = schedule.innerHTML;
 }
 
 const displayScheduleItem = async function(name, type) {
@@ -156,7 +181,9 @@ const displayScheduleItem = async function(name, type) {
         return;
     }
 
-    updateScheduleIframe("");
+    const schedule = q("#embedded-schedule");
+    schedule.innerHTML = "";
+
     q("#school-schedule-title").innerText = name;
 
     openPage("#school-schedule");
@@ -164,12 +191,12 @@ const displayScheduleItem = async function(name, type) {
     // Load the table from the cache
     const cachedHtml = localStorage.getItem("scheduleitem-" + name + "-" + type);
     if(cachedHtml) {
-        partiallyGenerateScheduleItem(cachedHtml);
+        buildEmbeddedSchedule(cachedHtml);
     }
 
     // Load from the network and update the existing table if it's already there.
     const response = await fetchCors(selectedScheduleInfo.dataset.url);
     const text = await response.text();
     localStorage.setItem("scheduleitem-" + name + "-" + type, text);
-    partiallyGenerateScheduleItem(text);
+    buildEmbeddedSchedule(text);
 }
