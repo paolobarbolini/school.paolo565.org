@@ -1,0 +1,17 @@
+{
+  "name": "school.paolo565.org",
+  "version": "1.0.0",
+  "main": "assets/js/app.js",
+  "private": true,
+  "scripts": {
+    "prod": "build.sh"
+  },
+  "keywords": [],
+  "author": "Paolo Barbolini",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "crass": "^0.12.3",
+    "uglify-es": "^3.3.9"
+  }
+}
