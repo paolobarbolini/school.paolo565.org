@@ -3,6 +3,11 @@ _A progressive web app which improves the interaction with my school's school ho
 
 Try it here: [school.paolo565.org](https://school.paolo565.org).
 
-The data is loaded client side from my school's website via the service [CORS Anywhere](https://cors-anywhere.herokuapp.com)
+The data is loaded client side from my school's website
+via the service [CORS Anywhere](https://cors-anywhere.herokuapp.com)
 
-App icon made by [Freepik](https://www.freepik.com) from [Flaticon](https://www.flaticon.com) licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+A smaller version of the website can be built by running ``npm install``
+to install npm packages and then building it with ``./build.sh``
+
+App icon made by [Freepik](https://www.freepik.com) from
+[Flaticon](https://www.flaticon.com) licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
