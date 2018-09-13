@@ -103,7 +103,7 @@ const loadSchedules = async function(firstLoad = false) {
     }
 }
 
-window.onload = function() {
+window.addEventListener('load', function() {
 
     /* ============================================================ */
     /* Check browser compatibility */
@@ -118,15 +118,15 @@ window.onload = function() {
     /* ============================================================ */
 
     const embeddedSchedule = q("#embedded-schedule");
-    embeddedSchedule.onload = function() {
+    embeddedSchedule.addEventListener('load', function() {
         embeddedSchedule.style.height = embeddedSchedule.contentWindow.document.body.offsetHeight + 20 + "px";
-    };
+    });
 
     /* ============================================================ */
     /* Page changer */
     /* ============================================================ */
 
-    window.onhashchange = loadFromHash;
+    window.addEventListener("hashchange", loadFromHash); 
 
     /* ============================================================ */
     /* Search */
@@ -134,7 +134,7 @@ window.onload = function() {
 
     const searchBox = q("#search-box");
     searchBox.value = "";
-    searchBox.oninput = filterColumns;
+    searchBox.addEventListener("input", filterColumns);
 
     /* ============================================================ */
     /* Service Worker */
@@ -157,4 +157,4 @@ window.onload = function() {
         setLoadingStatus("Impossibile caricare la lista degli orari.");
         console.log(err);
     }
-};
+});
