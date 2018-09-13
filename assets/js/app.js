@@ -117,7 +117,7 @@ window.onload = function() {
     /* Iframe resizer */
     /* ============================================================ */
 
-    const embeddedSchedule = document.getElementById("embedded-schedule");
+    const embeddedSchedule = q("#embedded-schedule");
     embeddedSchedule.onload = function() {
         embeddedSchedule.style.height = embeddedSchedule.contentWindow.document.body.offsetHeight + 20 + "px";
     };
@@ -149,7 +149,6 @@ window.onload = function() {
     /* ============================================================ */
 
     setLoadingStatus("Caricamento in corso...");
-
     openPage("#loading");
 
     try {
