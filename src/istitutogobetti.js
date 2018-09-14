@@ -12,6 +12,12 @@ const allowedEmbeddedTags = [
 ];
 
 export default {
+  isArticlePageButton(text) {
+    return text.includes('Orario') &&
+           text.includes('lezioni') &&
+           !text.includes('sostegno');
+  },
+
   async getArticlePageLink(allowCache = true) {
     if (allowCache) {
       const articlePageLink = localStorage.getItem('articlepage-url');
@@ -30,7 +36,7 @@ export default {
     for (const homeUrl of homeUrls) {
       const linkText = homeUrl.innerText;
 
-      if (!linkText.includes('Orario') || !linkText.includes('lezioni')) {
+      if (!this.isArticlePageButton(linkText)) {
         continue;
       }
 
@@ -48,7 +54,8 @@ export default {
   },
 
   async isSchedulePageUrl(url) {
-    return url.startsWith('/web_orario') || url.startsWith('/weborario');
+    const u = url.toLowerCase();
+    return u.startsWith('/web_orario') || u.startsWith('/weborario');
   },
 
   async getSchedulePageLink(articlePageLink, allowCache = true) {
@@ -68,9 +75,8 @@ export default {
     for (const bodyUrl of bodyUrls) {
       const articleHref = bodyUrl.getAttribute('href');
       const articleAbsUrl = Utils.joinUrls(articlePageLink, articleHref);
-      const cleanUrl = Utils.urlPath(articleAbsUrl).toLowerCase();
 
-      if (!this.isSchedulePageUrl(cleanUrl)) {
+      if (!this.isSchedulePageUrl(articleAbsUrl)) {
         continue;
       }
 

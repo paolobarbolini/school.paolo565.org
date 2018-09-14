@@ -10,10 +10,6 @@ export default {
     return new URL(url, baseUrl).href;
   },
 
-  urlPath(url) {
-    return new URL(url).pathname;
-  },
-
   async parseHtml(html) {
     const doc = document.implementation.createHTMLDocument('preview');
     const element = doc.createElement('div');
