@@ -15,7 +15,7 @@ Running the dev server:
 
     $ npm run dev
 
-Building the website (you will find the files in the dist folder):
+Building the website (you will find the files in the ``public`` folder):
 
     $ npm run prod
 
