@@ -1,0 +1,20 @@
+image: node:8
+
+test:
+  before_script:
+  - npm install
+  script:
+  - npm run lint
+  except:
+  - master
+
+pages:
+  before_script:
+  - npm install
+  script:
+  - npm run prod
+  artifacts:
+    paths:
+    - public
+  only:
+  - master

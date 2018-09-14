@@ -1,136 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Istituto Gobetti App</title>
+  <title>Istituto Gobetti App</title>
 
-    <link rel="manifest" href="/manifest.json">
-
-    <link rel="stylesheet" href="/assets/css/app.css">
-
-    <script src="/assets/js/utils.js"></script>
-    <script src="/assets/js/istitutogobetti.js"></script>
-    <script src="/assets/js/app.js"></script>
+  <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-    <div class="page" id="unsupported-device">
-        <div class="page-contents centered-page-contents">
-            <p>Questo dispositivo non è supportato.</p>
+  <div class="page" id="unsupported-device">
+    <div class="page-contents centered-page-contents">
+      <p>Questo dispositivo non è supportato.</p>
 
-            <h2>Cosa posso fare?</h2>
-            <ul>
-                <li>Verifica di stare usando uno dei seguenti browser: Google Chrome, Mozilla Firefox, Safari o Edge.</li>
-                <li>Controlla che il javascript sia abilitato.</li>
+      <h2>Cosa posso fare?</h2>
+      <ul>
+        <li>Verifica di stare usando uno dei seguenti browser: Google Chrome, Mozilla Firefox, Safari o Edge.</li>
+        <li>Controlla che il javascript sia abilitato.</li>
+      </ul>
+
+      <h2>Nessuna di queste opzioni funziona?</h2>
+      <p>Contattami a <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a></p>
+      <p>Nel frattempo puoi controllare gli orari direttamente su <a href="http://www.istitutogobetti.it">www.istitutogobetti.it</a></p>
+    </div>
+  </div>
+
+  <div class="page hidden" id="loading">
+    <div class="loading">
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
+      <div class="loading-bar"></div>
+    </div>
+
+    <div id="loading-status"></div>
+  </div>
+
+  <div class="page hidden" id="school-schedules">
+    <div class="top-bar">
+      <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
+
+      <p><a href="#/about">Maggiori Informazioni</a></p>
+    </div>
+
+    <div class="page-contents">
+      <input id="search-box" placeholder="Cerca..." type="text">
+
+      <div class="list-columns-wrapper">
+        <div class="list-columns">
+          <div class="list-column">
+            <h3 class="title">Classi</h3>
+
+            <ul id="classes">
             </ul>
+          </div>
 
-            <h2>Nessuna di queste opzioni funziona?</h2>
-            <p>Contattami a <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a></p>
-            <p>Nel frattempo puoi controllare gli orari direttamente su <a href="http://www.istitutogobetti.it">www.istitutogobetti.it</a></p>
+          <div class="list-column">
+            <h3 class="title">Docenti</h3>
+
+            <ul id="teachers">
+            </ul>
+          </div>
+
+          <div class="list-column">
+            <h3 class="title">Aule</h3>
+
+            <ul id="classrooms">
+            </ul>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page hidden" id="school-schedule">
+    <div class="top-bar">
+      <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
+
+      <p><a href="#/">Torna Indietro</a></p>
     </div>
 
-    <div class="page hidden" id="loading">
-        <div class="loading">
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-            <div class="loading-bar"></div>
-        </div>
+    <div class="page-contents">
+      <h2 class="title" id="school-schedule-title">Orario</h2>
 
-        <div id="loading-status"></div>
+      <div id="embedded-schedule">
+      </div>
+    </div>
+  </div>
+
+  <div class="page hidden" id="about">
+    <div class="top-bar">
+      <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
+
+      <p><a href="#/">Torna Indietro</a></p>
     </div>
 
-    <div class="page hidden" id="school-schedules">
-        <div class="top-bar">
-            <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
+    <div class="page-contents">
+      <p>Questo sito è stato creato per velocizzare l'accesso agli orari scolastici su <a href="http://www.istitutogobetti.it">www.istitutogobetti.it</a></p>
+      <p>Preferisci utilizzare un bot di Telegram? Aggiungi <a href="https://t.me/IstitutoGobettiBot">@IstitutoGobettiBot</a></p>
 
-            <p><a href="#/about">Maggiori Informazioni</a></p>
-        </div>
+      <hr>
 
-        <div class="page-contents">
-            <input id="search-box" placeholder="Cerca..." type="text">
+      <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
+      <p>Hai trovato un problema? Contattami <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a></p>
 
-            <div class="list-columns-wrapper">
-                <div class="list-columns">
-                    <div class="list-column">
-                        <h3 class="title">Classi</h3>
+      <hr>
 
-                        <ul id="classes">
-                        </ul>
-                    </div>
+      <h2>Guida All'Installazione</h2>
+      <ol>
+        <li>Aprire il browser (si consiglia l'utilizzo di: Google Chrome, Firefox, Edge o Safari)</li>
+        <li>Digitare <a href="https://school.paolo565.org">school.paolo565.org</a> e premere il tasto invio</li>
+        <li>Attendere il caricamento degli orari</li>
+        <li>Installare l'app (<b>SOLO per dispositivi Android</b>): Premere sull'icona in alto a destra della pagina (quella composta da 3 puntini) e selezionare <i>Aggiungi a schermata home</i></li>
+      </ol>
 
-                    <div class="list-column">
-                        <h3 class="title">Docenti</h3>
+      <hr>
 
-                        <ul id="teachers">
-                        </ul>
-                    </div>
+      <h2>Dietro le Quinte</h2>
 
-                    <div class="list-column">
-                        <h3 class="title">Aule</h3>
+      <p>Dati caricati tramite il servizio <a href="https://cors-anywhere.herokuapp.com">CORS Anywhere</a> e <a href="https://crossorigin.me">CORS Proxy</a></p>
+      <p>Hosting: <a href="https://m.do.co/c/5e302bbc5209">DigitalOcean (referral link)</a></p>
+      <p>Codice sorgente rilasciato su <a href="https://github.com/paolobarbolini/school.paolo565.org">GitHub</a> sotto <a href="https://github.com/paolobarbolini/school.paolo565.org/blob/master/LICENSE">licenza MIT</a></p>
 
-                        <ul id="classrooms">
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <p>Icona fornita da <a href="https://www.freepik.com" title="Freepik">Freepik</a> tramite <a href="https://www.flaticon.com/" title="Flaticon">flaticon.com</a> sotto licenza <a href="https://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+      <!-- https://www.flaticon.com/free-icon/time-zone_806237#term=clock&page=2&position=35 -->
     </div>
-
-    <div class="page hidden" id="school-schedule">
-        <div class="top-bar">
-            <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
-
-            <p><a href="#/">Torna Indietro</a></p>
-        </div>
-
-        <div class="page-contents">
-            <h2 class="title" id="school-schedule-title">Orario</h2>
-
-            <div id="embedded-schedule">
-            </div>
-        </div>
-    </div>
-
-    <div class="page hidden" id="about">
-        <div class="top-bar">
-            <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
-
-            <p><a href="#/">Torna Indietro</a></p>
-        </div>
-
-        <div class="page-contents">
-            <p>Questo sito è stato creato per velocizzare l'accesso agli orari scolastici su <a href="http://www.istitutogobetti.it">www.istitutogobetti.it</a></p>
-            <p>Preferisci utilizzare un bot di Telegram? Aggiungi <a href="https://t.me/IstitutoGobettiBot">@IstitutoGobettiBot</a></p>
-
-            <hr>
-
-            <p>Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
-            <p>Hai trovato un problema? Contattami <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a></p>
-
-            <hr>
-
-            <h2>Guida All'Installazione</h2>
-            <ol>
-                <li>Aprire il browser (si consiglia l'utilizzo di: Google Chrome, Firefox, Edge o Safari)</li>
-                <li>Digitare <a href="https://school.paolo565.org">school.paolo565.org</a> e premere il tasto invio</li>
-                <li>Attendere il caricamento degli orari</li>
-                <li>Installare l'app (<b>SOLO per dispositivi Android</b>): Premere sull'icona in alto a destra della pagina (quella composta da 3 puntini) e selezionare <i>Aggiungi a schermata home</i></li>
-            </ol>
-
-            <hr>
-
-            <h2>Dietro le Quinte</h2>
-
-            <p>Dati caricati tramite il servizio <a href="https://cors-anywhere.herokuapp.com">CORS Anywhere</a> e <a href="https://crossorigin.me">CORS Proxy</a></p>
-            <p>Hosting: <a href="https://m.do.co/c/5e302bbc5209">DigitalOcean (referral link)</a></p>
-            <p>Codice sorgente rilasciato su <a href="https://github.com/paolobarbolini/school.paolo565.org">GitHub</a> sotto <a href="https://github.com/paolobarbolini/school.paolo565.org/blob/master/LICENSE">licenza MIT</a></p>
-
-            <p>Icona fornita da <a href="https://www.freepik.com" title="Freepik">Freepik</a> tramite <a href="https://www.flaticon.com/" title="Flaticon">flaticon.com</a> sotto licenza <a href="https://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
-            <!-- https://www.flaticon.com/free-icon/time-zone_806237#term=clock&page=2&position=35 -->
-        </div>
-    </div>
+  </div>
 </body>
 </html>

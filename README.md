@@ -1,13 +1,31 @@
-# school.paolo565.org [![MIT License](https://img.shields.io/github/license/paolobarbolini/school.paolo565.org.svg?maxAge=2592000)](LICENSE)
+# school.paolo565.org [![MIT License][licensebardge]](LICENSE)
 _A progressive web app which improves the interaction with my school's school hours page_
 
-Try it here: [school.paolo565.org](https://school.paolo565.org).
+Try it here: [school.paolo565.org][website].
 
 The data is loaded client side from my school's website
-via the service [CORS Anywhere](https://cors-anywhere.herokuapp.com)
+via the service [CORS Anywhere][cors]
 
-A smaller version of the website can be built by running ``npm install``
-to install npm packages and then building it with ``./build.sh``
+## Building it
+To run the webpack build first install all node dependencies with
 
-App icon made by [Freepik](https://www.freepik.com) from
-[Flaticon](https://www.flaticon.com) licensed by [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/)
+    $ npm install
+
+Running the dev server:
+
+    $ npm run dev
+
+Building the website (you will find the files in the dist folder):
+
+    $ npm run prod
+
+## Icon License
+App icon made by [Freepik][freepik] from
+[Flaticon][flaticon] licensed by [CC 3.0 BY][cc]
+
+[licensebardge]: https://img.shields.io/github/license/paolobarbolini/school.paolo565.org.svg?maxAge=2592000
+[website]: https://school.paolo565.org
+[cors]: https://cors-anywhere.herokuapp.com
+[freepik]: https://www.freepik.com
+[flaticon]: https://www.flaticon.com
+[cc]: http://creativecommons.org/licenses/by/3.0/
