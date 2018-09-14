@@ -1,4 +1,4 @@
-# school.paolo565.org [![MIT License][licensebardge]](LICENSE)
+# school.paolo565.org [![MIT License][licensebardge]](LICENSE) [![Build Status][travisbadge]][travis]
 _A progressive web app which improves the interaction with my school's school hours page_
 
 Try it here: [school.paolo565.org][website].
@@ -29,3 +29,5 @@ App icon made by [Freepik][freepik] from
 [freepik]: https://www.freepik.com
 [flaticon]: https://www.flaticon.com
 [cc]: http://creativecommons.org/licenses/by/3.0/
+[travis]: https://travis-ci.org/paolobarbolini/school.paolo565.org
+[travisbadge]: https://travis-ci.org/paolobarbolini/school.paolo565.org.svg?branch=master
