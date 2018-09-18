@@ -55,7 +55,7 @@ function filterColumns() {
   }
 }
 
-function loadFromHash() {
+async function loadFromHash() {
   const hash = window.location.hash.substring(1);
   const splitted = hash.split('/');
   const type = splitted[1];
@@ -68,7 +68,20 @@ function loadFromHash() {
   } else if (hash.startsWith('/about')) {
     Utils.openPage('#about');
   } else {
+    const before = Utils.currentlyOpenPage;
     Utils.openPage('#school-schedules');
+
+    if (before !== '#school-schedule') {
+      return;
+    }
+
+    const articlePage = await Gobetti.articlePageUrl();
+    const articleUrl = articlePage.article;
+    const schedulePage = await Gobetti.schedulePageUrl(articleUrl);
+    const scheduleUrl = schedulePage.schedule;
+    const scheduleItems = await Gobetti.schedulePageItems(scheduleUrl);
+    const lastUpdateElement = document.querySelector('#schedules-last-update');
+    Utils.dateRangeUpdater(lastUpdateElement, scheduleItems.date);
   }
 }
 
@@ -94,6 +107,8 @@ async function loadSchedules(cache = false) {
     item.parentElement.removeChild(item);
   }
 
+  const lastUpdateElement = document.querySelector('#schedules-last-update');
+  Utils.dateRangeUpdater(lastUpdateElement, scheduleItems.date);
   for (const item of scheduleItems.items) {
     Gobetti.generateScheduleItem(item);
   }

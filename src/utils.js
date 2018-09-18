@@ -3,9 +3,70 @@ const corsProxies = [
   'https://crossorigin.me/',
 ];
 
-let currentlyOpenPage = '#unsupported-device';
-
 export default {
+  timeInterval: null,
+  currentlyOpenPage: '#unsupported-device',
+
+  msToStr(ms) {
+    // From https://stackoverflow.com/a/8212878
+
+    function formatNumber(n, uom) {
+      if (n == 1) {
+        const p = uom.substr(0, uom.length - 1);
+
+        if (uom.endsWith('e')) {
+          uom = p + 'a'; // a -> e
+        } else {
+          uom = p + 'o'; // e -> i
+        }
+      }
+
+      return n + ' ' + uom + ' fa';
+    }
+
+    let temp = Math.floor(ms / 1000);
+    const years = Math.floor(temp / 31536000);
+    if (years) {
+      return formatNumber(years, 'anni');
+    }
+
+    const days = Math.floor((temp %= 31536000) / 86400);
+    if (days) {
+      return formatNumber(days, 'giorni');
+    }
+    const hours = Math.floor((temp %= 86400) / 3600);
+    if (hours) {
+      return formatNumber(hours, 'ore');
+    }
+    const minutes = Math.floor((temp %= 3600) / 60);
+    if (minutes) {
+      return formatNumber(minutes, 'minuti');
+    }
+    const seconds = temp % 60;
+    if (seconds) {
+      return formatNumber(seconds, 'secondi');
+    }
+    return 'ora';
+  },
+
+  dateToRangeStr(date) {
+    const now = new Date().getTime();
+    const then = date.getTime();
+
+    return this.msToStr(now - then);
+  },
+
+  dateRangeUpdater(element, date) {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+
+    element.title = date.toLocaleString();
+    this.timeInterval = setInterval(() => {
+      element.innerText = this.dateToRangeStr(date);
+    }, 1000);
+  },
+
   joinUrls(baseUrl, url) {
     return new URL(url, baseUrl).href;
   },
@@ -45,13 +106,13 @@ export default {
   },
 
   openPage(query) {
-    if (query === currentlyOpenPage) {
+    if (query === this.currentlyOpenPage) {
       return;
     }
 
     document.querySelector(query).classList.remove('hidden');
-    document.querySelector(currentlyOpenPage).classList.add('hidden');
-    currentlyOpenPage = query;
+    document.querySelector(this.currentlyOpenPage).classList.add('hidden');
+    this.currentlyOpenPage = query;
   },
 
   save(key, value) {

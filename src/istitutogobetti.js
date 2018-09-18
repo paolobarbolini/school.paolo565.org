@@ -157,8 +157,11 @@ export default {
     };
   },
 
-  async buildEmbeddedSchedule(html) {
-    const body = await Utils.parseHtml(html);
+  async buildEmbeddedSchedule(item) {
+    const lastUpdateElement = document.querySelector('#schedule-last-update');
+    Utils.dateRangeUpdater(lastUpdateElement, item.date);
+
+    const body = await Utils.parseHtml(item.html);
     const tableTrs = body.querySelectorAll('center:nth-of-type(2) table, tr');
     for (const tableTr of tableTrs) {
       for (const attr of tableTr.attributes) {
@@ -201,13 +204,13 @@ export default {
 
     const url = selectedScheduleInfo.dataset.url;
     const item = await this.scheduleItem(url, name, type);
-    this.buildEmbeddedSchedule(item.html);
+    this.buildEmbeddedSchedule(item);
 
     if (!item.cached) {
       return;
     }
 
-    const freshItem = await this.scheduleItem(url, name, type);
-    this.buildEmbeddedSchedule(freshItem.html);
+    const freshItem = await this.scheduleItem(url, name, type, false);
+    this.buildEmbeddedSchedule(freshItem);
   },
 };
