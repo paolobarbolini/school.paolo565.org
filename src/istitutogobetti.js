@@ -2,6 +2,17 @@ import Utils from './utils';
 
 export default {
   schoolUrl: 'http://www.istitutogobetti.it',
+  scheduleLoadingMessages: [
+    'Caricamento in corso...',
+    'Ci siamo quasi...',
+    'Ora ci sta davvero mettendo tanto tempo...',
+    'Stiamo ancora aspettando...',
+    'C\'è nessuno?',
+    'Hai davvero molta pazienza!',
+    'Stai davvero leggendo questo messaggio?',
+    'Forse qualcosa è andato storto?',
+  ],
+  scheduleLoadingTimer: null,
 
   isArticlePageButton(text) {
     return text.includes('Orario') &&
@@ -151,6 +162,42 @@ export default {
     };
   },
 
+  async scheduleItemAndRender(url, name, type, cache = true) {
+    const loadingElement = document.querySelector('#schedule-loading');
+    let loadingIndex = 0;
+
+    const loader = () => {
+      if (loadingIndex >= this.scheduleLoadingMessages.length) {
+        clearInterval(this.scheduleLoadingTimer);
+        this.scheduleLoadingTimer = null;
+        return;
+      }
+
+      loadingElement.innerText = this.scheduleLoadingMessages[loadingIndex];
+
+      loadingIndex++;
+    };
+
+    if (this.scheduleLoadingTimer) {
+      clearInterval(this.scheduleLoadingTimer);
+      this.scheduleLoadingTimer = null;
+    }
+
+    this.scheduleLoadingTimer = setInterval(loader, 2500);
+    loader();
+
+    const item = await this.scheduleItem(url, name, type, cache);
+    await this.buildEmbeddedSchedule(item);
+
+    if (this.scheduleLoadingTimer) {
+      clearInterval(this.scheduleLoadingTimer);
+      this.scheduleLoadingTimer = null;
+    }
+    loadingElement.innerText = '';
+
+    return item;
+  },
+
   async buildEmbeddedSchedule(item) {
     const lastUpdateElement = document.querySelector('#schedule-last-update');
     Utils.dateRangeUpdater(lastUpdateElement, item.date);
@@ -197,14 +244,11 @@ export default {
     Utils.openPage('#school-schedule');
 
     const url = selectedScheduleInfo.dataset.url;
-    const item = await this.scheduleItem(url, name, type);
-    this.buildEmbeddedSchedule(item);
-
+    const item = await this.scheduleItemAndRender(url, name, type);
     if (!item.cached) {
       return;
     }
 
-    const freshItem = await this.scheduleItem(url, name, type, false);
-    this.buildEmbeddedSchedule(freshItem);
+    this.scheduleItemAndRender(url, name, type, false);
   },
 };
