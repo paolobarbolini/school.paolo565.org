@@ -88,21 +88,21 @@ export default {
     return str.replace(/[-[]\/{}()\*\+\?\.\\\^\$\|]/g, '\\$&');
   },
 
-  async fetchCors(url, retries = 0) {
-    if (retries >= corsProxies.length) {
-      throw new Error(`No CORS proxy could fetch: ${url}`);
+  fetchCors(url) {
+    return Promise.race(
+        corsProxies.map((proxy) => {
+          return this.fetchOk(proxy + url);
+        })
+    );
+  },
+
+  async fetchOk(url) {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      throw new Error(`Invalid response: ${resp.status}`);
     }
 
-    try {
-      const response = await fetch(corsProxies[retries] + url);
-      if (!response.ok) {
-        throw new Error(`Invalid response: ${response.status}`);
-      }
-
-      return response;
-    } catch (err) {
-      return this.fetchCors(url, retries + 1);
-    }
+    return resp;
   },
 
   openPage(query) {
