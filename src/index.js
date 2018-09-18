@@ -73,28 +73,28 @@ function loadFromHash() {
 }
 
 async function loadSchedules(cache = false) {
-  const articlePage = await Gobetti.getArticlePageLink(cache);
+  const articlePage = await Gobetti.articlePageUrl(cache);
   if (!articlePage) {
     throw new Error('Can\'t find the article pointing to orario facile');
   }
   setLoadingStatus('Ci siamo quasi...');
 
-  const schedulePage = await Gobetti.getSchedulePageLink(articlePage, cache);
+  const articleUrl = articlePage.article;
+  const schedulePage = await Gobetti.schedulePageUrl(articleUrl, cache);
   if (!schedulePage) {
     throw new Error('Can\'t find the article pointing to orario facile');
   }
   setLoadingStatus('Ancora qualche secondo...');
 
-  const scheduleItems = await Gobetti.getScheduleItems(schedulePage, cache);
+  const scheduleUrl = schedulePage.schedule;
+  const scheduleItems = await Gobetti.schedulePageItems(scheduleUrl, cache);
 
-  if (!cache) {
-    const items = document.querySelectorAll('.list-column li');
-    for (const item of items) {
-      item.parentElement.removeChild(item);
-    }
+  const items = document.querySelectorAll('.list-column li');
+  for (const item of items) {
+    item.parentElement.removeChild(item);
   }
 
-  for (const item of scheduleItems) {
+  for (const item of scheduleItems.items) {
     Gobetti.generateScheduleItem(item);
   }
 

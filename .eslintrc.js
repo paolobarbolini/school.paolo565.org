@@ -13,6 +13,9 @@ module.exports = {
         es6: true,
     },
     rules: {
-        'require-jsdoc': 0
+        'require-jsdoc': 0,
+        'no-empty': [
+            'error', { allowEmptyCatch: true }
+        ]
     }
 };

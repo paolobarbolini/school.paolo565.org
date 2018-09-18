@@ -1,33 +1,22 @@
 import Utils from './utils';
 
-const schoolUrl = 'http://www.istitutogobetti.it';
-
-const allowedEmbeddedTags = [
-  'table',
-  'tbody',
-  'tr',
-  'td',
-  'p',
-  'a',
-];
-
 export default {
+  schoolUrl: 'http://www.istitutogobetti.it',
+
   isArticlePageButton(text) {
     return text.includes('Orario') &&
            text.includes('lezioni') &&
            !text.includes('sostegno');
   },
 
-  async getArticlePageLink(allowCache = true) {
-    if (allowCache) {
-      const articlePageLink = localStorage.getItem('articlepage-url');
-      if (articlePageLink) {
-        return articlePageLink;
-      }
-    }
+  async articlePageUrl(cache = true) {
+    return Utils.load('articlepage-url-v2', async () => {
+      return await this.findArticlePageUrl();
+    }, cache);
+  },
 
-    // Request the home page
-    const homePageResponse = await Utils.fetchCors(schoolUrl);
+  async findArticlePageUrl() {
+    const homePageResponse = await Utils.fetchCors(this.schoolUrl);
     const homePageText = await homePageResponse.text();
     const homeBody = await Utils.parseHtml(homePageText);
     const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
@@ -48,9 +37,10 @@ export default {
     }
 
     // Request the schedule article
-    const articlePageLink = Utils.joinUrls(schoolUrl, partialArticlePageLink);
-    localStorage.setItem('articlepage-url', articlePageLink);
-    return articlePageLink;
+    const articlePage = Utils.joinUrls(this.schoolUrl, partialArticlePageLink);
+    return {
+      article: articlePage,
+    };
   },
 
   async isSchedulePageUrl(url) {
@@ -58,14 +48,13 @@ export default {
     return u.startsWith('/web_orario') || u.startsWith('/weborario');
   },
 
-  async getSchedulePageLink(articlePageLink, allowCache = true) {
-    if (allowCache) {
-      const schedulePageLink = localStorage.getItem('schedulepage-url');
-      if (schedulePageLink) {
-        return schedulePageLink;
-      }
-    }
+  async schedulePageUrl(articlePageLink, cache = true) {
+    return Utils.load('schedulepage-url-v2', async () => {
+      return this.findSchedulePageUrl(articlePageLink);
+    }, cache);
+  },
 
+  async findSchedulePageUrl(articlePageLink) {
     const articlePageResponse = await Utils.fetchCors(articlePageLink);
     const articlePageText = await articlePageResponse.text();
     const articlePageBody = await Utils.parseHtml(articlePageText);
@@ -87,20 +76,18 @@ export default {
       throw new Error('Can\'t find the url pointing to the orario facile page');
     }
 
-    localStorage.setItem('schedulepage-url', schedulePageLink);
-    return schedulePageLink;
+    return {
+      schedule: schedulePageLink,
+    };
   },
 
-  async getScheduleItems(schedulePageLink, allowCache = true) {
-    // Try loading the schedule list from the cache
-    if (allowCache) {
-      const cachedScheduleItems = localStorage.getItem('schedule-items');
-      if (cachedScheduleItems) {
-        const scheduleItems = JSON.parse(cachedScheduleItems);
-        return scheduleItems;
-      }
-    }
+  async schedulePageItems(schedulePageLink, cache = true) {
+    return Utils.load('schedule-items-v2', async () => {
+      return this.findSchedulePageItems(schedulePageLink);
+    }, cache);
+  },
 
+  async findSchedulePageItems(schedulePageLink) {
     // Request the schedule list
     const schedulePageResponse = await Utils.fetchCors(schedulePageLink);
     const schedulePageText = await schedulePageResponse.text();
@@ -136,8 +123,9 @@ export default {
       });
     }
 
-    localStorage.setItem('schedule-items', JSON.stringify(scheduleItems));
-    return scheduleItems;
+    return {
+      items: scheduleItems,
+    };
   },
 
   generateScheduleItem(item) {
@@ -155,17 +143,22 @@ export default {
     document.querySelector(item.list).appendChild(liElement);
   },
 
+  async scheduleItem(url, name, type, cache = true) {
+    return Utils.load(`scheduleitem-v2-${name}-${type}`, async () => {
+      return this.findScheduleItem(url);
+    }, cache);
+  },
+
+  async findScheduleItem(url) {
+    const response = await Utils.fetchCors(url);
+    const html = await response.text();
+    return {
+      html: html,
+    };
+  },
+
   async buildEmbeddedSchedule(html) {
     const body = await Utils.parseHtml(html);
-
-    const everything = body.querySelectorAll('center:nth-of-type(2) *');
-    for (const element of everything) {
-      const name = element.tagName.toLowerCase();
-      if (!allowedEmbeddedTags.includes(name)) {
-        element.parentElement.removeChild(element);
-      }
-    }
-
     const tableTrs = body.querySelectorAll('center:nth-of-type(2) table, tr');
     for (const tableTr of tableTrs) {
       for (const attr of tableTr.attributes) {
@@ -203,21 +196,18 @@ export default {
 
     const schedule = document.querySelector('#embedded-schedule');
     schedule.innerHTML = '';
-
     document.querySelector('#school-schedule-title').innerText = name;
-
     Utils.openPage('#school-schedule');
 
-    // Load the table from the cache
-    const cachedHtml = localStorage.getItem(`scheduleitem-${name}-${type}`);
-    if (cachedHtml) {
-      this.buildEmbeddedSchedule(cachedHtml);
+    const url = selectedScheduleInfo.dataset.url;
+    const item = await this.scheduleItem(url, name, type);
+    this.buildEmbeddedSchedule(item.html);
+
+    if (!item.cached) {
+      return;
     }
 
-    // Load from the network and update the existing table.
-    const response = await Utils.fetchCors(selectedScheduleInfo.dataset.url);
-    const text = await response.text();
-    localStorage.setItem(`scheduleitem-${name}-${type}`, text);
-    this.buildEmbeddedSchedule(text);
+    const freshItem = await this.scheduleItem(url, name, type);
+    this.buildEmbeddedSchedule(freshItem.html);
   },
 };
