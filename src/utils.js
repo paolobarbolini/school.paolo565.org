@@ -88,6 +88,15 @@ export default {
     return str.replace(/[-[]\/{}()\*\+\?\.\\\^\$\|]/g, '\\$&');
   },
 
+  async fetchOk(url) {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      throw new Error(`Invalid response: ${resp.status}`);
+    }
+
+    return resp;
+  },
+
   fetchCors(url) {
     return Promise.race(
         corsProxies.map((proxy) => {
@@ -96,13 +105,11 @@ export default {
     );
   },
 
-  async fetchOk(url) {
-    const resp = await fetch(url);
-    if (!resp.ok) {
-      throw new Error(`Invalid response: ${resp.status}`);
-    }
-
-    return resp;
+  async fetchCorsParseHtml(url) {
+    const resp = await this.fetchCors(url);
+    const html = await resp.text();
+    const parsedHtml = await this.parseHtml(html);
+    return parsedHtml;
   },
 
   openPage(query) {

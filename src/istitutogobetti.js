@@ -16,9 +16,7 @@ export default {
   },
 
   async findArticlePageUrl() {
-    const homePageResponse = await Utils.fetchCors(this.schoolUrl);
-    const homePageText = await homePageResponse.text();
-    const homeBody = await Utils.parseHtml(homePageText);
+    const homeBody = await Utils.fetchCorsParseHtml(this.schoolUrl);
     const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
 
     let partialArticlePageLink;
@@ -55,9 +53,7 @@ export default {
   },
 
   async findSchedulePageUrl(articlePageLink) {
-    const articlePageResponse = await Utils.fetchCors(articlePageLink);
-    const articlePageText = await articlePageResponse.text();
-    const articlePageBody = await Utils.parseHtml(articlePageText);
+    const articlePageBody = await Utils.fetchCorsParseHtml(articlePageLink);
     const bodyUrls = articlePageBody.querySelectorAll('#jsn-mainbody a');
 
     let schedulePageLink;
@@ -89,9 +85,7 @@ export default {
 
   async findSchedulePageItems(schedulePageLink) {
     // Request the schedule list
-    const schedulePageResponse = await Utils.fetchCors(schedulePageLink);
-    const schedulePageText = await schedulePageResponse.text();
-    const schedulePageBody = await Utils.parseHtml(schedulePageText);
+    const schedulePageBody = await Utils.fetchCorsParseHtml(schedulePageLink);
     const schedulePageUrls = schedulePageBody.querySelectorAll('a');
 
     const scheduleItems = [];
