@@ -97,8 +97,15 @@ export default {
     return resp;
   },
 
+  async promiseRaceSuccessfull(ps) {
+    // From https://stackoverflow.com/a/39941616
+
+    const invert = (p) => new Promise((res, rej) => p.then(rej, res));
+    return await invert(Promise.all(ps.map(invert)));
+  },
+
   fetchCors(url) {
-    return Promise.race(
+    return this.promiseRaceSuccessfull(
         corsProxies.map((proxy) => {
           return this.fetchOk(proxy + url);
         })
