@@ -185,8 +185,7 @@ body {
 }
 
 .list-column {
-  min-width: 300px;
-  max-width: 500px;
+  width: 240px;
   flex: 1;
 
   & ul {
