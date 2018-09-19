@@ -1,7 +1,7 @@
 import Utils from './utils';
 
 export default {
-  schoolUrl: 'http://www.istitutogobetti.it',
+  schoolUrl: 'http://www.istitutogobetti.it/',
   scheduleLoadingMessages: [
     'Caricamento in corso...',
     'Ci siamo quasi...',
