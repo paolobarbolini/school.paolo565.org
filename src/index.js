@@ -27,8 +27,8 @@ function filterColumns() {
       if (searchQuery === '') {
         visible = true;
         entry.classList.remove('hidden');
-        const link = entry.querySelector('a');
-        link.innerHTML = text;
+        const url = entry.querySelector('a');
+        url.innerHTML = text;
         continue;
       }
 
@@ -43,8 +43,8 @@ function filterColumns() {
 
       visible = true;
       entry.classList.remove('hidden');
-      const link = entry.querySelector('a');
-      link.innerHTML = newText;
+      const url = entry.querySelector('a');
+      url.innerHTML = newText;
     }
 
     if (visible) {

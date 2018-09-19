@@ -15,13 +15,13 @@ export default {
         const p = uom.substr(0, uom.length - 1);
 
         if (uom.endsWith('e')) {
-          uom = p + 'a'; // a -> e
+          uom = `${p}a`; // a -> e
         } else {
-          uom = p + 'o'; // e -> i
+          uom = `${p}o`; // e -> i
         }
       }
 
-      return n + ' ' + uom + ' fa';
+      return `${n} ${uom} fa`;
     }
 
     let temp = Math.floor(ms / 1000);
@@ -107,7 +107,7 @@ export default {
   fetchCors(url) {
     return this.promiseRaceSuccessfull(
         corsProxies.map((proxy) => {
-          return this.fetchOk(proxy + url);
+          return this.fetchOk(`${proxy}${url}`);
         })
     );
   },

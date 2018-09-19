@@ -30,7 +30,7 @@ export default {
     const homeBody = await Utils.fetchCorsParseHtml(this.schoolUrl);
     const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
 
-    let partialArticlePageLink;
+    let partialArticlePageUrl;
     for (const homeUrl of homeUrls) {
       const linkText = homeUrl.innerText;
 
@@ -38,15 +38,15 @@ export default {
         continue;
       }
 
-      partialArticlePageLink = homeUrl.getAttribute('href');
+      partialArticlePageUrl = homeUrl.getAttribute('href');
     }
 
-    if (!partialArticlePageLink) {
+    if (!partialArticlePageUrl) {
       return;
     }
 
     // Request the schedule article
-    const articlePage = Utils.joinUrls(this.schoolUrl, partialArticlePageLink);
+    const articlePage = Utils.joinUrls(this.schoolUrl, partialArticlePageUrl);
     return {
       article: articlePage,
     };
@@ -57,63 +57,63 @@ export default {
     return u.startsWith('/web_orario') || u.startsWith('/weborario');
   },
 
-  async schedulePageUrl(articlePageLink, cache = true) {
+  async schedulePageUrl(articlePageUrl, cache = true) {
     return Utils.load('schedulepage-url-v2', async () => {
-      return this.findSchedulePageUrl(articlePageLink);
+      return this.findSchedulePageUrl(articlePageUrl);
     }, cache);
   },
 
-  async findSchedulePageUrl(articlePageLink) {
-    const articlePageBody = await Utils.fetchCorsParseHtml(articlePageLink);
+  async findSchedulePageUrl(articlePageUrl) {
+    const articlePageBody = await Utils.fetchCorsParseHtml(articlePageUrl);
     const bodyUrls = articlePageBody.querySelectorAll('#jsn-mainbody a');
 
-    let schedulePageLink;
+    let schedulePageUrl;
     for (const bodyUrl of bodyUrls) {
       const articleHref = bodyUrl.getAttribute('href');
-      const articleAbsUrl = Utils.joinUrls(articlePageLink, articleHref);
+      const articleAbsUrl = Utils.joinUrls(articlePageUrl, articleHref);
 
       if (!this.isSchedulePageUrl(articleAbsUrl)) {
         continue;
       }
 
-      schedulePageLink = articleAbsUrl;
+      schedulePageUrl = articleAbsUrl;
     }
 
-    if (!schedulePageLink) {
+    if (!schedulePageUrl) {
       throw new Error('Can\'t find the url pointing to the orario facile page');
     }
 
     return {
-      schedule: schedulePageLink,
+      schedule: schedulePageUrl,
     };
   },
 
-  async schedulePageItems(schedulePageLink, cache = true) {
+  async schedulePageItems(schedulePageUrl, cache = true) {
     return Utils.load('schedule-items-v2', async () => {
-      return this.findSchedulePageItems(schedulePageLink);
+      return this.findSchedulePageItems(schedulePageUrl);
     }, cache);
   },
 
-  async findSchedulePageItems(schedulePageLink) {
+  async findSchedulePageItems(schedulePageUrl) {
     // Request the schedule list
-    const schedulePageBody = await Utils.fetchCorsParseHtml(schedulePageLink);
-    const schedulePageUrls = schedulePageBody.querySelectorAll('a');
+    const schedulePageBody = await Utils.fetchCorsParseHtml(schedulePageUrl);
+    const scheduleUrls = schedulePageBody.querySelectorAll('a');
 
     const scheduleItems = [];
 
-    for (const schedulePageUrl of schedulePageUrls) {
-      const scheduleHref = schedulePageUrl.getAttribute('href');
-      const scheduleAbsUrl = Utils.joinUrls(schedulePageLink, scheduleHref);
+    for (const scheduleUrl of scheduleUrls) {
+      const scheduleHref = scheduleUrl.getAttribute('href');
+      const scheduleAbsUrl = Utils.joinUrls(schedulePageUrl, scheduleHref);
 
       let list; let
         type;
-      if (scheduleAbsUrl.indexOf('Classi/') !== -1) {
+      if (scheduleAbsUrl.includes('Classi/')) {
         list = '#classes';
         type = 'classi';
-      } else if (scheduleAbsUrl.indexOf('Docenti/') !== -1) {
+      } else if (scheduleAbsUrl.includes('Docenti/')) {
         list = '#teachers';
         type = 'docenti';
-      } else if (scheduleAbsUrl.indexOf('Aule/') !== -1) {
+      } else if (scheduleAbsUrl.includes('Aule/')) {
         list = '#classrooms';
         type = 'aule';
       } else {
@@ -123,7 +123,7 @@ export default {
       scheduleItems.push({
         list,
         type,
-        name: schedulePageUrl.innerText,
+        name: scheduleUrl.innerText,
         url: scheduleAbsUrl,
       });
     }
@@ -211,8 +211,8 @@ export default {
     }
 
     const urls = body.querySelectorAll('center:nth-of-type(2) a');
-    for (const link of urls) {
-      const fullUrl = link.getAttribute('href');
+    for (const u of urls) {
+      const fullUrl = u.getAttribute('href');
       if (!fullUrl.startsWith('../') || !fullUrl.endsWith('.html')) {
         continue;
       }
@@ -221,7 +221,7 @@ export default {
       const type = url.substring(0, url.lastIndexOf('/')).toLowerCase();
       const name = url.substring(url.lastIndexOf('/'));
       const hash = `#${type}${name}`;
-      link.href = hash;
+      u.href = hash;
     }
 
     const scheduleEl = document.querySelector('#embedded-schedule');
