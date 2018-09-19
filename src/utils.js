@@ -1,7 +1,6 @@
 const corsProxies = [
   'https://cors.paolo565.org/',
   'https://cors-anywhere.herokuapp.com/',
-  'https://crossorigin.me/',
 ];
 
 export default {
