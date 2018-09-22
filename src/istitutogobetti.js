@@ -1,3 +1,5 @@
+import PDFJS from 'pdfjs-dist';
+
 import Utils from './utils';
 
 export default {
@@ -28,8 +30,25 @@ export default {
 
   async findArticlePageUrl() {
     const homeBody = await Utils.fetchCorsParseHtml(this.schoolUrl);
-    const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
 
+    const posts = [];
+    const homePosts = homeBody.querySelectorAll('.jsn-article');
+    for (const post of homePosts) {
+      const titleElement = post.querySelector('.contentheading');
+      const dateElement = post.querySelector('.createdate');
+      const linkElement = post.querySelector('.readon');
+
+      const rUrl = linkElement.getAttribute('href');
+      const url = Utils.joinUrls(this.schoolUrl, rUrl);
+
+      posts.push({
+        title: titleElement.innerText.trim(),
+        date: dateElement.innerText.trim(),
+        url: url,
+      });
+    }
+
+    const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
     let partialArticlePageUrl;
     for (const homeUrl of homeUrls) {
       const linkText = homeUrl.innerText;
@@ -48,8 +67,32 @@ export default {
     // Request the schedule article
     const articlePage = Utils.joinUrls(this.schoolUrl, partialArticlePageUrl);
     return {
+      posts: posts,
       article: articlePage,
     };
+  },
+
+  async articlePagePdf(title, url, cache = true) {
+    return Utils.load('article-pdf-' + title, async () => {
+      return this.findArticlePagePdf(title, url);
+    }, cache);
+  },
+
+  async findArticlePagePdf(title, pageUrl) {
+    const articlePdfPage = await Utils.fetchCorsParseHtml(pageUrl);
+    const content = articlePdfPage.querySelector('.jsn-article-content');
+    const urls = content.querySelectorAll('a');
+    for (const url of urls) {
+      const href = url.getAttribute('href');
+      if (!href || !href.endsWith('.pdf')) {
+        continue;
+      }
+
+      const fullUrl = Utils.joinUrls(pageUrl, href);
+      return {
+        url: fullUrl,
+      };
+    }
   },
 
   async isSchedulePageUrl(url) {
@@ -146,6 +189,20 @@ export default {
     liElement.dataset.type = item.type;
     liElement.appendChild(aElement);
     document.querySelector(item.list).appendChild(liElement);
+  },
+
+  generateArticleItem(post) {
+    const liElement = document.createElement('li');
+    liElement.classList.add('article-list-item');
+    liElement.dataset.url = post.url;
+    liElement.dataset.title = post.title;
+
+    const aElement = document.createElement('a');
+    aElement.href = `#/posts/${post.title}`;
+    aElement.innerText = post.title;
+
+    liElement.appendChild(aElement);
+    document.querySelector('#articles').appendChild(liElement);
   },
 
   async scheduleItem(url, name, type, cache = true) {
@@ -250,5 +307,46 @@ export default {
     }
 
     this.scheduleItemAndRender(url, name, type, false);
+  },
+
+  async displayPdfItem(title) {
+    const selector = `li[data-title="${title}"]`;
+    const pdfButton = document.querySelector(selector);
+    if (!pdfButton) {
+      window.location.hash = '/';
+      return;
+    }
+
+    Utils.openPage('#post-page');
+
+    const titlee = pdfButton.dataset.title;
+    const url = pdfButton.dataset.url;
+    const data = await this.articlePagePdf(titlee, url);
+
+    document.querySelector('#post-title').innerText = titlee;
+
+    const container = document.querySelector('#post-canvases');
+
+    const range = document.createRange();
+    range.selectNodeContents(container);
+    range.deleteContents();
+
+    const pdf = await PDFJS.getDocument('https://cors.paolo565.org/' + data.url);
+    for (let p = 1; p <= pdf.numPages; p++) {
+      const page = await pdf.getPage(p);
+      const viewport = page.getViewport(1);
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+      page.render(renderContext);
+      container.appendChild(canvas);
+    }
   },
 };

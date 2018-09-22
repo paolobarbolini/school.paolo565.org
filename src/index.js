@@ -65,6 +65,11 @@ async function loadFromHash() {
     const name = decodeURIComponent(splitted[splitted.length - 1]);
 
     Gobetti.displayScheduleItem(name, type);
+  } else if (hash === '/posts/') {
+    Utils.openPage('#posts-page');
+  } else if (hash.startsWith('/posts/')) {
+    const title = decodeURIComponent(splitted[splitted.length - 1]);
+    Gobetti.displayPdfItem(title);
   } else if (hash.startsWith('/about')) {
     Utils.openPage('#about');
   } else {
@@ -91,6 +96,15 @@ async function loadSchedules(cache = false) {
     throw new Error('Can\'t find the article pointing to orario facile');
   }
   setLoadingStatus('Ci siamo quasi...');
+
+  const articles = document.querySelectorAll('#articles li');
+  for (const article of articles) {
+    article.parentElement.removeChild(article);
+  }
+
+  for (const post of articlePage.posts) {
+    Gobetti.generateArticleItem(post);
+  }
 
   const articleUrl = articlePage.article;
   const schedulePage = await Gobetti.schedulePageUrl(articleUrl, cache);
