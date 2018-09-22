@@ -326,10 +326,7 @@ export default {
     document.querySelector('#post-title').innerText = titlee;
 
     const container = document.querySelector('#post-canvases');
-
-    const range = document.createRange();
-    range.selectNodeContents(container);
-    range.deleteContents();
+    Utils.emptyElement(container);
 
     const pdf = await PDFJS.getDocument('https://cors.paolo565.org/' + data.url);
     for (let p = 1; p <= pdf.numPages; p++) {

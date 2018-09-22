@@ -67,6 +67,12 @@ export default {
     }, 1000);
   },
 
+  emptyElement(element) {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.deleteContents();
+  },
+
   joinUrls(baseUrl, url) {
     return new URL(url, baseUrl).href;
   },

@@ -98,9 +98,7 @@ async function loadSchedules(cache = false) {
   setLoadingStatus('Ci siamo quasi...');
 
   const articles = document.querySelectorAll('#articles li');
-  for (const article of articles) {
-    article.parentElement.removeChild(article);
-  }
+  Utils.emptyElement(articles);
 
   for (const post of articlePage.posts) {
     Gobetti.generateArticleItem(post);
@@ -117,9 +115,7 @@ async function loadSchedules(cache = false) {
   const scheduleItems = await Gobetti.schedulePageItems(scheduleUrl, cache);
 
   const items = document.querySelectorAll('.list-column li');
-  for (const item of items) {
-    item.parentElement.removeChild(item);
-  }
+  Utils.emptyElement(items);
 
   const lastUpdateElement = document.querySelector('#schedules-last-update');
   Utils.dateRangeUpdater(lastUpdateElement, scheduleItems.date);
