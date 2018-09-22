@@ -62,6 +62,7 @@ export default {
     }
 
     element.title = date.toLocaleString();
+    element.innerText = this.dateToRangeStr(date);
     this.timeInterval = setInterval(() => {
       element.innerText = this.dateToRangeStr(date);
     }, 1000);

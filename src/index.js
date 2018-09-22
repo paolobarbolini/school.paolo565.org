@@ -97,12 +97,14 @@ async function loadSchedules(cache = false) {
   }
   setLoadingStatus('Ci siamo quasi...');
 
-  const articles = document.querySelectorAll('#articles li');
+  const articles = document.querySelector('#articles');
   Utils.emptyElement(articles);
 
   for (const post of articlePage.posts) {
     Gobetti.generateArticleItem(post);
   }
+  const lastUpdatePosts = document.querySelector('#posts-last-update');
+  Utils.dateRangeUpdater(lastUpdatePosts, articlePage.date);
 
   const articleUrl = articlePage.article;
   const schedulePage = await Gobetti.schedulePageUrl(articleUrl, cache);
@@ -114,7 +116,7 @@ async function loadSchedules(cache = false) {
   const scheduleUrl = schedulePage.schedule;
   const scheduleItems = await Gobetti.schedulePageItems(scheduleUrl, cache);
 
-  const items = document.querySelectorAll('.list-column li');
+  const items = document.querySelector('.list-column ul');
   Utils.emptyElement(items);
 
   const lastUpdateElement = document.querySelector('#schedules-last-update');
