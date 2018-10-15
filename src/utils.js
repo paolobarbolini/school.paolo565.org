@@ -4,20 +4,16 @@ const corsProxies = [
 ];
 
 export default {
-  timeInterval: null,
-  currentlyOpenPage: '#unsupported-device',
-
   msToStr(ms) {
     // From https://stackoverflow.com/a/8212878
-
     function formatNumber(n, uom) {
       if (n == 1) {
         const p = uom.substr(0, uom.length - 1);
 
         if (uom.endsWith('e')) {
-          uom = `${p}a`; // a -> e
+          uom = `${p}a`; // e -> a
         } else {
-          uom = `${p}o`; // e -> i
+          uom = `${p}o`; // i -> o
         }
       }
 
@@ -49,29 +45,11 @@ export default {
     return 'ora';
   },
 
-  dateToRangeStr(date) {
+  timePassed(date) {
     const now = new Date().getTime();
     const then = date.getTime();
 
     return this.msToStr(now - then);
-  },
-
-  dateRangeUpdater(element, date) {
-    if (this.timeInterval) {
-      clearInterval(this.timeInterval);
-    }
-
-    element.title = date.toLocaleString();
-    element.innerText = this.dateToRangeStr(date);
-    this.timeInterval = setInterval(() => {
-      element.innerText = this.dateToRangeStr(date);
-    }, 1000);
-  },
-
-  emptyElement(element) {
-    const range = document.createRange();
-    range.selectNodeContents(element);
-    range.deleteContents();
   },
 
   joinUrls(baseUrl, url) {
@@ -95,6 +73,12 @@ export default {
     return str.replace(/[-[]\/{}()\*\+\?\.\\\^\$\|]/g, '\\$&');
   },
 
+  escapeHtml(string) {
+    const element = document.createElement('span');
+    element.innerText = string;
+    return element.innerHTML;
+  },
+
   async fetchOk(url) {
     const resp = await fetch(url);
     if (!resp.ok) {
@@ -106,7 +90,6 @@ export default {
 
   async promiseRaceSuccessfull(ps) {
     // From https://stackoverflow.com/a/39941616
-
     const invert = (p) => new Promise((res, rej) => p.then(rej, res));
     return await invert(Promise.all(ps.map(invert)));
   },
@@ -126,16 +109,6 @@ export default {
     return parsedHtml;
   },
 
-  openPage(query) {
-    if (query === this.currentlyOpenPage) {
-      return;
-    }
-
-    document.querySelector(query).classList.remove('hidden');
-    document.querySelector(this.currentlyOpenPage).classList.add('hidden');
-    this.currentlyOpenPage = query;
-  },
-
   save(key, value) {
     value.date = new Date();
     const val = JSON.stringify(value);
@@ -147,12 +120,10 @@ export default {
     if (cache) {
       const val = localStorage.getItem(key);
       if (val) {
-        try {
-          const value = JSON.parse(val);
-          value.date = new Date(value.date);
-          value.cached = true;
-          return value;
-        } catch (err) {}
+        const value = JSON.parse(val);
+        value.date = new Date(value.date);
+        value.cached = true;
+        return value;
       }
     }
 

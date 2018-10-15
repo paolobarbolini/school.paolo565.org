@@ -16,17 +16,10 @@ module.exports = merge(baseConfig, {
       new UglifyWebpackPlugin({
         uglifyOptions: {
           mangle: true,
+          ie8: false,
           compress: {
-            sequences: true,
-            dead_code: true,
-            conditionals: true,
-            booleans: true,
-            unused: true,
-            if_return: true,
-            join_vars: true,
             drop_console: true,
           },
-          screw_ie8: true,
         },
       }),
     ],

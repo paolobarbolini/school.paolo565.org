@@ -1,20 +1,7 @@
-import PDFJS from 'pdfjs-dist';
-
 import Utils from './utils';
 
 export default {
   schoolUrl: 'http://www.istitutogobetti.it/',
-  scheduleLoadingMessages: [
-    'Caricamento in corso...',
-    'Ci siamo quasi...',
-    'Ora ci sta davvero mettendo tanto tempo...',
-    'Stiamo ancora aspettando...',
-    'C\'è nessuno?',
-    'Hai davvero molta pazienza!',
-    'Stai davvero leggendo questo messaggio?',
-    'Forse qualcosa è andato storto?',
-  ],
-  scheduleLoadingTimer: null,
 
   isArticlePageButton(text) {
     return text.includes('Orario') &&
@@ -22,64 +9,75 @@ export default {
            !text.includes('sostegno');
   },
 
-  async articlePageUrl(cache = true) {
-    return Utils.load('articlepage-url-v2', async () => {
-      return await this.findArticlePageUrl();
+  async articlePageUrl(cache = true, page = 1) {
+    return Utils.load(`articlepage-url-v2-${page}`, async () => {
+      return await this.findArticlePageUrl(page);
     }, cache);
   },
 
-  async findArticlePageUrl() {
-    const homeBody = await Utils.fetchCorsParseHtml(this.schoolUrl);
+  async findArticlePageUrl(page = 1) {
+    const limit = ((page - 1) * 4);
+    const query = `?limitstart=${limit}`;
+    const body = await Utils.fetchCorsParseHtml(`${this.schoolUrl}${query}`);
 
     const posts = [];
-    const homePosts = homeBody.querySelectorAll('.jsn-article');
-    for (const post of homePosts) {
+    const postsSelector = body.querySelectorAll('.jsn-article');
+    for (const post of postsSelector) {
       const titleElement = post.querySelector('.contentheading');
       const dateElement = post.querySelector('.createdate');
       const linkElement = post.querySelector('.readon');
 
+      const title = titleElement.innerText.trim();
+      const date = dateElement.innerText.trim();
       const rUrl = linkElement.getAttribute('href');
       const url = Utils.joinUrls(this.schoolUrl, rUrl);
+      let id = url.substring(url.indexOf('&id=') + 4);
+      id = id.substring(0, id.indexOf(':'));
 
       posts.push({
-        title: titleElement.innerText.trim(),
-        date: dateElement.innerText.trim(),
-        url: url,
+        id,
+        title,
+        date,
+        url,
       });
     }
 
-    const homeUrls = homeBody.querySelectorAll('#jsn-pleft a');
-    let partialArticlePageUrl;
+    const homeUrls = body.querySelectorAll('#jsn-pleft a');
+    let article;
     for (const homeUrl of homeUrls) {
-      const linkText = homeUrl.innerText;
-
-      if (!this.isArticlePageButton(linkText)) {
+      if (!this.isArticlePageButton(homeUrl.innerText)) {
         continue;
       }
 
-      partialArticlePageUrl = homeUrl.getAttribute('href');
+      article = Utils.joinUrls(this.schoolUrl, homeUrl.getAttribute('href'));
+      break;
     }
 
-    if (!partialArticlePageUrl) {
-      return;
+    if (!article) {
+      return {
+        posts,
+      };
     }
 
-    // Request the schedule article
-    const articlePage = Utils.joinUrls(this.schoolUrl, partialArticlePageUrl);
     return {
-      posts: posts,
-      article: articlePage,
+      posts,
+      article,
     };
   },
 
-  async articlePagePdf(title, url, cache = true) {
-    return Utils.load('article-pdf-' + title, async () => {
-      return this.findArticlePagePdf(title, url);
+  getArticlePageUrl(id) {
+    return `${this.schoolUrl}?option=com_content&id=${id}`;
+  },
+
+  async articlePagePdf(id, cache = true) {
+    return Utils.load(`article-pdf-v2-${id}`, async () => {
+      return this.findArticlePagePdf(id);
     }, cache);
   },
 
-  async findArticlePagePdf(title, pageUrl) {
-    const articlePdfPage = await Utils.fetchCorsParseHtml(pageUrl);
+  async findArticlePagePdf(id) {
+    const url = this.getArticlePageUrl(id);
+    const articlePdfPage = await Utils.fetchCorsParseHtml(url);
     const content = articlePdfPage.querySelector('.jsn-article-content');
     const urls = content.querySelectorAll('a');
     for (const url of urls) {
@@ -88,14 +86,16 @@ export default {
         continue;
       }
 
-      const fullUrl = Utils.joinUrls(pageUrl, href);
+      const fullUrl = Utils.joinUrls(this.schoolUrl, href);
       return {
-        url: fullUrl,
+        pdfUrl: fullUrl,
       };
     }
+
+    return {};
   },
 
-  async isSchedulePageUrl(url) {
+  isSchedulePageUrl(url) {
     const u = url.toLowerCase();
     return u.startsWith('/web_orario') || u.startsWith('/weborario');
   },
@@ -110,24 +110,22 @@ export default {
     const articlePageBody = await Utils.fetchCorsParseHtml(articlePageUrl);
     const bodyUrls = articlePageBody.querySelectorAll('#jsn-mainbody a');
 
-    let schedulePageUrl;
+    let schedule;
     for (const bodyUrl of bodyUrls) {
-      const articleHref = bodyUrl.getAttribute('href');
-      const articleAbsUrl = Utils.joinUrls(articlePageUrl, articleHref);
+      const href = bodyUrl.getAttribute('href');
+      schedule = Utils.joinUrls(articlePageUrl, href);
 
-      if (!this.isSchedulePageUrl(articleAbsUrl)) {
-        continue;
+      if (this.isSchedulePageUrl(href)) {
+        break;
       }
-
-      schedulePageUrl = articleAbsUrl;
     }
 
-    if (!schedulePageUrl) {
-      throw new Error('Can\'t find the url pointing to the orario facile page');
+    if (!schedule) {
+      return {};
     }
 
     return {
-      schedule: schedulePageUrl,
+      schedule,
     };
   },
 
@@ -142,67 +140,33 @@ export default {
     const schedulePageBody = await Utils.fetchCorsParseHtml(schedulePageUrl);
     const scheduleUrls = schedulePageBody.querySelectorAll('a');
 
-    const scheduleItems = [];
-
+    const items = [];
     for (const scheduleUrl of scheduleUrls) {
-      const scheduleHref = scheduleUrl.getAttribute('href');
-      const scheduleAbsUrl = Utils.joinUrls(schedulePageUrl, scheduleHref);
+      const name = scheduleUrl.innerText.trim();
+      const href = scheduleUrl.getAttribute('href');
+      const url = Utils.joinUrls(schedulePageUrl, href);
 
-      let list; let
-        type;
-      if (scheduleAbsUrl.includes('Classi/')) {
-        list = '#classes';
+      let type;
+      if (url.includes('Classi/')) {
         type = 'classi';
-      } else if (scheduleAbsUrl.includes('Docenti/')) {
-        list = '#teachers';
+      } else if (url.includes('Docenti/')) {
         type = 'docenti';
-      } else if (scheduleAbsUrl.includes('Aule/')) {
-        list = '#classrooms';
+      } else if (url.includes('Aule/')) {
         type = 'aule';
       } else {
         continue;
       }
 
-      scheduleItems.push({
-        list,
+      items.push({
+        name,
         type,
-        name: scheduleUrl.innerText,
-        url: scheduleAbsUrl,
+        url,
       });
     }
 
     return {
-      items: scheduleItems,
+      items,
     };
-  },
-
-  generateScheduleItem(item) {
-    const liElement = document.createElement('li');
-    liElement.classList.add('schedule-list-item');
-    liElement.dataset.originalText = item.name;
-    liElement.dataset.url = item.url;
-
-    const aElement = document.createElement('a');
-    aElement.href = `#/${item.type}/${encodeURIComponent(item.name)}`;
-    aElement.innerText = liElement.dataset.originalText;
-
-    liElement.dataset.type = item.type;
-    liElement.appendChild(aElement);
-    document.querySelector(item.list).appendChild(liElement);
-  },
-
-  generateArticleItem(post) {
-    const liElement = document.createElement('li');
-    liElement.classList.add('article-list-item');
-    liElement.dataset.url = post.url;
-    liElement.dataset.title = post.title;
-
-    const aElement = document.createElement('a');
-    aElement.href = `#/posts/${post.title}`;
-    aElement.innerText = post.title;
-
-    liElement.appendChild(aElement);
-    document.querySelector('#articles').appendChild(liElement);
   },
 
   async scheduleItem(url, name, type, cache = true) {
@@ -215,135 +179,37 @@ export default {
     const response = await Utils.fetchCors(url);
     const html = await response.text();
     return {
-      html: html,
+      html,
     };
   },
 
-  async scheduleItemAndRender(url, name, type, cache = true) {
-    const loadingElement = document.querySelector('#schedule-loading');
-    let loadingIndex = 0;
+  async buildEmbeddedSchedule(html) {
+    const body = await Utils.parseHtml(html);
+    const schedule = body.querySelector('center:nth-of-type(2)');
 
-    const loader = () => {
-      if (loadingIndex >= this.scheduleLoadingMessages.length) {
-        clearInterval(this.scheduleLoadingTimer);
-        this.scheduleLoadingTimer = null;
-        return;
-      }
-
-      loadingElement.innerText = this.scheduleLoadingMessages[loadingIndex];
-
-      loadingIndex++;
-    };
-
-    if (this.scheduleLoadingTimer) {
-      clearInterval(this.scheduleLoadingTimer);
-      this.scheduleLoadingTimer = null;
-    }
-
-    this.scheduleLoadingTimer = setInterval(loader, 2500);
-    loader();
-
-    const item = await this.scheduleItem(url, name, type, cache);
-    await this.buildEmbeddedSchedule(item);
-
-    if (this.scheduleLoadingTimer) {
-      clearInterval(this.scheduleLoadingTimer);
-      this.scheduleLoadingTimer = null;
-    }
-    loadingElement.innerText = '';
-
-    return item;
-  },
-
-  async buildEmbeddedSchedule(item) {
-    const lastUpdateElement = document.querySelector('#schedule-last-update');
-    Utils.dateRangeUpdater(lastUpdateElement, item.date);
-
-    const body = await Utils.parseHtml(item.html);
-    const tableTrs = body.querySelectorAll('center:nth-of-type(2) table, tr');
+    // Remove all attributes from table and tr
+    const tableTrs = schedule.querySelectorAll('table, tr');
     for (const tableTr of tableTrs) {
       for (const attr of tableTr.attributes) {
         tableTr.removeAttribute(attr);
       }
     }
 
-    const urls = body.querySelectorAll('center:nth-of-type(2) a');
+    // Update all urls
+    const urls = schedule.querySelectorAll('a');
     for (const u of urls) {
-      const fullUrl = u.getAttribute('href');
-      if (!fullUrl.startsWith('../') || !fullUrl.endsWith('.html')) {
+      const href = u.getAttribute('href');
+      if (!href.startsWith('../') || !href.endsWith('.html')) {
         continue;
       }
 
-      const url = fullUrl.substring(2, fullUrl.length - 5);
+      const url = href.substring(3, href.length - 5);
       const type = url.substring(0, url.lastIndexOf('/')).toLowerCase();
       const name = url.substring(url.lastIndexOf('/'));
-      const hash = `#${type}${name}`;
+      const hash = `#/${type}${name}`;
       u.href = hash;
     }
 
-    const scheduleEl = document.querySelector('#embedded-schedule');
-    const schedule = body.querySelector('center:nth-of-type(2)');
-    scheduleEl.innerHTML = schedule.innerHTML;
-  },
-
-  async displayScheduleItem(name, type) {
-    const selector = `li[data-original-text="${name}"][data-type="${type}"]`;
-    const selectedScheduleInfo = document.querySelector(selector);
-    if (!selectedScheduleInfo) {
-      window.location.hash = '/';
-      Utils.openPage('#school-schedules');
-      return;
-    }
-
-    const schedule = document.querySelector('#embedded-schedule');
-    schedule.innerHTML = '';
-    document.querySelector('#school-schedule-title').innerText = name;
-    Utils.openPage('#school-schedule');
-
-    const url = selectedScheduleInfo.dataset.url;
-    const item = await this.scheduleItemAndRender(url, name, type);
-    if (!item.cached) {
-      return;
-    }
-
-    this.scheduleItemAndRender(url, name, type, false);
-  },
-
-  async displayPdfItem(title) {
-    const selector = `li[data-title="${title}"]`;
-    const pdfButton = document.querySelector(selector);
-    if (!pdfButton) {
-      window.location.hash = '/';
-      return;
-    }
-
-    Utils.openPage('#post-page');
-
-    const titlee = pdfButton.dataset.title;
-    const url = pdfButton.dataset.url;
-    const data = await this.articlePagePdf(titlee, url);
-
-    document.querySelector('#post-title').innerText = titlee;
-
-    const container = document.querySelector('#post-canvases');
-    Utils.emptyElement(container);
-
-    const pdf = await PDFJS.getDocument('https://cors.paolo565.org/' + data.url);
-    for (let p = 1; p <= pdf.numPages; p++) {
-      const page = await pdf.getPage(p);
-      const viewport = page.getViewport(1);
-
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport,
-      };
-      page.render(renderContext);
-      container.appendChild(canvas);
-    }
+    return schedule.innerHTML;
   },
 };

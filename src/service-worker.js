@@ -1,4 +1,4 @@
-const cacheName = 'istitutogobettiapp-v4';
+const cacheName = 'istitutogobettiapp-v5';
 
 const expectedCaches = [
   cacheName,

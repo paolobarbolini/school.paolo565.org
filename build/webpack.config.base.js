@@ -1,4 +1,5 @@
 const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,15 +7,22 @@ const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
 module.exports = {
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.vue'],
+    alias: {
+      '@': path.join(__dirname, '..', 'src'),
+    }
   },
 
   module: {
     rules: [
       {
-        test: /\.(js)$/,
+        test: /\.(js|vue)$/,
         use: 'eslint-loader',
-        enforce: 'pre',
+        enforce: 'pre'
+      },
+      {
+        test: /\.vue$/,
+        use: 'vue-loader'
       },
       {
         test: /\.css?$/,
@@ -35,10 +43,11 @@ module.exports = {
   },
 
   output: {
-    path: __dirname + '/../public'
+    path: path.join(__dirname, '..', 'public')
   },
 
   plugins: [
+    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
