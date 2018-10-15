@@ -48,7 +48,9 @@ export default {
 
 <style lang="scss">
 .schedule-column {
-  width: 240px;
+  width: 30vw;
+  min-width: 240px;
+  max-width: 320px;
   flex: 1;
 
   ul {

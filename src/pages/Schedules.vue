@@ -91,6 +91,6 @@ export default {
   position: relative;
   left: 50%;
   box-sizing: border-box;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 </style>
