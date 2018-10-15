@@ -9,38 +9,14 @@ export default {
            !text.includes('sostegno');
   },
 
-  async articlePageUrl(cache = true, page = 1) {
-    return Utils.load(`articlepage-url-v2-${page}`, async () => {
-      return await this.findArticlePageUrl(page);
+  async articlePageUrl(cache = true) {
+    return Utils.load(`articlepage-url-v3`, async () => {
+      return await this.findArticlePageUrl();
     }, cache);
   },
 
-  async findArticlePageUrl(page = 1) {
-    const limit = ((page - 1) * 4);
-    const query = `?limitstart=${limit}`;
-    const body = await Utils.fetchCorsParseHtml(`${this.schoolUrl}${query}`);
-
-    const posts = [];
-    const postsSelector = body.querySelectorAll('.jsn-article');
-    for (const post of postsSelector) {
-      const titleElement = post.querySelector('.contentheading');
-      const dateElement = post.querySelector('.createdate');
-      const linkElement = post.querySelector('.readon');
-
-      const title = titleElement.innerText.trim();
-      const date = dateElement.innerText.trim();
-      const rUrl = linkElement.getAttribute('href');
-      const url = Utils.joinUrls(this.schoolUrl, rUrl);
-      let id = url.substring(url.indexOf('&id=') + 4);
-      id = id.substring(0, id.indexOf(':'));
-
-      posts.push({
-        id,
-        title,
-        date,
-        url,
-      });
-    }
+  async findArticlePageUrl() {
+    const body = await Utils.fetchCorsParseHtml(`${this.schoolUrl}`);
 
     const homeUrls = body.querySelectorAll('#jsn-pleft a');
     let article;
@@ -54,14 +30,50 @@ export default {
     }
 
     if (!article) {
-      return {
-        posts,
-      };
+      return {};
+    }
+
+    return {
+      article,
+    };
+  },
+
+  async listArticles(cache = true, page = 1) {
+    return Utils.load('articles', async () => {
+      return this.findArticles(page);
+    }, cache);
+  },
+
+  async findArticles(page = 1) {
+    const limit = ((page - 1) * 250);
+    let q = '/?option=com_content&view=category&id=20&Itemid=111&limit=250';
+    q = `${q}&limitstart=${limit}`;
+    const body = await Utils.fetchCorsParseHtml(`${this.schoolUrl}${q}`);
+
+    const posts = [];
+    const trs = body.querySelectorAll('#jsn-mainbody tr:not(:first-of-type)');
+    for (const post of trs) {
+      const elements = post.querySelectorAll('td');
+      const titleUrlElement = elements[1].querySelector('a');
+      const dateElement = elements[2];
+
+      const title = titleUrlElement.innerText.trim();
+      const date = dateElement.innerText.trim();
+      const rUrl = titleUrlElement.getAttribute('href');
+      const url = Utils.joinUrls(this.schoolUrl, rUrl);
+      let id = url.substring(url.indexOf('&id=') + 4);
+      id = id.substring(0, id.indexOf(':'));
+
+      posts.push({
+        id,
+        title,
+        date,
+        url,
+      });
     }
 
     return {
       posts,
-      article,
     };
   },
 

@@ -43,21 +43,26 @@ export default {
     },
   },
 
+  watch: {
+    items(items) {
+      if (items.cached) {
+        this.loadPosts(false);
+      }
+    },
+  },
+
   created() {
     this.loadPosts();
   },
 
   methods: {
-    async loadPosts(page = 1) {
-      const home = await IstitutoGobetti.articlePageUrl(false, page);
+    async loadPosts(cache = true) {
+      const home = await IstitutoGobetti.listArticles(cache);
       if (!home.posts) {
         throw new Error('Can\'t find the article pointing to orario facile');
       }
 
-      if (page === 1) {
-        this.items.date = home.date;
-      }
-      this.items.posts = this.items.posts.concat(home.posts);
+      this.items = home;
     },
   },
 };
