@@ -58,6 +58,11 @@ export default {
   },
 
   watch: {
+    async name(name) {
+      this.item = null;
+      await this.loadSchedule();
+    },
+
     async item(item) {
       this.schedule = await IstitutoGobetti.buildEmbeddedSchedule(item.html);
       if (item.cached) {
