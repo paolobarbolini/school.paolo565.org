@@ -4,8 +4,9 @@ import Router from 'vue-router';
 import Schedules from '@/pages/Schedules';
 import Schedule from '@/pages/Schedule';
 import Articles from '@/pages/Articles';
-import Article from '@/pages/Article';
 import About from '@/pages/About.vue';
+
+const Article = () => import(/* webpackChunkName: "pdf" */ '@/pages/Article');
 
 Vue.use(Router);
 
