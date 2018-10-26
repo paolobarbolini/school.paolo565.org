@@ -53,6 +53,10 @@ export default {
   max-width: 320px;
   flex: 1;
 
+  h3 {
+    margin-top: 0;
+  }
+
   ul {
     margin: 0;
     padding: 0;

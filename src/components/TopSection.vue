@@ -51,11 +51,11 @@ export default {
   }
 
   p {
-    margin: 16px 0 4px 0;
-  }
+    margin: 8px 0 0;
 
-  p:not(:first-of-type) {
-    margin-top: 4px;
+    &:first-of-type {
+      margin-top: 16px;
+    }
   }
 
   ul {
