@@ -3,9 +3,8 @@
     v-show="visible"
     class="schedule-item">
     <router-link
-      :to="{ name: 'schedule', params: { type: type, name: item.name }}">
-      <span v-html="name" />
-    </router-link>
+      :to="{ name: 'schedule', params: { type: type, name: item.name }}"
+      v-html="name" />
   </li>
 </template>
 
