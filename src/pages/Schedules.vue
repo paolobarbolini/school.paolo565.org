@@ -8,7 +8,7 @@
       :share="true" />
 
     <input
-      v-model="searchQuery"
+      v-model.trim="searchQuery"
       class="search-box"
       placeholder="Cerca..."
       type="text"
