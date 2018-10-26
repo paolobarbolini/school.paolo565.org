@@ -1,5 +1,7 @@
 <template>
-  <li class="schedule-item">
+  <li
+    v-show="visible"
+    class="schedule-item">
     <router-link
       :to="{ name: 'schedule', params: { type: type, name: item.name }}">
       <span v-html="name" />
@@ -27,6 +29,10 @@ export default {
   },
 
   computed: {
+    visible() {
+      return this.item.name.toLowerCase().includes(this.filter.toLowerCase());
+    },
+
     name() {
       const name = Utils.escapeHtml(this.item.name);
       if (!this.filter) return name;

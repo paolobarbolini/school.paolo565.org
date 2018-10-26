@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="items.length > 0"
+    v-show="visible"
     class="schedule-column">
     <h3 class="center">
       {{ name }}
@@ -41,6 +41,19 @@ export default {
     items: {
       type: Array,
       required: true,
+    },
+  },
+
+  computed: {
+    visible() {
+      const filter = this.filter.toLowerCase();
+      for (const item of this.items) {
+        if (item.name.toLowerCase().includes(filter)) {
+          return true;
+        }
+      }
+
+      return false;
     },
   },
 };

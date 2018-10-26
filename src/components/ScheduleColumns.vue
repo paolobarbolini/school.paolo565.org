@@ -43,21 +43,20 @@ export default {
 
   computed: {
     classes() {
-      return this.filterColumn(this.items, 'classi', this.filter);
+      return this.filterColumn(this.items, 'classi');
     },
     teachers() {
-      return this.filterColumn(this.items, 'docenti', this.filter);
+      return this.filterColumn(this.items, 'docenti');
     },
     classrooms() {
-      return this.filterColumn(this.items, 'aule', this.filter);
+      return this.filterColumn(this.items, 'aule');
     },
   },
 
   methods: {
-    filterColumn(items, type, filter) {
-      const f = filter.toLowerCase();
+    filterColumn(items, type) {
       return items.filter((item) => {
-        return item.type === type && item.name.toLowerCase().includes(f);
+        return item.type === type;
       });
     },
   },
