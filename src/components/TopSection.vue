@@ -21,6 +21,11 @@
           {{ item.name }}
         </router-link>
       </li>
+      <li
+        v-if="displayShare"
+        @click="doShare()">
+        Condividi
+      </li>
     </ul>
   </div>
 </template>
@@ -33,6 +38,28 @@ export default {
       default: () => {
         return [];
       },
+    },
+    share: {
+      type: Boolean,
+      default: () => {
+        return false;
+      },
+    },
+  },
+
+  computed: {
+    displayShare() {
+      return this.share && navigator.share;
+    },
+  },
+
+  methods: {
+    doShare() {
+      navigator.share({
+        title: 'Istituto Gobetti App',
+        text: 'Controlla con facilità gli orari e ricevi gli ultimi avvisi',
+        url: 'https://school.paolo565.org',
+      });
     },
   },
 };

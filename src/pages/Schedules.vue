@@ -4,7 +4,8 @@
       :items="[
         { name: 'Avvisi', destination: 'posts' },
         { name: 'Maggiori Informazioni', destination: 'about' }
-    ]" />
+      ]"
+      :share="true" />
 
     <input
       ref="searchQuery"
