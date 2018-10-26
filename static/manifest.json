@@ -1,6 +1,6 @@
 {
-  "name": "Istituto Gobetti App",
-  "short_name": "Istituto Gobetti App",
+  "name": "Istituto Gobetti Web",
+  "short_name": "ISG Web",
   "icons": [
     {
       "src": "/static/icons/icon-72x72.png",
