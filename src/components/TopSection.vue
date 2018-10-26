@@ -1,7 +1,15 @@
 <template>
   <div class="top-section bold">
     <p class="center">
-      App realizzata da <a href="https://www.paolo565.org">Paolo Barbolini</a>
+      App realizzata da
+      <a href="https://www.paolo565.org">Paolo Barbolini</a>
+    </p>
+    <p class="center">
+      Classe
+      <router-link
+        :to="{ name: 'schedule', params: { type: 'classi', name: '3H' } }">
+        3H
+      </router-link>
     </p>
 
     <ul class="center">
@@ -43,11 +51,16 @@ export default {
   }
 
   p {
-    margin: 16px;
+    margin: 16px 0 4px 0;
+  }
+
+  p:not(:first-of-type) {
+    margin-top: 4px;
   }
 
   ul {
     padding: 0;
+    margin: 0 0 16px 0;
   }
 
   li {
