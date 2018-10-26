@@ -1,15 +1,17 @@
 <template>
   <div class="top-section bold">
     <p class="center">
-      App realizzata da
-      <a href="https://www.paolo565.org">Paolo Barbolini</a>
-    </p>
-    <p class="center">
-      Classe
-      <router-link
-        :to="{ name: 'schedule', params: { type: 'classi', name: '3H' } }">
-        3H
-      </router-link>
+      <span class="nowrap">
+        Realizzato da
+        <a href="https://www.paolo565.org">Paolo Barbolini</a>
+      </span>
+      <span class="nowrap class">
+        Classe
+        <router-link
+          :to="{ name: 'schedule', params: { type: 'classi', name: '3H' } }">
+          3H
+        </router-link>
+      </span>
     </p>
 
     <ul class="center">
@@ -78,11 +80,12 @@ export default {
   }
 
   p {
-    margin: 8px 0 0;
+    margin: 16px 4px 0;
+  }
 
-    &:first-of-type {
-      margin-top: 16px;
-    }
+  .class:before {
+    content: '|';
+    margin: 0 8px;
   }
 
   ul {
