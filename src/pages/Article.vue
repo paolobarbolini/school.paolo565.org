@@ -16,7 +16,9 @@
       <a :href="articleUrl">Vai all'articolo</a>
     </p>
 
-    <div class="article" />
+    <div
+      ref="article"
+      class="article" />
     <loading v-if="!loaded" />
   </div>
 </template>
@@ -79,7 +81,7 @@ export default {
 
     async pdf(pdf) {
       if (!pdf) return;
-      const container = document.querySelector('.article');
+      const container = this.$refs.article;
       container.innerHTML = '';
 
       for (let i = 1; i <= pdf.numPages; i++) {
