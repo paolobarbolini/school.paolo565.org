@@ -56,10 +56,17 @@ export default {
 
 <style lang="scss">
 .last-update {
-  width: max-content;
-  margin: 16px auto;
-  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.3);
-  padding: 8px;
+  text-align: center;
+}
+
+// Stop Edge from hurting itself
+@supports(width: max-content) {
+  .last-update {
+    width: max-content;
+    margin: 16px auto;
+    box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.3);
+    padding: 8px;
+  }
 }
 
 .loading-bars {
