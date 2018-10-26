@@ -58,13 +58,13 @@ export default {
   margin-bottom: 5px;
   text-align: center;
 
-  background-color: rgba(234, 164, 7, .65);
+  background-color: rgba(113, 181, 0, .75);
   box-shadow: 3px 4px 9px 0px rgba(0, 0, 0, .2);
   transition: background-color .3s;
   border-radius: 16px;
 
   &:hover {
-    background-color: rgba(234, 164, 7, .45);
+    background-color: rgba(113, 181, 0, .5);
   }
 
   a {
