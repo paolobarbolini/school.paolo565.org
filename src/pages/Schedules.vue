@@ -7,6 +7,7 @@
     ]" />
 
     <input
+      ref="searchQuery"
       v-model="searchQuery"
       class="search-box"
       placeholder="Cerca..."
@@ -57,6 +58,10 @@ export default {
         this.loadSchedules(false);
       }
     },
+  },
+
+  mounted() {
+    this.$refs.searchQuery.focus();
   },
 
   created() {
