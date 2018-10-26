@@ -8,11 +8,11 @@
       :share="true" />
 
     <input
-      ref="searchQuery"
       v-model="searchQuery"
       class="search-box"
       placeholder="Cerca..."
-      type="text">
+      type="text"
+      autofocus>
 
     <last-update :date="loaded ? items.date : null" />
 
@@ -59,10 +59,6 @@ export default {
         this.loadSchedules(false);
       }
     },
-  },
-
-  mounted() {
-    this.$refs.searchQuery.focus();
   },
 
   created() {
