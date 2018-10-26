@@ -1,3 +1,5 @@
+import 'core-js/fn/symbol/iterator.js'; // Edge browser sucks
+
 const corsProxies = [
   'https://cors.paolo565.org/',
   'https://cors-anywhere.herokuapp.com/',

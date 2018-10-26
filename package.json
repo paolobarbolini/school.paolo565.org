@@ -13,6 +13,7 @@
   "author": "Paolo Barbolini",
   "license": "MIT",
   "dependencies": {
+    "core-js": "^2.5.7",
     "pdfjs-dist": "^2.0.489",
     "serviceworker-webpack-plugin": "^1.0.1",
     "vue": "^2.5.17",
