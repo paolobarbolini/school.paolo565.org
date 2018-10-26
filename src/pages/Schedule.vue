@@ -58,13 +58,13 @@ export default {
   },
 
   watch: {
-    async name(name) {
+    name(name) {
       this.item = null;
-      await this.loadSchedule();
+      this.loadSchedule();
     },
 
-    async item(item) {
-      this.schedule = await IstitutoGobetti.buildEmbeddedSchedule(item.html);
+    item(item) {
+      this.schedule = IstitutoGobetti.buildEmbeddedSchedule(item.html);
       if (item.cached) {
         this.loadSchedule(false);
       }

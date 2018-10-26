@@ -195,8 +195,8 @@ export default {
     };
   },
 
-  async buildEmbeddedSchedule(html) {
-    const body = await Utils.parseHtml(html);
+  buildEmbeddedSchedule(html) {
+    const body = Utils.parseHtml(html);
     const schedule = body.querySelector('center:nth-of-type(2)');
 
     // Remove all attributes from table and tr

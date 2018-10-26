@@ -56,7 +56,7 @@ export default {
     return new URL(url, baseUrl).href;
   },
 
-  async parseHtml(html) {
+  parseHtml(html) {
     const doc = document.implementation.createHTMLDocument('preview');
     const element = doc.createElement('div');
     element.innerHTML = html;
@@ -105,7 +105,7 @@ export default {
   async fetchCorsParseHtml(url) {
     const resp = await this.fetchCors(url);
     const html = await resp.text();
-    const parsedHtml = await this.parseHtml(html);
+    const parsedHtml = this.parseHtml(html);
     return parsedHtml;
   },
 
