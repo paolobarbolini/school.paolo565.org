@@ -30,8 +30,11 @@ export default {
         'Ora ci sta davvero mettendo tanto tempo...',
         'Stiamo ancora aspettando...',
         'C\'è nessuno?',
+        'Hellooo, anybody there?',
         'Hai davvero molta pazienza!',
         'Stai davvero leggendo questo messaggio?',
+        'Forse dovresti andare a studiare!',
+        'Non hai un interrogazione per domani?',
         'Forse qualcosa è andato storto?',
       ],
     };
@@ -39,7 +42,7 @@ export default {
 
   timers: {
     updateMessage: {
-      time: 2500,
+      time: 3000,
       autostart: true,
       repeat: true,
       immediate: true,
