@@ -66,7 +66,9 @@ export default {
     item(item) {
       this.schedule = IstitutoGobetti.buildEmbeddedSchedule(item.html);
       if (item.cached) {
-        this.loadSchedule(false);
+        requestIdleCallback(() => {
+          this.loadSchedule(false);
+        });
       }
     },
   },

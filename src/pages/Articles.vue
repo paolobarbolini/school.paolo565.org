@@ -46,7 +46,9 @@ export default {
   watch: {
     items(items) {
       if (items.cached) {
-        this.loadPosts(false);
+        requestIdleCallback(() => {
+          this.loadPosts(false);
+        });
       }
     },
   },

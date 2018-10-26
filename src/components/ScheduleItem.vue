@@ -34,6 +34,8 @@ export default {
     },
 
     name() {
+      if (!this.visible) return this.item.name;
+
       const name = Utils.escapeHtml(this.item.name);
       if (!this.filter) return name;
       const filter = Utils.escapeHtml(this.filter);

@@ -56,7 +56,9 @@ export default {
   watch: {
     items(items) {
       if (items.cached) {
-        this.loadSchedules(false);
+        requestIdleCallback(() => {
+          this.loadSchedules(false);
+        });
       }
     },
   },
