@@ -3,6 +3,7 @@ import router from './router';
 import App from './App';
 import runtime from 'serviceworker-webpack-plugin/lib/runtime';
 
+import 'request-idle-polyfill'; // Edge Browser is evil
 import './index.scss';
 
 window.addEventListener('load', () => {
