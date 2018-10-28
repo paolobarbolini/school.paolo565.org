@@ -1,10 +1,10 @@
 <template>
   <li
     v-show="visible"
-    class="schedule-item">
+    class="column-item">
     <router-link
-      :to="{ name: 'schedule', params: { type: type, name: item.name }}"
-      v-html="name" />
+      :to="to"
+      v-html="displayName" />
   </li>
 </template>
 
@@ -13,7 +13,7 @@ import Utils from '@/utils';
 
 export default {
   props: {
-    type: {
+    name: {
       type: String,
       required: true,
     },
@@ -21,7 +21,7 @@ export default {
       type: String,
       default: '',
     },
-    item: {
+    to: {
       type: Object,
       required: true,
     },
@@ -29,14 +29,13 @@ export default {
 
   computed: {
     visible() {
-      return this.item.name.toLowerCase().includes(this.filter.toLowerCase());
+      return this.name.toLowerCase().includes(this.filter.toLowerCase());
     },
 
-    name() {
-      if (!this.visible) return this.item.name;
+    displayName() {
+      const name = Utils.escapeHtml(this.name);
+      if (!this.filter || !this.visible) return name;
 
-      const name = Utils.escapeHtml(this.item.name);
-      if (!this.filter) return name;
       const filter = Utils.escapeHtml(this.filter);
 
       const escapedQuery = Utils.escapeRegExp(filter);
@@ -44,16 +43,14 @@ export default {
 
       const i = name.toLowerCase().indexOf(filter.toLowerCase());
       const queryReplacement = name.substring(i, i + filter.length);
-      const highlightedName = name.replace(regex, `<b>${queryReplacement}</b>`);
-
-      return highlightedName;
+      return name.replace(regex, `<b>${queryReplacement}</b>`);
     },
   },
 };
 </script>
 
 <style lang="scss">
-.schedule-item {
+.column-item {
   padding: 10px 15px;
   margin: 0;
   margin-bottom: 5px;

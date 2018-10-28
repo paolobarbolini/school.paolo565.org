@@ -2,26 +2,33 @@
   <div class="article-columns-wrapper">
     <div class="article-columns">
       <ul>
-        <li
+        <column-item
           v-for="item in items"
-          :key="item.id"
-          class="article-item">
-          <router-link
-            :to="{ name: 'post', params: { id: item.id }}">
-            {{ item.title }}
-          </router-link>
-        </li>
+          :key="item.name"
+          :name="item.title"
+          :filter="filter"
+          :to="{ name: 'post', params: { id: item.id }}" />
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import ColumnItem from './ColumnItem';
+
 export default {
+  components: {
+    ColumnItem,
+  },
+
   props: {
     items: {
       type: Array,
       required: true,
+    },
+    filter: {
+      type: String,
+      default: '',
     },
   },
 };
@@ -45,30 +52,6 @@ export default {
     &:last-of-type {
       margin-right: 10px;
     }
-  }
-}
-
-.article-item {
-  padding: 10px 15px;
-  margin: 0;
-  margin-bottom: 5px;
-  text-align: center;
-
-  background-color: rgba(113, 181, 0, .75);
-  box-shadow: 3px 4px 9px 0px rgba(0, 0, 0, .2);
-  transition: background-color .3s;
-  border-radius: 16px;
-
-  &:hover {
-    background-color: rgba(113, 181, 0, .5);
-  }
-
-  a {
-    color: #303030;
-    text-decoration: none;
-    display: block;
-    height: 100%;
-    width: 100%;
   }
 }
 </style>

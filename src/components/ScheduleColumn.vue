@@ -7,22 +7,22 @@
     </h3>
 
     <ul>
-      <schedule-item
+      <column-item
         v-for="item in items"
         :key="item.name"
-        :item="item"
+        :name="item.name"
         :filter="filter"
-        :type="type" />
+        :to="{ name: 'schedule', params: { type: type, name: item.name }}" />
     </ul>
   </div>
 </template>
 
 <script>
-import ScheduleItem from './ScheduleItem';
+import ColumnItem from './ColumnItem';
 
 export default {
   components: {
-    ScheduleItem,
+    ColumnItem,
   },
 
   props: {

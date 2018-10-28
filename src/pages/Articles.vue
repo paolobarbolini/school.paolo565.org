@@ -7,7 +7,8 @@
     <div class="container">
       <article-columns
         v-if="loaded"
-        :items="items.posts || []" />
+        :items="items.posts || []"
+        :filter="searchQuery" />
       <loading v-else />
     </div>
   </div>
@@ -25,6 +26,13 @@ export default {
     TopHeading,
     Loading,
     ArticleColumns,
+  },
+
+  props: {
+    searchQuery: {
+      type: String,
+      default: '',
+    },
   },
 
   data() {
