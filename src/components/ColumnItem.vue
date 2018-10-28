@@ -31,7 +31,6 @@ export default {
     visible() {
       return this.name.toLowerCase().includes(this.filter.toLowerCase());
     },
-
     displayName() {
       const name = Utils.escapeHtml(this.name);
       if (!this.filter || !this.visible) return name;

@@ -53,11 +53,10 @@ export default {
   },
 
   watch: {
-    name(name) {
-      this.item = null;
-      this.loadSchedule();
+    name: {
+      handler: 'loadSchedule',
+      immediate: true,
     },
-
     item(item) {
       this.schedule = IstitutoGobetti.buildEmbeddedSchedule(item.html);
       if (item.cached) {
@@ -66,10 +65,6 @@ export default {
         });
       }
     },
-  },
-
-  created() {
-    this.loadSchedule();
   },
 
   methods: {

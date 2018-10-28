@@ -58,20 +58,15 @@ export default {
   },
 
   watch: {
-    async id(id) {
-      this.loaded = false;
-      this.pdfUrl = null;
-      this.pdf = null;
-
-      await this.loadArticle();
+    id: {
+      handler: 'loadArticle',
+      immediate: true,
     },
-
     async pdfUrl(pdfUrl) {
       if (!pdfUrl) return;
       this.pdf = await pdfjsLib.getDocument('https://cors.paolo565.org/' + pdfUrl);
       this.loaded = true;
     },
-
     async pdf(pdf) {
       if (!pdf) return;
       const container = this.$refs.article;
@@ -98,12 +93,12 @@ export default {
     },
   },
 
-  created() {
-    this.loadArticle();
-  },
-
   methods: {
     async loadArticle(cache = true) {
+      this.loaded = false;
+      this.pdfUrl = null;
+      this.pdf = null;
+
       const id = this.id;
       const pdf = await IstitutoGobetti.findArticlePagePdf(id);
       this.pdfUrl = pdf.pdfUrl;
