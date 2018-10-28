@@ -19,7 +19,6 @@
           <span>Contattami</span>
         </router-link>
       </li>
-
       <li v-if="displayShare">
         <a @click="doShare()">
           <icon name="share-alt" />

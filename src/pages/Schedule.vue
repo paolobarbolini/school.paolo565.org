@@ -4,13 +4,11 @@
       :last-update="loaded ? item.date : null"
       :title="name" />
 
-    <div class="container">
-      <div
-        v-if="loaded"
-        class="schedule"
-        v-html="schedule" />
-      <loading v-else />
-    </div>
+    <div
+      v-if="loaded"
+      class="schedule"
+      v-html="schedule" />
+    <loading v-else />
   </div>
 </template>
 
@@ -92,25 +90,29 @@ export default {
 </script>
 
 <style lang="scss">
-.schedule-page {
-  padding: 0;
+.schedule {
+  overflow-y: auto;
+  width: calc(100vw - 40px);
+  max-width: 1500px;
+  margin: 10px auto;
 
-  .schedule {
-    overflow-y: auto;
-    width: calc(100vw - 40px);
-    max-width: 1500px;
-    margin: 10px auto;
+  @media (max-width: 1200px) {
+    width: 100vw;
+    margin-bottom: 0;
+  }
 
-    table {
-      width: 100%;
-    }
+  table {
+    width: 100%;
+  }
 
+  // Table fixes
+  table {
     * {
       font-weight: bold;
       text-decoration: none;
       text-transform: uppercase;
       text-align: center;
-      font-family: "Designosaur";
+      font-family: 'Designosaur';
       font-size: 9pt;
 
       .nodecBlack {
@@ -153,15 +155,6 @@ export default {
         padding: 0;
         margin-top: 5px;
       }
-    }
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .schedule-page {
-    .schedule {
-      width: 100vw;
-      margin-bottom: 0;
     }
   }
 }
