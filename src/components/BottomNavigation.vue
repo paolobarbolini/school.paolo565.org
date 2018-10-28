@@ -19,6 +19,13 @@
           <span>Contattami</span>
         </router-link>
       </li>
+
+      <li v-if="displayShare">
+        <a @click="doShare()">
+          <icon name="share-alt" />
+          <span>Condividi</span>
+        </a>
+      </li>
     </ul>
   </div>
 </template>
@@ -27,6 +34,7 @@
 import 'vue-awesome/icons/home';
 import 'vue-awesome/icons/book';
 import 'vue-awesome/icons/paper-plane';
+import 'vue-awesome/icons/share-alt';
 
 import Icon from 'vue-awesome/components/Icon';
 
