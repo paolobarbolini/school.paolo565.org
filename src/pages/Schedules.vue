@@ -80,17 +80,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.search-box {
-  width: 80vw;
-  max-width: 400px;
-  transform: translate(-50%, -50%);
-  position: relative;
-  left: 50%;
-  box-sizing: border-box;
-  margin-top: 40px;
-  border: rgba(234, 158, 19, 0.66) solid 2px;
-  box-shadow: 3px 4px 9px 0px rgba(0, 0, 0, .3);
-}
-</style>
