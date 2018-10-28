@@ -38,6 +38,11 @@ const routes = [
     path: '/about',
     component: About,
   },
+  {
+    name: 'not-found',
+    path: '*',
+    redirect: '/',
+  },
 ];
 
 export default new Router({
