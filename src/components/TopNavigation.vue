@@ -22,7 +22,8 @@
         v-model.trim="searchQuery"
         type="text"
         placeholder="Cerca"
-        @keyup.enter="$refs.searchQuery.blur()">
+        @keyup.enter="blurSearch()"
+        @keyup.esc="searchVisible = false">
     </div>
   </div>
 </template>
@@ -58,6 +59,12 @@ export default {
     },
     $route() {
       this.searchVisible = false;
+    },
+  },
+
+  methods: {
+    blurSearch() {
+      this.$refs.searchQuery.blur();
     },
   },
 };
