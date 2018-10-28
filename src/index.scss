@@ -31,8 +31,8 @@ body {
   margin: 0 auto;
 }
 
-.last-container,
-.container {
+.last-container:last-of-type,
+.container:last-of-type {
   margin-bottom: 90px;
 }
 

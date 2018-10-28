@@ -1,54 +1,50 @@
 <template>
   <div class="about-page">
-    <top-heading title="Contattami" />
-
+    <top-heading title="Contatti" />
     <div class="container">
       <p>
-        Questo sito è stato creato per velocizzare l'accesso
-        agli orari scolastici su
-        <a href="http://www.istitutogobetti.it">www.istitutogobetti.it</a>
+        App realizzata da <a href="https://www.paolo565.org">Paolo Barbolini</a>
       </p>
       <p>
-        Preferisci utilizzare un bot di Telegram?
-        Aggiungi <a href="https://t.me/IstitutoGobettiBot">@IstitutoGobettiBot</a>
-      </p>
-
-      <hr>
-
-      <p>
-        Sito realizzato da <a href="https://www.paolo565.org">Paolo Barbolini</a>
+        <span>Hai trovato un problema?</span>
+        <span>
+          Contattami
+          <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a>
+        </span>
       </p>
       <p>
-        Hai trovato un problema?
-        Contattami <a href="mailto:paolo@paolo565.org">paolo@paolo565.org</a>
+        <span>Preferisci Telegram?</span>
+        <span>Aggiungi <a href="https://t.me/IstitutoGobettiBot">@IstitutoGobettiBot</a></span>
       </p>
+    </div>
 
-      <hr>
-
-      <h2 class="center">Guida All'Installazione</h2>
+    <top-heading title="Installazione" />
+    <div class="container">
       <ol>
         <li>
           Aprire il browser (si consiglia l'utilizzo di:
-          Google Chrome, Firefox, Edge o Safari)</li>
+          Google Chrome, Firefox, Safari o Edge)
+        </li>
         <li>
-          Digitare <a href="https://school.paolo565.org">school.paolo565.org</a>
+          Digitare <i>school.paolo565.org</i> nella barra in alto
           e premere il tasto invio
         </li>
         <li>
-          Attendere il caricamento degli orari
-        </li>
-        <li>
-          Installare l'app (<b>SOLO per dispositivi Android</b>):
+          Installare (<b>SOLO per dispositivi Android</b>):
           Premere sull'icona in alto a destra della pagina
           (quella composta da 3 puntini) e selezionare
           <i>Aggiungi a schermata home</i>
         </li>
       </ol>
 
-      <hr>
+      <p v-if="supportsWebShare">
+        In alternativa <a @click="displayShareDialog">premi qui</a>
+        per condividerla direttamente su WhatsApp o per email
+      </p>
+    </div>
 
-      <h2 class="center">Dietro le Quinte</h2>
-
+    <top-heading title="Dietro le quinte" />
+    <div class="container">
       <p>
         Dati caricati tramite
         <a href="https://gitlab.com/PaoloBarbolini/school.paolo565.org/snippets/1755327">cors.paolo565.org</a>
@@ -75,7 +71,7 @@
           title="Flaticon">flaticon.com</a>
         sotto licenza
         <a
-          href="https://creativecommons.org/licenses/by/3.0/"
+          href="https://creativecommons.org/licenses/by/3.0/deed.it"
           title="Creative Commons BY 3.0"
           target="_blank">CC 3.0 BY</a>
       </p>
@@ -87,9 +83,19 @@
 <script>
 import TopHeading from '@/components/TopHeading';
 
+import Web from '@/web';
+
 export default {
   components: {
     TopHeading,
+  },
+
+  computed: {
+    supportsWebShare: Web.supportsWebShare,
+  },
+
+  methods: {
+    displayShareDialog: Web.displayShareDialog,
   },
 };
 </script>
@@ -97,16 +103,21 @@ export default {
 <style lang="scss">
 .about-page .container {
   p {
-    margin: 0;
-    text-align: center;
-
-    &:first-of-type {
-      margin-top: 20px;
-    }
+    margin: 0 0 10px 0;
   }
 
-  hr {
-    margin: 0 10px;
+  a {
+    text-decoration: none;
+    color: #3F51B5;
+  }
+
+  span,
+  i {
+    white-space: nowrap;
+  }
+
+  ol {
+    margin: 0 0 10px 0;
   }
 }
 </style>

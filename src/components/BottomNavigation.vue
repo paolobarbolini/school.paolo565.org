@@ -19,8 +19,8 @@
           <span>Contattami</span>
         </router-link>
       </li>
-      <li v-if="displayShare">
-        <a @click="doShare()">
+      <li v-if="supportsWebShare">
+        <a @click="displayShareDialog()">
           <icon name="share-alt" />
           <span>Condividi</span>
         </a>
@@ -37,26 +37,19 @@ import 'vue-awesome/icons/share-alt';
 
 import Icon from 'vue-awesome/components/Icon';
 
+import Web from '@/web';
+
 export default {
   components: {
     Icon,
   },
 
   computed: {
-    displayShare() {
-      return !!navigator.share;
-    },
+    supportsWebShare: Web.supportsWebShare,
   },
 
   methods: {
-    doShare() {
-      navigator.share({
-        title: 'Istituto Gobetti App',
-        text: 'Controlla con facilità gli orari e gli avvisi ' +
-              'dell\'Istituto Gobetti',
-        url: 'https://school.paolo565.org',
-      });
-    },
+    displayShareDialog: Web.displayShareDialog,
   },
 };
 </script>
