@@ -29,6 +29,7 @@ module.exports = merge(baseConfig, {
     },
     historyApiFallback: true,
     noInfo: true,
+    disableHostCheck: true,
   },
 
   output: {
