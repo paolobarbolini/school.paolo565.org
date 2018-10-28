@@ -1,8 +1,8 @@
 <template>
   <div>
-    <top-navigation />
+    <top-navigation @search-query="setSearchQuery" />
 
-    <router-view />
+    <router-view :search-query="searchQuery" />
 
     <bottom-navigation />
   </div>
@@ -16,6 +16,18 @@ export default {
   components: {
     TopNavigation,
     BottomNavigation,
+  },
+
+  data() {
+    return {
+      searchQuery: '',
+    };
+  },
+
+  methods: {
+    setSearchQuery(query) {
+      this.searchQuery = query;
+    },
   },
 };
 </script>

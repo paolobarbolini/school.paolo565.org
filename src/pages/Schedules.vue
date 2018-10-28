@@ -1,12 +1,5 @@
 <template>
   <div class="hours-page">
-    <input
-      v-model.trim="searchQuery"
-      class="search-box"
-      placeholder="Cerca..."
-      type="text"
-      autofocus>
-
     <last-update :date="loaded ? items.date : null" />
 
     <schedule-columns
@@ -31,9 +24,15 @@ export default {
     ScheduleColumns,
   },
 
+  props: {
+    searchQuery: {
+      type: String,
+      default: '',
+    },
+  },
+
   data() {
     return {
-      searchQuery: '',
       items: null,
     };
   },
