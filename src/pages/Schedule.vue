@@ -1,21 +1,21 @@
 <template>
   <div class="schedule-page">
-    <h2 class="center">
-      {{ name }}
-    </h2>
+    <top-heading
+      :last-update="loaded ? item.date : null"
+      :title="name" />
 
-    <last-update :date="loaded ? item.date : null" />
-
-    <div
-      v-if="loaded"
-      class="schedule"
-      v-html="schedule" />
-    <loading v-else />
+    <div class="container">
+      <div
+        v-if="loaded"
+        class="schedule"
+        v-html="schedule" />
+      <loading v-else />
+    </div>
   </div>
 </template>
 
 <script>
-import LastUpdate from '@/components/LastUpdate';
+import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
 
@@ -23,7 +23,7 @@ import IstitutoGobetti from '@/istitutogobetti';
 
 export default {
   components: {
-    LastUpdate,
+    TopHeading,
     Loading,
     ScheduleColumns,
   },

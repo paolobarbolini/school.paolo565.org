@@ -1,22 +1,20 @@
 <template>
   <div class="article-page">
-    <h2
-      v-if="loaded"
-      class="center">
-      {{ title }}
-    </h2>
+    <top-heading title="Titolo WIP" />
 
-    <p
-      v-if="loaded && !pdf"
-      class="bold center">
-      Questo articolo non contiene un pdf.<br>
-      <a :href="articleUrl">Vai all'articolo</a>
-    </p>
+    <div class="container">
+      <p
+        v-if="loaded && !pdf"
+        class="bold center">
+        Questo articolo non contiene un pdf.<br>
+        <a :href="articleUrl">Vai all'articolo</a>
+      </p>
 
-    <div
-      ref="article"
-      class="article" />
-    <loading v-if="!loaded" />
+      <div
+        ref="article"
+        class="article" />
+      <loading v-if="!loaded" />
+    </div>
   </div>
 </template>
 
@@ -24,7 +22,7 @@
 import pdfjsLib from 'pdfjs-dist/webpack.js';
 import {PDFPageView} from 'pdfjs-dist/web/pdf_viewer';
 
-import LastUpdate from '@/components/LastUpdate';
+import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 
 import IstitutoGobetti from '@/istitutogobetti';
@@ -33,7 +31,7 @@ const CSS_UNITS = 96 / 72;
 
 export default {
   components: {
-    LastUpdate,
+    TopHeading,
     Loading,
   },
 

@@ -36,10 +36,6 @@ export default {
 }
 
 .article-columns {
-  width: 90%;
-  max-width: 500px;
-  margin: auto;
-
   ul {
     margin: 0;
     padding: 0;

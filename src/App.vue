@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <top-navigation @search-query="setSearchQuery" />
 
     <router-view :search-query="searchQuery" />

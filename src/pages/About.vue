@@ -1,6 +1,8 @@
 <template>
   <div class="about-page">
-    <div class="contents">
+    <top-heading title="Contattami" />
+
+    <div class="container">
       <p>
         Questo sito è stato creato per velocizzare l'accesso
         agli orari scolastici su
@@ -82,12 +84,18 @@
   </div>
 </template>
 
-<style lang="scss">
-.about-page .contents {
-  padding: 10px;
-  max-width: 1000px;
-  margin: auto;
+<script>
+import TopHeading from '@/components/TopHeading';
 
+export default {
+  components: {
+    TopHeading,
+  },
+};
+</script>
+
+<style lang="scss">
+.about-page .container {
   p {
     margin: 0;
     text-align: center;
@@ -98,8 +106,7 @@
   }
 
   hr {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 0 10px;
   }
 }
 </style>

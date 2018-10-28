@@ -1,16 +1,20 @@
 <template>
   <div class="articles-page">
-    <last-update :date="loaded ? items.date : null" />
+    <top-heading
+      :last-update="loaded ? items.date : null"
+      title="Avvisi" />
 
-    <article-columns
-      v-if="loaded"
-      :items="items.posts || []" />
-    <loading v-else />
+    <div class="container">
+      <article-columns
+        v-if="loaded"
+        :items="items.posts || []" />
+      <loading v-else />
+    </div>
   </div>
 </template>
 
 <script>
-import LastUpdate from '@/components/LastUpdate';
+import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ArticleColumns from '@/components/ArticleColumns';
 
@@ -18,7 +22,7 @@ import IstitutoGobetti from '@/istitutogobetti';
 
 export default {
   components: {
-    LastUpdate,
+    TopHeading,
     Loading,
     ArticleColumns,
   },
