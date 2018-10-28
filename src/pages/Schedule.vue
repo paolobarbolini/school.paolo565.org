@@ -1,8 +1,5 @@
 <template>
   <div class="schedule-page">
-    <top-section
-      :items="[ { name: 'Torna Indietro', destination: 'schedules' } ]" />
-
     <h2 class="center">
       {{ name }}
     </h2>
@@ -18,7 +15,6 @@
 </template>
 
 <script>
-import TopSection from '@/components/TopSection';
 import LastUpdate from '@/components/LastUpdate';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
@@ -27,7 +23,6 @@ import IstitutoGobetti from '@/istitutogobetti';
 
 export default {
   components: {
-    TopSection,
     LastUpdate,
     Loading,
     ScheduleColumns,

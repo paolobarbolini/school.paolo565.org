@@ -1,8 +1,5 @@
 <template>
   <div class="article-page">
-    <top-section
-      :items="[ { name: 'Torna Indietro', destination: 'posts' } ]" />
-
     <h2
       v-if="loaded"
       class="center">
@@ -27,7 +24,6 @@
 import pdfjsLib from 'pdfjs-dist/webpack.js';
 import {PDFPageView} from 'pdfjs-dist/web/pdf_viewer';
 
-import TopSection from '@/components/TopSection';
 import LastUpdate from '@/components/LastUpdate';
 import Loading from '@/components/Loading';
 
@@ -37,7 +33,6 @@ const CSS_UNITS = 96 / 72;
 
 export default {
   components: {
-    TopSection,
     LastUpdate,
     Loading,
   },

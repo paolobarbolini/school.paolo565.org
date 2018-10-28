@@ -1,8 +1,5 @@
 <template>
   <div class="about-page">
-    <top-section
-      :items="[ { name: 'Torna Indietro', destination: 'schedules' } ]" />
-
     <div class="contents">
       <p>
         Questo sito è stato creato per velocizzare l'accesso
@@ -84,16 +81,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import TopSection from '@/components/TopSection';
-
-export default {
-  components: {
-    TopSection,
-  },
-};
-</script>
 
 <style lang="scss">
 .about-page .contents {

@@ -1,12 +1,5 @@
 <template>
   <div class="hours-page">
-    <top-section
-      :items="[
-        { name: 'Avvisi', destination: 'posts' },
-        { name: 'Maggiori Informazioni', destination: 'about' }
-      ]"
-      :share="true" />
-
     <input
       v-model.trim="searchQuery"
       class="search-box"
@@ -25,7 +18,6 @@
 </template>
 
 <script>
-import TopSection from '@/components/TopSection';
 import LastUpdate from '@/components/LastUpdate';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
@@ -34,7 +26,6 @@ import IstitutoGobetti from '@/istitutogobetti';
 
 export default {
   components: {
-    TopSection,
     LastUpdate,
     Loading,
     ScheduleColumns,

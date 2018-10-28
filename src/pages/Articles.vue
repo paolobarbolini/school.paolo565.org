@@ -1,8 +1,5 @@
 <template>
   <div class="articles-page">
-    <top-section
-      :items="[ { name: 'Torna Indietro', destination: 'schedules' } ]" />
-
     <last-update :date="loaded ? items.date : null" />
 
     <article-columns
@@ -13,7 +10,6 @@
 </template>
 
 <script>
-import TopSection from '@/components/TopSection';
 import LastUpdate from '@/components/LastUpdate';
 import Loading from '@/components/Loading';
 import ArticleColumns from '@/components/ArticleColumns';
@@ -22,7 +18,6 @@ import IstitutoGobetti from '@/istitutogobetti';
 
 export default {
   components: {
-    TopSection,
     LastUpdate,
     Loading,
     ArticleColumns,
