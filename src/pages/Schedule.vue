@@ -4,11 +4,13 @@
       :last-update="loaded ? item.date : null"
       :title="name" />
 
-    <div
-      v-if="loaded"
-      class="schedule"
-      v-html="schedule" />
-    <loading v-else />
+    <div class="last-container">
+      <div
+        v-if="loaded"
+        class="schedule"
+        v-html="schedule" />
+      <loading v-else />
+    </div>
   </div>
 </template>
 

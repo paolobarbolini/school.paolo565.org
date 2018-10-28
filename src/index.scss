@@ -31,9 +31,12 @@ body {
   margin: 0 auto;
 }
 
+.last-container,
 .container {
   margin-bottom: 90px;
+}
 
+.container {
   background-color: white;
   padding: 16px;
 
