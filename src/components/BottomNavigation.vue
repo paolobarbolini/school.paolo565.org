@@ -75,8 +75,10 @@ export default {
   ul {
     padding: 0;
     margin: 0;
+    width: 100%;
+    max-width: 400px;
 
-    display: inline-block;
+    display: flex;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
@@ -85,10 +87,7 @@ export default {
   li {
     list-style-type: none;
     display: inline-block;
-
-    &:not(:last-of-type) {
-      margin-right: 16px;
-    }
+    width: 100%;
 
     a {
       color: #757575;
@@ -103,12 +102,14 @@ export default {
     .fa-icon {
       position: relative;
       left: 50%;
-      transform: translateX(-50%) scale(1.5);
+      transform: translateX(-50%) scale(1.3);
       margin-bottom: 4px;
     }
 
     span {
       display: block;
+      font-size: small;
+      text-align: center;
     }
   }
 }
