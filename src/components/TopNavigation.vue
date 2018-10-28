@@ -21,7 +21,8 @@
         ref="searchQuery"
         v-model.trim="searchQuery"
         type="text"
-        placeholder="Cerca">
+        placeholder="Cerca"
+        @keyup.enter="$refs.searchQuery.blur()">
     </div>
   </div>
 </template>
