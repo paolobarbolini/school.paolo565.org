@@ -9,7 +9,7 @@
       </li>
       <li>
         <router-link :to="{ name: 'posts' }">
-          <icon name="book" />
+          <icon name="scroll" />
           <span>Avvisi</span>
         </router-link>
       </li>
@@ -31,7 +31,7 @@
 
 <script>
 import 'vue-awesome/icons/home';
-import 'vue-awesome/icons/book';
+import 'vue-awesome/icons/scroll';
 import 'vue-awesome/icons/paper-plane';
 import 'vue-awesome/icons/share-alt';
 
