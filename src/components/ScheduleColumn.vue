@@ -64,7 +64,6 @@ export default {
   width: 30vw;
   min-width: 240px;
   max-width: 320px;
-  flex: 1;
 
   h3 {
     margin-top: 0;

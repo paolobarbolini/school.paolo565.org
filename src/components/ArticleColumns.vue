@@ -1,15 +1,13 @@
 <template>
-  <div class="article-columns-wrapper">
-    <div class="article-columns">
-      <ul>
-        <column-item
-          v-for="item in items"
-          :key="item.name"
-          :name="item.title"
-          :filter="filter"
-          :to="{ name: 'post', params: { id: item.id }}" />
-      </ul>
-    </div>
+  <div class="article-columns">
+    <ul>
+      <column-item
+        v-for="item in items"
+        :key="item.name"
+        :name="item.title"
+        :filter="filter"
+        :to="{ name: 'post', params: { id: item.id }}" />
+    </ul>
   </div>
 </template>
 
@@ -35,14 +33,10 @@ export default {
 </script>
 
 <style lang="scss">
-.article-columns-wrapper {
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
-  display: inline-flex;
-}
-
 .article-columns {
+  max-width: 512px;
+  margin: 0 auto;
+
   ul {
     margin: 0;
     padding: 0;

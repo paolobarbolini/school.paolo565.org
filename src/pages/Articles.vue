@@ -4,7 +4,9 @@
       :last-update="loaded ? items.date : null"
       title="Avvisi" />
 
-    <div class="container">
+    <div
+      class="container"
+      style="background-color: transparent; box-shadow: none; padding: 0;">
       <article-columns
         v-if="loaded"
         :items="items.posts || []"

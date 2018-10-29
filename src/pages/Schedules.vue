@@ -4,7 +4,9 @@
       :last-update="loaded ? items.date : null"
       title="Orari" />
 
-    <div class="container">
+    <div
+      class="container"
+      style="background-color: transparent; box-shadow: none; padding: 0;">
       <schedule-columns
         v-if="loaded"
         :items="items.items || []"

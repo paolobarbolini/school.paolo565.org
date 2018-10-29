@@ -50,18 +50,16 @@ export default {
 
 <style lang="scss">
 .column-item {
-  padding: 10px 15px;
-  margin: 0;
-  margin-bottom: 5px;
+  padding: 5px 10px;
+  margin-bottom: 8px;
   text-align: center;
-
-  background-color: rgba(113, 181, 0, .75);
-  box-shadow: 3px 4px 9px 0px rgba(0, 0, 0, .2);
-  transition: background-color .3s;
-  border-radius: 16px;
+  transition: background-color .5s;
+  background-color: white;
+  box-shadow: 0 0 8px grey;
+  border-radius: 2px;
 
   &:hover {
-    background-color: rgba(113, 181, 0, .5);
+    background-color: #E3F2FD;
   }
 
   a {
