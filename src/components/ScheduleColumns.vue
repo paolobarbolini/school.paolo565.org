@@ -73,7 +73,6 @@ export default {
 
 .list-columns {
   display: flex;
-  max-width: 100%;
-  margin: auto;
+  width: 100%;
 }
 </style>

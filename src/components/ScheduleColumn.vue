@@ -61,9 +61,15 @@ export default {
 
 <style lang="scss">
 .schedule-column {
-  width: 30vw;
-  min-width: 240px;
-  max-width: 320px;
+  min-width: 33%;
+
+  @media (max-width: 320px) {
+    min-width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    min-width: 50%;
+  }
 
   h3 {
     margin-top: 0;
