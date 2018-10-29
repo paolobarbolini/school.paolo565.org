@@ -1,11 +1,22 @@
-const cacheName = 'istitutogobettiapp-v5';
+// eslint-disable-next-line no-undef
+const cacheFiles = ['/'].concat(serviceWorkerOption.assets);
+
+// Cache name generator
+const str = cacheFiles.join();
+
+let hash = 0;
+for (let i = 0; i < str.length; i++) {
+  const chr = str.charCodeAt(i);
+  hash = ((hash << 5) - hash) + chr;
+  hash |= 0;
+}
+hash = Math.abs(hash);
+
+const cacheName = `istitutogobettiapp-${hash}`;
 
 const expectedCaches = [
   cacheName,
 ];
-
-// eslint-disable-next-line no-undef
-const cacheFiles = ['/'].concat(serviceWorkerOption.assets);
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
