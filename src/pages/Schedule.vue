@@ -102,6 +102,13 @@ export default {
     width: 100%;
   }
 
+  td:first-of-type {
+    position: sticky;
+    left: 0;
+    background-color: #e9e9e9;
+    width: 30px;
+  }
+
   // Table fixes
   table {
     * {
