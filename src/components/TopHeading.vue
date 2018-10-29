@@ -63,7 +63,6 @@ export default {
 <style lang="scss">
 .top-heading {
   color: #888;
-  height: 50px;
   display: flex;
   align-items: center;
   padding: 0 0 0 16px;
@@ -73,6 +72,7 @@ export default {
     font-weight: bold;
     font-size: 100%;
     margin-right: .3rem;
+    white-space: normal;
   }
 
   span {
