@@ -76,3 +76,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.articles-page {
+  .top-heading {
+    max-width: 512px;
+  }
+}
+</style>
