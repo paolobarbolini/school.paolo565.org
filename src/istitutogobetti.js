@@ -82,15 +82,18 @@ export default {
   },
 
   async articlePagePdf(id, cache = true) {
-    return Utils.load(`article-pdf-v2-${id}`, async () => {
+    return Utils.load(`article-pdf-v3-${id}`, async () => {
       return this.findArticlePagePdf(id);
     }, cache);
   },
 
   async findArticlePagePdf(id) {
     const url = this.getArticlePageUrl(id);
-    const articlePdfPage = await Utils.fetchCorsParseHtml(url);
-    const content = articlePdfPage.querySelector('.jsn-article-content');
+    const articlePage = await Utils.fetchCorsParseHtml(url);
+    const content = articlePage.querySelector('.jsn-article-content');
+
+    const titleElement = articlePage.querySelector('.contentheading');
+    const title = titleElement.innerText.trim();
     const urls = content.querySelectorAll('a');
     for (const url of urls) {
       const href = url.getAttribute('href');
@@ -100,6 +103,7 @@ export default {
 
       const fullUrl = Utils.joinUrls(this.schoolUrl, href);
       return {
+        title: title,
         pdfUrl: fullUrl,
       };
     }

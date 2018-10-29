@@ -1,6 +1,6 @@
 <template>
   <div class="article-page">
-    <top-heading title="Titolo WIP" />
+    <top-heading :title="title" />
 
     <div class="container">
       <p
@@ -63,13 +63,14 @@ export default {
   },
 
   methods: {
-    async loadArticle(cache = true) {
+    async loadArticle() {
       this.loaded = false;
       this.pdfUrl = null;
       this.pdf = null;
 
       const id = this.id;
-      const pdf = await IstitutoGobetti.findArticlePagePdf(id);
+      const pdf = await IstitutoGobetti.articlePagePdf(id);
+      this.title = pdf.title;
       this.pdfUrl = pdf.pdfUrl;
       this.loaded = true;
     },
