@@ -13,8 +13,9 @@
       <pdf
         v-if="loaded"
         :url="pdfUrl"
-        class="article" />
-      <loading v-if="!loaded" />
+        class="article"
+        @pdf-loaded="pdfLoaded = true" />
+      <loading v-if="!loaded || (pdfUrl && !pdfLoaded)" />
     </div>
   </div>
 </template>
@@ -45,6 +46,7 @@ export default {
     return {
       title: '',
       loaded: false,
+      pdfLoaded: false,
       pdfUrl: null,
     };
   },
@@ -65,6 +67,7 @@ export default {
   methods: {
     async loadArticle() {
       this.loaded = false;
+      this.pdfLoaded = false;
       this.pdfUrl = null;
       this.pdf = null;
 

@@ -43,6 +43,7 @@ export default {
   methods: {
     async loadPdf() {
       this.pdf = await pdfjsLib.getDocument('https://cors.paolo565.org/' + this.url);
+      this.$emit('pdf-loaded');
     },
   },
 };
