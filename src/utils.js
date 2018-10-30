@@ -81,8 +81,13 @@ export default {
     return element.innerHTML;
   },
 
-  async fetchOk(url) {
-    const resp = await fetch(url);
+  async fetchOk(url, signal = null) {
+    const options = {};
+    if (signal) {
+      options.signal = signal;
+    }
+
+    const resp = await fetch(url, options);
     if (!resp.ok) {
       throw new Error(`Invalid response: ${resp.status}`);
     }
@@ -96,12 +101,25 @@ export default {
     return await invert(Promise.all(ps.map(invert)));
   },
 
-  fetchCors(url) {
-    return this.promiseRaceSuccessfull(
-        corsProxies.map((proxy) => {
-          return this.fetchOk(`${proxy}${url}`);
+  async fetchCors(url) {
+    let controllers = [];
+
+    const resp = await this.promiseRaceSuccessfull(
+        corsProxies.map(async (proxy) => {
+          const controller = new AbortController();
+          controller.proxy = proxy;
+          controllers.push(controller);
+
+          const resp = await this.fetchOk(`${proxy}${url}`, controller.signal);
+          controllers = controllers.filter((item) => item.proxy !== proxy);
+          return resp;
         })
     );
+    for (const controller of controllers) {
+      controller.abort();
+    }
+
+    return resp;
   },
 
   async fetchCorsParseHtml(url) {
