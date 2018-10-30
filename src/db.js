@@ -41,4 +41,28 @@ export default {
     }
     return values;
   },
+
+  save(key, value) {
+    value.date = new Date();
+    const val = JSON.stringify(value);
+    localStorage.setItem(key, val);
+    return value;
+  },
+
+  async load(key, loader, cache = true) {
+    if (cache) {
+      const val = localStorage.getItem(key);
+      if (val) {
+        const value = JSON.parse(val);
+        value.date = new Date(value.date);
+        value.cached = true;
+        return value;
+      }
+    }
+
+    const value = await await loader();
+    const savedValue = await this.save(key, value);
+    savedValue.cached = false;
+    return savedValue;
+  },
 };

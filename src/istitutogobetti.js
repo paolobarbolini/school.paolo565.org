@@ -1,3 +1,4 @@
+import DB from './db';
 import Utils from './utils';
 
 export default {
@@ -10,7 +11,7 @@ export default {
   },
 
   async articlePageUrl(cache = true) {
-    return Utils.load(`articlepage-url-v3`, async () => {
+    return DB.load(`articlepage-url-v3`, async () => {
       return await this.findArticlePageUrl();
     }, cache);
   },
@@ -39,7 +40,7 @@ export default {
   },
 
   async listArticles(cache = true, page = 1) {
-    return Utils.load('articles', async () => {
+    return DB.load('articles', async () => {
       return this.findArticles(page);
     }, cache);
   },
@@ -82,7 +83,7 @@ export default {
   },
 
   async articlePagePdf(id, cache = true) {
-    return Utils.load(`article-pdf-v3-${id}`, async () => {
+    return DB.load(`article-pdf-v3-${id}`, async () => {
       return this.findArticlePagePdf(id);
     }, cache);
   },
@@ -117,7 +118,7 @@ export default {
   },
 
   async schedulePageUrl(articlePageUrl, cache = true) {
-    return Utils.load('schedulepage-url-v2', async () => {
+    return DB.load('schedulepage-url-v2', async () => {
       return this.findSchedulePageUrl(articlePageUrl);
     }, cache);
   },
@@ -146,7 +147,7 @@ export default {
   },
 
   async schedulePageItems(schedulePageUrl, cache = true) {
-    return Utils.load('schedule-items-v2', async () => {
+    return DB.load('schedule-items-v2', async () => {
       return this.findSchedulePageItems(schedulePageUrl);
     }, cache);
   },
@@ -186,7 +187,7 @@ export default {
   },
 
   async scheduleItem(url, name, type, cache = true) {
-    return Utils.load(`scheduleitem-v2-${name}-${type}`, async () => {
+    return DB.load(`scheduleitem-v2-${name}-${type}`, async () => {
       return this.findScheduleItem(url);
     }, cache);
   },
