@@ -5,6 +5,16 @@
       title="Orari" />
 
     <div class="container clear-container">
+      <ul class="highlighted-schedules">
+        <column-item
+          v-for="item in highlightedSchedules"
+          :key="item.name"
+          :name="item.name"
+          :filter="searchQuery"
+          :to="{ name: 'schedule',
+                 params: { type: item.type, name: item.name }}" />
+      </ul>
+
       <schedule-columns
         v-if="loaded"
         :items="items.items || []"
@@ -18,14 +28,17 @@
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
+import ColumnItem from '@/components/ColumnItem';
 
 import IstitutoGobetti from '@/istitutogobetti';
+import DB from '@/db';
 
 export default {
   components: {
     TopHeading,
     Loading,
     ScheduleColumns,
+    ColumnItem,
   },
 
   props: {
@@ -44,6 +57,9 @@ export default {
   computed: {
     loaded() {
       return !!this.items;
+    },
+    highlightedSchedules() {
+      return DB.getMostFrequentlyUsed().slice(0, 3);
     },
   },
 
@@ -80,3 +96,18 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.highlighted-schedules {
+  list-style: none;
+  margin: 0 0 10px 0;
+  padding: 0;
+  display: flex;
+
+  .column-item {
+    display: inline-block;
+    width: 100%;
+    margin: 0 10px;
+  }
+}
+</style>

@@ -20,6 +20,7 @@ import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
 
 import IstitutoGobetti from '@/istitutogobetti';
+import DB from '@/db';
 
 export default {
   components: {
@@ -54,10 +55,10 @@ export default {
 
   watch: {
     name: {
-      handler: 'loadSchedule',
+      handler: 'load',
       immediate: true,
     },
-    item(item) {
+    item(item, oldItem) {
       this.schedule = IstitutoGobetti.buildEmbeddedSchedule(item.html);
       if (item.cached) {
         requestIdleCallback(() => {
@@ -68,6 +69,10 @@ export default {
   },
 
   methods: {
+    async load() {
+      DB.addToFrequentyUsed(this.type, this.name);
+      await this.loadSchedule();
+    },
     async loadSchedule(cache = true) {
       const items = await IstitutoGobetti.schedulePageItems('');
       for (const item of items.items) {
