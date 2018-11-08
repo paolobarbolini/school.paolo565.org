@@ -30,10 +30,11 @@
           e premere il tasto invio
         </li>
         <li>
-          Installare (<b>SOLO per dispositivi Android</b>):
+          Installare l'app (<b>SOLO col browser Google Chrome</b>):
           Premere sull'icona in alto a destra della pagina
           (quella composta da 3 puntini) e selezionare
-          <i>Aggiungi a schermata home</i>
+          <i>Aggiungi a schermata home</i> o
+          <i>Installa Istituto Gobetti Web...</i>
         </li>
       </ol>
 
