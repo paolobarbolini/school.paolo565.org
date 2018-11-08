@@ -36,13 +36,10 @@ export default {
       if (!this.filter || !this.visible) return name;
 
       const filter = Utils.escapeHtml(this.filter);
-
       const escapedQuery = Utils.escapeRegExp(filter);
-      const regex = new RegExp(escapedQuery, 'ig');
 
-      const i = name.toLowerCase().indexOf(filter.toLowerCase());
-      const queryReplacement = name.substring(i, i + filter.length);
-      return name.replace(regex, `<b>${queryReplacement}</b>`);
+      const regex = new RegExp(`(${escapedQuery})`, 'ig');
+      return name.replace(regex, '<b>$1</b>');
     },
   },
 };
