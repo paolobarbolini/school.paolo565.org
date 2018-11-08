@@ -3,8 +3,8 @@
     <ul>
       <li>
         <router-link :to="{ name: 'schedules' }">
-          <icon name="home" />
-          <span>Home</span>
+          <icon name="clock" />
+          <span>Orari</span>
         </router-link>
       </li>
       <li>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/home';
+import 'vue-awesome/icons/clock';
 import 'vue-awesome/icons/scroll';
 import 'vue-awesome/icons/paper-plane';
 import 'vue-awesome/icons/share-alt';
