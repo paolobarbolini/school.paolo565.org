@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!offline">
     <div class="loading-bars">
       <div class="loading-bar" />
       <div class="loading-bar" />
@@ -11,15 +11,29 @@
       {{ loadingStatus }}
     </p>
   </div>
+  <offline-comp v-else />
 </template>
 
 <script>
+import Offline from '@/components/Offline';
+
 import VueTimers from 'vue-timers/mixin';
 
 export default {
+  components: {
+    'offline-comp': Offline,
+  },
+
   mixins: [
     VueTimers,
   ],
+
+  props: {
+    offline: {
+      type: Boolean,
+      required: true,
+    },
+  },
 
   data() {
     return {

@@ -2,6 +2,7 @@
   <div class="hours-page">
     <top-heading
       :last-update="loaded ? items.date : null"
+      :offline="offline"
       title="Orari" />
 
     <div class="container clear-container">
@@ -19,7 +20,9 @@
         v-if="loaded"
         :items="items.items || []"
         :filter="searchQuery" />
-      <loading v-else />
+      <loading
+        v-else
+        :offline="offline" />
     </div>
   </div>
 </template>
@@ -29,6 +32,7 @@ import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
 import ColumnItem from '@/components/ColumnItem';
+import Offline from '@/components/Offline';
 
 import IstitutoGobetti from '@/istitutogobetti';
 import DB from '@/db';
@@ -39,6 +43,7 @@ export default {
     Loading,
     ScheduleColumns,
     ColumnItem,
+    Offline,
   },
 
   props: {
@@ -50,6 +55,7 @@ export default {
 
   data() {
     return {
+      offline: false,
       items: null,
     };
   },
@@ -73,8 +79,12 @@ export default {
     },
   },
 
-  created() {
-    this.loadSchedules();
+  async created() {
+    try {
+      await this.loadSchedules();
+    } catch {
+      this.offline = true;
+    }
   },
 
   methods: {

@@ -4,8 +4,11 @@
       {{ title }}
     </h1>
 
-    <span v-if="displayLastUpdate">
+    <span v-if="displayLastUpdate && !offline">
       aggiornato {{ displayLastUpdate }}
+    </span>
+    <span v-else-if="offline">
+      sei offline :(
     </span>
   </div>
 </template>
@@ -24,6 +27,10 @@ export default {
     title: {
       type: String,
       required: true,
+    },
+    offline: {
+      type: Boolean,
+      default: false,
     },
     lastUpdate: {
       validator: (prop) => prop instanceof Date || prop === null,

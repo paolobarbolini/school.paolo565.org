@@ -1,6 +1,6 @@
 <template>
   <div class="article-page">
-    <top-heading :title="title" />
+    <top-heading :title="title || 'Avvisi'" />
 
     <div class="container">
       <p
@@ -15,7 +15,9 @@
         :url="pdfUrl"
         class="article"
         @pdf-loaded="pdfLoaded = true" />
-      <loading v-if="!loaded || (pdfUrl && !pdfLoaded)" />
+      <loading
+        v-else
+        :offline="offline" />
     </div>
   </div>
 </template>
@@ -23,6 +25,7 @@
 <script>
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
+import Offline from '@/components/Offline';
 
 const Pdf = () => import(/* webpackChunkName: "pdf" */ '@/components/Pdf');
 
@@ -33,6 +36,7 @@ export default {
     TopHeading,
     Loading,
     Pdf,
+    Offline,
   },
 
   props: {
@@ -44,6 +48,7 @@ export default {
 
   data() {
     return {
+      offline: false,
       title: '',
       loaded: false,
       pdfLoaded: false,
@@ -59,12 +64,20 @@ export default {
 
   watch: {
     id: {
-      handler: 'loadArticle',
+      handler: 'load',
       immediate: true,
     },
   },
 
   methods: {
+    async load() {
+      try {
+        await this.loadArticle();
+      } catch {
+        this.offline = true;
+      }
+    },
+
     async loadArticle() {
       this.loaded = false;
       this.pdfLoaded = false;

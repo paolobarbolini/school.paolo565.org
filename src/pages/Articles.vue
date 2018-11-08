@@ -9,7 +9,9 @@
         v-if="loaded"
         :items="items.posts || []"
         :filter="searchQuery" />
-      <loading v-else />
+      <loading
+        v-else
+        :offline="offline" />
     </div>
   </div>
 </template>
@@ -18,6 +20,7 @@
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ArticleColumns from '@/components/ArticleColumns';
+import Offline from '@/components/Offline';
 
 import IstitutoGobetti from '@/istitutogobetti';
 
@@ -26,6 +29,7 @@ export default {
     TopHeading,
     Loading,
     ArticleColumns,
+    Offline,
   },
 
   props: {
@@ -37,6 +41,7 @@ export default {
 
   data() {
     return {
+      offline: false,
       page: 1,
       items: {
         posts: [],
@@ -60,8 +65,12 @@ export default {
     },
   },
 
-  created() {
-    this.loadPosts();
+  async created() {
+    try {
+      await this.loadPosts();
+    } catch {
+      this.offline = true;
+    }
   },
 
   methods: {
