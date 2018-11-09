@@ -7,6 +7,7 @@
     <div class="last-container">
       <div
         v-if="loaded"
+        ref="schedule"
         class="schedule"
         v-html="schedule" />
       <loading
@@ -78,6 +79,7 @@ export default {
       DB.addToFrequentyUsed(this.type, this.name);
       try {
         await this.loadSchedule();
+        this.$nextTick(this.alignSchedule);
       } catch {
         this.offline = true;
       }
@@ -95,6 +97,17 @@ export default {
         this.item = await IstitutoGobetti.scheduleItem(url, name, type, cache);
         break;
       }
+    },
+    alignSchedule() {
+      const i = new Date().getDay() + 1;
+
+      const schedule = this.$refs.schedule;
+      const leftEl = document.querySelector('td:nth-child(1)');
+      const destEl = document.querySelector(`td:nth-child(${i})`);
+
+      const x = destEl.offsetLeft - leftEl.scrollWidth;
+      const y = leftEl.scrollHeight;
+      schedule.scrollTo(x, y);
     },
   },
 };
