@@ -2,7 +2,9 @@
   <div class="article-page">
     <top-heading :title="title || 'Avvisi'" />
 
-    <div class="container">
+    <div
+      :class="{ 'pdf-container': loaded && !offline }"
+      class="container">
       <p
         v-if="loaded && !pdfUrl"
         class="bold center no-pdf">
@@ -96,7 +98,7 @@ export default {
 
 <style lang="scss">
 .article-page {
-  .container {
+  .pdf-container {
     background-color: #525659;
   }
 
