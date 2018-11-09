@@ -81,6 +81,10 @@ export default {
 .offline-page {
   margin: 30vh 24px 0;
 
+  @media (max-width: 480px) {
+    margin-top: 0;
+  }
+
   .fa-icon {
     position: relative;
     left: 50%;
