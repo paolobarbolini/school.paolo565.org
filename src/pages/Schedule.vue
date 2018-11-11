@@ -80,7 +80,7 @@ export default {
       try {
         await this.loadSchedule();
         this.$nextTick(this.alignSchedule);
-      } catch {
+      } catch (e) {
         this.offline = true;
       }
     },

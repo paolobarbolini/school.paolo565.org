@@ -82,7 +82,7 @@ export default {
   async created() {
     try {
       await this.loadSchedules();
-    } catch {
+    } catch (e) {
       this.offline = true;
     }
   },

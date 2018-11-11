@@ -68,7 +68,7 @@ export default {
   async created() {
     try {
       await this.loadPosts();
-    } catch {
+    } catch (e) {
       this.offline = true;
     }
   },

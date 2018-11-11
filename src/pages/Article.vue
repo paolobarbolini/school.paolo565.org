@@ -75,7 +75,7 @@ export default {
     async load() {
       try {
         await this.loadArticle();
-      } catch {
+      } catch (e) {
         this.offline = true;
       }
     },
