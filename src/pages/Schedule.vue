@@ -104,6 +104,7 @@ export default {
       const schedule = this.$refs.schedule;
       const leftEl = document.querySelector('td:nth-child(1)');
       const destEl = document.querySelector(`td:nth-child(${i})`);
+      if (!destEl) return;
 
       const x = destEl.offsetLeft - leftEl.scrollWidth;
       const y = leftEl.scrollHeight;
