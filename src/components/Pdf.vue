@@ -1,12 +1,14 @@
 <template>
   <div
     v-if="pdf"
-    class="pdf">
+    class="pdf"
+  >
     <pdf-page
       v-for="page in pdf.numPages"
       :key="page"
       :pdf="pdf"
-      :page="page" />
+      :page="page"
+    />
   </div>
 </template>
 

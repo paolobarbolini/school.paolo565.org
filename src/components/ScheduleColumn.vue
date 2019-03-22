@@ -1,7 +1,8 @@
 <template>
   <div
     v-show="visible"
-    class="schedule-column">
+    class="schedule-column"
+  >
     <h3 class="center">
       {{ name }}
     </h3>
@@ -12,7 +13,8 @@
         :key="item.name"
         :name="item.name"
         :filter="filter"
-        :to="{ name: 'schedule', params: { type: type, name: item.name }}" />
+        :to="{ name: 'schedule', params: { type: type, name: item.name }}"
+      />
     </ul>
   </div>
 </template>

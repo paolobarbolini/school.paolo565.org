@@ -65,16 +65,19 @@
         Icona fornita da
         <a
           href="https://www.freepik.com"
-          title="Freepik">Freepik</a>
+          title="Freepik"
+        >Freepik</a>
         tramite
         <a
           href="https://www.flaticon.com/"
-          title="Flaticon">flaticon.com</a>
+          title="Flaticon"
+        >flaticon.com</a>
         sotto licenza
         <a
           href="https://creativecommons.org/licenses/by/3.0/deed.it"
           title="Creative Commons BY 3.0"
-          target="_blank">CC 3.0 BY</a>
+          target="_blank"
+        >CC 3.0 BY</a>
       </p>
       <!-- https://www.flaticon.com/free-icon/time-zone_806237#term=clock&page=2&position=35 -->
     </div>

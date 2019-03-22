@@ -6,7 +6,8 @@
         :key="item.name"
         :name="item.title"
         :filter="filter"
-        :to="{ name: 'post', params: { id: item.id }}" />
+        :to="{ name: 'post', params: { id: item.id }}"
+      />
     </ul>
   </div>
 </template>

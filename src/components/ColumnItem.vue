@@ -1,10 +1,12 @@
 <template>
   <li
     v-show="visible"
-    class="column-item">
+    class="column-item"
+  >
     <router-link
       :to="to"
-      v-html="displayName" />
+      v-html="displayName"
+    />
   </li>
 </template>
 

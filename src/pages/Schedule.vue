@@ -2,17 +2,20 @@
   <div class="schedule-page">
     <top-heading
       :last-update="loaded ? item.date : null"
-      :title="name || 'Orario'" />
+      :title="name || 'Orario'"
+    />
 
     <div class="last-container">
       <div
         v-if="loaded"
         ref="schedule"
         class="schedule"
-        v-html="schedule" />
+        v-html="schedule"
+      />
       <loading
         v-else
-        :offline="offline" />
+        :offline="offline"
+      />
     </div>
   </div>
 </template>
@@ -20,8 +23,6 @@
 <script>
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
-import ScheduleColumns from '@/components/ScheduleColumns';
-import Offline from '@/components/Offline';
 
 import IstitutoGobetti from '@/istitutogobetti';
 import DB from '@/db';
@@ -30,8 +31,6 @@ export default {
   components: {
     TopHeading,
     Loading,
-    ScheduleColumns,
-    Offline,
   },
 
   props: {

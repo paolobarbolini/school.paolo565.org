@@ -3,7 +3,8 @@
     <top-heading
       :last-update="loaded ? items.date : null"
       :offline="offline"
-      title="Orari" />
+      title="Orari"
+    />
 
     <div class="container clear-container">
       <ul class="highlighted-schedules">
@@ -13,16 +14,19 @@
           :name="item.name"
           :filter="searchQuery"
           :to="{ name: 'schedule',
-                 params: { type: item.type, name: item.name }}" />
+                 params: { type: item.type, name: item.name }}"
+        />
       </ul>
 
       <schedule-columns
         v-if="loaded"
         :items="items.items || []"
-        :filter="searchQuery" />
+        :filter="searchQuery"
+      />
       <loading
         v-else
-        :offline="offline" />
+        :offline="offline"
+      />
     </div>
   </div>
 </template>
@@ -32,7 +36,6 @@ import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ScheduleColumns from '@/components/ScheduleColumns';
 import ColumnItem from '@/components/ColumnItem';
-import Offline from '@/components/Offline';
 
 import IstitutoGobetti from '@/istitutogobetti';
 import DB from '@/db';
@@ -43,7 +46,6 @@ export default {
     Loading,
     ScheduleColumns,
     ColumnItem,
-    Offline,
   },
 
   props: {

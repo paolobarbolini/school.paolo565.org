@@ -1,7 +1,8 @@
 <template>
   <div
     ref="pdfPage"
-    class="pdf-page" />
+    class="pdf-page"
+  />
 </template>
 
 <script>

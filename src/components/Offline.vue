@@ -2,7 +2,8 @@
   <div class="offline-page">
     <icon
       name="hammer"
-      scale="3" />
+      scale="3"
+    />
 
     <p>
       Al momento sei offline,

@@ -6,13 +6,15 @@
 
     <div
       class="search"
-      @click="searchVisible = true">
+      @click="searchVisible = true"
+    >
       <icon name="search" />
     </div>
 
     <div
       :class="{ 'active': searchVisible }"
-      class="search-bar">
+      class="search-bar"
+    >
       <div @click="searchVisible = false">
         <icon name="arrow-left" />
       </div>
@@ -23,7 +25,8 @@
         type="text"
         placeholder="Cerca"
         @keyup.enter="blurSearch()"
-        @keyup.esc="searchVisible = false">
+        @keyup.esc="searchVisible = false"
+      >
     </div>
   </div>
 </template>

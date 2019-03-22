@@ -5,19 +5,22 @@
         :items="classes"
         :filter="filter"
         name="Classi"
-        type="classi" />
+        type="classi"
+      />
 
       <schedule-column
         :items="teachers"
         :filter="filter"
         name="Docenti"
-        type="docenti" />
+        type="docenti"
+      />
 
       <schedule-column
         :items="classrooms"
         :filter="filter"
         name="Aule"
-        type="aule" />
+        type="aule"
+      />
     </div>
   </div>
 </template>

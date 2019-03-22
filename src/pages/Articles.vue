@@ -2,16 +2,19 @@
   <div class="articles-page">
     <top-heading
       :last-update="loaded ? items.date : null"
-      title="Avvisi" />
+      title="Avvisi"
+    />
 
     <div class="container clear-container">
       <article-columns
         v-if="loaded"
         :items="items.posts || []"
-        :filter="searchQuery" />
+        :filter="searchQuery"
+      />
       <loading
         v-else
-        :offline="offline" />
+        :offline="offline"
+      />
     </div>
   </div>
 </template>
@@ -20,7 +23,6 @@
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
 import ArticleColumns from '@/components/ArticleColumns';
-import Offline from '@/components/Offline';
 
 import IstitutoGobetti from '@/istitutogobetti';
 
@@ -29,7 +31,6 @@ export default {
     TopHeading,
     Loading,
     ArticleColumns,
-    Offline,
   },
 
   props: {

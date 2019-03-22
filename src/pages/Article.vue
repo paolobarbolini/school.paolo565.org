@@ -4,10 +4,12 @@
 
     <div
       :class="{ 'pdf-container': loaded && !offline }"
-      class="container">
+      class="container"
+    >
       <p
         v-if="loaded && !pdfUrl"
-        class="bold center no-pdf">
+        class="bold center no-pdf"
+      >
         Questo articolo non contiene un pdf.<br>
         <a :href="articleUrl">Vai all'articolo</a>
       </p>
@@ -16,10 +18,12 @@
         v-if="loaded"
         :url="pdfUrl"
         class="article"
-        @pdf-loaded="pdfLoaded = true" />
+        @pdf-loaded="pdfLoaded = true"
+      />
       <loading
         v-else
-        :offline="offline" />
+        :offline="offline"
+      />
     </div>
   </div>
 </template>
@@ -27,7 +31,6 @@
 <script>
 import TopHeading from '@/components/TopHeading';
 import Loading from '@/components/Loading';
-import Offline from '@/components/Offline';
 
 const Pdf = () => import(/* webpackChunkName: "pdf" */ '@/components/Pdf');
 
@@ -38,7 +41,6 @@ export default {
     TopHeading,
     Loading,
     Pdf,
-    Offline,
   },
 
   props: {
