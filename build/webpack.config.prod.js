@@ -30,9 +30,7 @@ module.exports = merge(baseConfig, {
     publicPath: '/',
   },
   plugins: [
-    new CleanWebpackPlugin([
-      'public',
-    ], {
+    new CleanWebpackPlugin({
       root: path.join(__dirname, '../'),
     }),
   ],
