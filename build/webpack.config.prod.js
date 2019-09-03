@@ -2,7 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const baseConfig = require('./webpack.config.base');
 
 module.exports = merge(baseConfig, {
