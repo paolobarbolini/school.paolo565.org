@@ -111,6 +111,7 @@ export default {
           controllers.push(controller);
 
           const resp = await this.fetchOk(`${proxy}${url}`, controller.signal);
+          // eslint-disable-next-line require-atomic-updates
           controllers = controllers.filter((item) => item.proxy !== proxy);
           return resp;
         })
