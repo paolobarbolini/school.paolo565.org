@@ -33,6 +33,11 @@ body {
     white-space: nowrap;
 }
 
+h2 {
+    margin: 12px 0;
+    font-size: 1.4em;
+}
+
 .fa-icon {
     display: inline-block;
     fill: currentColor;
@@ -46,7 +51,7 @@ body {
 
 .last-container:last-of-type,
 .container:last-of-type {
-    margin-bottom: 90px;
+    margin-bottom: 60px;
 }
 
 .container {

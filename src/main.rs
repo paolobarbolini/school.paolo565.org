@@ -88,6 +88,13 @@ fn article(id: i64) -> HandlebarsResponse {
     handlebars_response!(disable_minify "article", &map)
 }
 
+#[get("/info")]
+fn about() -> HandlebarsResponse {
+    let mut map = HashMap::new();
+    map.insert("is_about", json!(true));
+    handlebars_response!(disable_minify "about", &map)
+}
+
 fn main() {
     rocket::ignite()
         .attach(StaticResponse::fairing(|resources| {
@@ -120,6 +127,8 @@ fn main() {
                 "views/article.hbs",
                 "articles",
                 "views/articles.hbs",
+                "about",
+                "views/about.hbs",
                 "header",
                 "views/partials/header.hbs",
                 "top_navigation",
@@ -130,7 +139,7 @@ fn main() {
                 "views/partials/footer.hbs",
             );
         }))
-        .mount("/", routes![index, articles, article])
+        .mount("/", routes![index, articles, article, about])
         .mount(
             "/",
             routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
