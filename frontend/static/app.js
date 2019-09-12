@@ -38,12 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Display the search input
     const searchBar = document.querySelector('#search-bar');
+    const searchInput = document.querySelector('#search-bar input');
     search.addEventListener('click', () => {
         searchBar.classList.add('active');
+        searchInput.focus();
     });
 
     // Hide search input
-    const searchInput = document.querySelector('#search-bar input');
     searchInput.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape' && event.key !== 'Enter') return;
 
