@@ -287,3 +287,17 @@ h2 {
     margin-left: 10px;
     list-style: none;
 }
+
+#pdf-preview {
+    width: 100%;
+    max-width: 720px;
+    margin: 20px auto 80px auto;
+    background: #494949;
+    padding: 20px;
+    box-shadow: 0 2px 15px 7px rgba(0, 0, 0, 0.4);
+}
+
+#pdf-preview canvas {
+    width: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+}

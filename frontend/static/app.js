@@ -75,3 +75,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+/* ============================================================ */
+/* PDF Preview */
+/* ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const pdfPreview = document.querySelector('#pdf-preview');
+    if (!pdfPreview) return;
+
+    const url = `${document.location.href}/pdf/1`;
+    var pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/static/vendored/pdf-js/pdf.worker.js';
+
+    const loadPage = (pdf, pageNumber) => {
+        return new Promise((resolve, reject) => {
+            pdf.getPage(pageNumber).then((page) => {
+                const scale = 1.5;
+                const viewport = page.getViewport({ scale });
+    
+                const container = document.querySelector('#pdf-preview');
+                const canvas = document.createElement('canvas');
+                container.appendChild(canvas);
+
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+    
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                const renderTask = page.render(renderContext);
+                renderTask.promise.then(resolve).catch(reject);
+            });
+        });
+    }
+
+    var loadingTask = pdfjsLib.getDocument(url);
+    loadingTask.promise.then(async (pdf) => {
+        for(let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            await loadPage(pdf, pageNumber);
+
+            if (pageNumber === 1) pdfPreview.classList.remove('hidden');
+        }
+    });
+});

@@ -13,6 +13,11 @@
             <a href="{{this.url}}">{{this.text}}</a>
         {{/each}}
     </div>
+
+    {{#if has_pdf}}
+    <div id="pdf-preview" class="hidden">
+    </div>
+    {{/if}}
 </div>
 
 {{>footer}}

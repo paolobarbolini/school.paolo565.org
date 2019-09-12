@@ -39,7 +39,7 @@ impl Article {
     pub fn urls(&self) -> Vec<ArticleUrl> {
         let mut urls: Vec<ArticleUrl> = Vec::new();
         for c in &self.contents {
-            if !c.urls.is_empty() {
+            if !c.text.is_empty() && !c.urls.is_empty() {
                 urls.extend_from_slice(c.urls.as_slice());
             }
         }

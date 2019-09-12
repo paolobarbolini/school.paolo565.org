@@ -50,6 +50,16 @@ fn js() -> StaticResponse {
     static_response!("js")
 }
 
+#[get("/static/vendored/pdf-js/pdf.js")]
+fn pdf_js() -> StaticResponse {
+    static_response!("pdf-js")
+}
+
+#[get("/static/vendored/pdf-js/pdf.worker.js")]
+fn pdf_js_worker() -> StaticResponse {
+    static_response!("pdf-js-worker")
+}
+
 #[get("/static/icon-192x192.png")]
 fn icon_192() -> StaticResponse {
     static_response!("icon-192")
@@ -85,11 +95,13 @@ fn articles() -> HandlebarsResponse {
 #[get("/avvisi/<id>")]
 fn article(id: i64) -> HandlebarsResponse {
     let art = article::load_article(id).unwrap();
+    let pdfs = art.pdfs();
 
     let mut map = HashMap::new();
     map.insert("article", json!(art));
     map.insert("path", json!(format!("/avvisi/{}", id)));
     map.insert("is_articles", json!(true));
+    map.insert("has_pdf", json!(pdfs.len() == 1));
     handlebars_response!(disable_minify "article", &map)
 }
 
@@ -134,6 +146,10 @@ fn main() {
                 "frontend/static/app.css",
                 "js",
                 "frontend/static/app.js",
+                "pdf-js",
+                "frontend/static/vendored/pdf-js/pdf.js",
+                "pdf-js-worker",
+                "frontend/static/vendored/pdf-js/pdf.worker.js",
                 "icon-192",
                 "frontend/static/icon-192x192.png",
                 "icon-384",
@@ -163,7 +179,10 @@ fn main() {
                 "views/partials/footer.hbs",
             );
         }))
-        .mount("/", routes![index, articles, article, pdf, about])
+        .mount(
+            "/",
+            routes![index, articles, article, pdf, pdf_js, pdf_js_worker, about],
+        )
         .mount(
             "/",
             routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
