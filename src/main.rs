@@ -9,6 +9,9 @@ extern crate rocket_include_static_resources;
 #[macro_use]
 extern crate rocket_include_handlebars;
 
+#[macro_use]
+extern crate serde_json;
+
 use rocket_include_handlebars::HandlebarsResponse;
 use rocket_include_static_resources::StaticResponse;
 use std::collections::HashMap;
@@ -77,7 +80,8 @@ fn article(id: i64) -> HandlebarsResponse {
     let art = article::load_article(id).unwrap();
 
     let mut map = HashMap::new();
-    map.insert("article", art);
+    map.insert("article", json!(art));
+    map.insert("path", json!(format!("/avvisi/{}", id)));
     handlebars_response!(disable_minify "article", &map)
 }
 
@@ -107,7 +111,7 @@ fn main() {
         .attach(HandlebarsResponse::fairing(|handlebars| {
             handlebars_resources_initialize!(
                 handlebars,
-                                "index",
+                "index",
                 "views/index.hbs",
                 "article",
                 "views/article.hbs",
@@ -123,7 +127,7 @@ fn main() {
                 "views/partials/footer.hbs",
             );
         }))
-        .mount("/", routes![index,articles, article])
+        .mount("/", routes![index, articles, article])
         .mount(
             "/",
             routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
