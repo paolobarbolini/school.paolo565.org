@@ -37,14 +37,26 @@ impl Article {
     }
 
     pub fn urls(&self) -> Vec<ArticleUrl> {
-        let mut contents: Vec<ArticleUrl> = Vec::new();
+        let mut urls: Vec<ArticleUrl> = Vec::new();
         for c in &self.contents {
             if !c.urls.is_empty() {
-                contents.extend_from_slice(c.urls.as_slice());
+                urls.extend_from_slice(c.urls.as_slice());
             }
         }
 
-        contents
+        urls
+    }
+
+    pub fn pdfs(&self) -> Vec<ArticleUrl> {
+        let mut u: Vec<ArticleUrl> = Vec::new();
+        let urls = self.urls();
+        for url in urls {
+            if url.abs_url().ends_with(".pdf") {
+                u.push(url);
+            }
+        }
+
+        u
     }
 }
 
@@ -124,6 +136,14 @@ impl ArticleUrl {
 
     pub fn abs_url(&self) -> String {
         self.parsed_url().into_string()
+    }
+
+    pub fn body(&self) -> Result<Vec<u8>> {
+        let url = self.abs_url();
+        let mut resp = reqwest::get(&url)?;
+        let mut buf: Vec<u8> = vec![];
+        resp.copy_to(&mut buf)?;
+        Ok(buf)
     }
 }
 

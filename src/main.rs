@@ -12,9 +12,14 @@ extern crate rocket_include_handlebars;
 #[macro_use]
 extern crate serde_json;
 
+use rocket::http::hyper::header::ETag;
+use rocket::http::{ContentType, Status};
+use rocket::Response;
+use rocket_etag_if_none_match::{EntityTag, EtagIfNoneMatch};
 use rocket_include_handlebars::HandlebarsResponse;
 use rocket_include_static_resources::StaticResponse;
 use std::collections::HashMap;
+use std::io::Cursor;
 
 mod article;
 mod articles;
@@ -88,6 +93,25 @@ fn article(id: i64) -> HandlebarsResponse {
     handlebars_response!(disable_minify "article", &map)
 }
 
+#[get("/avvisi/<id>/pdf/<i>")]
+fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, Status> {
+    let art = article::load_article(id).unwrap();
+    let pdfs = art.pdfs();
+    let body = pdfs[i - 1].body().unwrap();
+
+    let digest = md5::compute(&body);
+    let generated_etag = EntityTag::new(false, format!("{:x}", digest));
+    if etag.strong_eq(&generated_etag) {
+        Response::build().status(Status::NotModified).ok()
+    } else {
+        Response::build()
+            .header(ETag(generated_etag))
+            .header(ContentType::PDF)
+            .sized_body(Cursor::new(body))
+            .ok()
+    }
+}
+
 #[get("/info")]
 fn about() -> HandlebarsResponse {
     let mut map = HashMap::new();
@@ -139,7 +163,7 @@ fn main() {
                 "views/partials/footer.hbs",
             );
         }))
-        .mount("/", routes![index, articles, article, about])
+        .mount("/", routes![index, articles, article, pdf, about])
         .mount(
             "/",
             routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
