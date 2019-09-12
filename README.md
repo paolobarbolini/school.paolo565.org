@@ -13,4 +13,4 @@ App icon made by [Freepik][freepik] from
 [flaticon]: https://www.flaticon.com
 [cc]: http://creativecommons.org/licenses/by/3.0/
 [gitlab]: https://gitlab.com/paolobarbolini/school.paolo565.org
-[gitlabbadge]: https://gitlab.com/paolobarbolini/school.paolo565.org/badges/master/pipeline.svg
+[gitlabbadge]: https://gitlab.com/paolobarbolini/school.paolo565.org/badges/v2/pipeline.svg
