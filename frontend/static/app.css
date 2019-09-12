@@ -17,6 +17,10 @@ body {
 /* Base */
 /* ============================================================ */
 
+.hidden {
+    display: none !important;
+}
+
 .center {
     text-align: center;
 }
