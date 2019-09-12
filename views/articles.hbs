@@ -1,0 +1,19 @@
+{{>header title="Avvisi" path="/avvisi"}}
+
+<div class="articles-page">
+    <div class="top-heading base-container">
+        <h1>Avvisi</h1> 
+        <!--<span>aggiornato X ore fa</span>-->
+    </div>
+    <div class="container clear-container">
+        <div class="article-columns">
+            <ul>
+                {{#each articles}}
+                    {{>article_item article=.}}
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{{>footer}}

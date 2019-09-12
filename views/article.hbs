@@ -1,0 +1,18 @@
+{{>header title="BLABLABLA" path="/avvisi"}}
+
+<div class="article-page">
+    <div class="top-heading base-container">
+        <h1>{{article.title}}</h1> 
+        <!--<span>aggiornato X ore fa</span>-->
+    </div>
+    <div class="container text-container">
+        {{#each article.contents}}
+            <p style="padding-left: {{this.padding}}px">{{this.text}}</p>
+        {{/each}}
+        {{#each article.urls}}
+            <a href="{{this.url}}">{{this.text}}</a>
+        {{/each}}
+    </div>
+</div>
+
+{{>footer}}
