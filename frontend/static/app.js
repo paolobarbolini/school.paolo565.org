@@ -34,6 +34,7 @@ if (navigator.share) {
 document.addEventListener('DOMContentLoaded', () => {
     const search = document.querySelector('#search');
     if (!search) return;
+    search.classList.remove('hidden');
 
     // Display the search input
     const searchBar = document.querySelector('#search-bar');
