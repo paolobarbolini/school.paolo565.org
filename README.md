@@ -1,4 +1,4 @@
-# school.paolo565.org [![MIT License][licensebardge]](LICENSE) [![pipeline status][gitlabbadge]][gitlab]
+# school.paolo565.org [![MIT License][licensebadge]](LICENSE) [![pipeline status][gitlabbadge]][gitlab]
 _A progressive web app which improves the interaction with my school's school hours page_
 
 Try it here: [school.paolo565.org][website].
@@ -7,7 +7,7 @@ Try it here: [school.paolo565.org][website].
 App icon made by [Freepik][freepik] from
 [Flaticon][flaticon] licensed by [CC 3.0 BY][cc]
 
-[licensebardge]: https://img.shields.io/github/license/paolobarbolini/school.paolo565.org.svg?maxAge=2592000
+[licensebadge]: https://img.shields.io/badge/license-Apache%202-blue
 [website]: https://school.paolo565.org
 [freepik]: https://www.freepik.com
 [flaticon]: https://www.flaticon.com
