@@ -51,6 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
         searchBar.classList.remove('active');
     });
 
+    const searchBack = document.querySelector('#search-back');
+    searchBack.addEventListener('click', () => {
+        searchBar.classList.remove('active');
+    });
+
     // Search
     searchInput.addEventListener('input', (event) => {
         const value = event.target.value;
