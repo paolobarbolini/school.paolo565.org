@@ -214,7 +214,8 @@ body {
     text-decoration: none;
 }
 
-.bottom-navigation li a:hover {
+.bottom-navigation li a:hover,
+.bottom-navigation li .active {
     color: #3949AB;
 }
   

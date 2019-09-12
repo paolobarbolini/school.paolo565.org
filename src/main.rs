@@ -62,7 +62,8 @@ fn icon_512() -> StaticResponse {
 
 #[get("/")]
 fn index() -> HandlebarsResponse {
-    let map: HashMap<String, String> = HashMap::new();
+    let mut map = HashMap::new();
+    map.insert("is_index", json!(true));
     handlebars_response!(disable_minify "index", &map)
 }
 
@@ -71,7 +72,8 @@ fn articles() -> HandlebarsResponse {
     let arts = articles::load_articles().unwrap();
 
     let mut map = HashMap::new();
-    map.insert("articles", arts);
+    map.insert("articles", json!(arts));
+    map.insert("is_articles", json!(true));
     handlebars_response!(disable_minify "articles", &map)
 }
 
@@ -82,6 +84,7 @@ fn article(id: i64) -> HandlebarsResponse {
     let mut map = HashMap::new();
     map.insert("article", json!(art));
     map.insert("path", json!(format!("/avvisi/{}", id)));
+    map.insert("is_articles", json!(true));
     handlebars_response!(disable_minify "article", &map)
 }
 
