@@ -117,12 +117,12 @@ h2 {
     text-decoration: none;
 }
   
-.top-navigation .search {
+.top-navigation #search {
     color: white;
     margin-left: auto;
 }
   
-.top-navigation .search-bar {
+.top-navigation #search-bar {
     position: absolute;
     top: 0;
     left: 0;
@@ -138,12 +138,12 @@ h2 {
     transition: opacity 0.1s ease-in-out;
 }
 
-.top-navigation .search-bar.active {
+.top-navigation #search-bar.active {
     pointer-events: all;
     opacity: 1;
 }
 
-.top-navigation .search-bar input {
+.top-navigation #search-bar input {
     outline: 0;
     width: 100%;
     background-color: white;
