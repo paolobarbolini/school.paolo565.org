@@ -43,4 +43,4 @@ release:
     paths:
       - target/release/school_paolo565_org 
   only:
-    - master
+    - v2
