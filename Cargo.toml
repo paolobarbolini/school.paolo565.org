@@ -3,6 +3,7 @@ name = "school_paolo565_org"
 version = "2.0.0"
 authors = ["Paolo Barbolini <paolo@paolo565.org>"]
 edition = "2018"
+license = "Apache-2.0"
 
 [dependencies]
 rocket = "0.4.2"
