@@ -57,6 +57,12 @@ fn icon_512() -> StaticResponse {
     static_response!("icon-512")
 }
 
+#[get("/")]
+fn index() -> HandlebarsResponse {
+    let map: HashMap<String, String> = HashMap::new();
+    handlebars_response!(disable_minify "index", &map)
+}
+
 #[get("/avvisi")]
 fn articles() -> HandlebarsResponse {
     let arts = articles::load_articles().unwrap();
@@ -101,6 +107,8 @@ fn main() {
         .attach(HandlebarsResponse::fairing(|handlebars| {
             handlebars_resources_initialize!(
                 handlebars,
+                                "index",
+                "views/index.hbs",
                 "article",
                 "views/article.hbs",
                 "articles",
@@ -115,7 +123,7 @@ fn main() {
                 "views/partials/footer.hbs",
             );
         }))
-        .mount("/", routes![articles, article])
+        .mount("/", routes![index,articles, article])
         .mount(
             "/",
             routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
