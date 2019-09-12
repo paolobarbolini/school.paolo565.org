@@ -22,6 +22,11 @@ fn manifest() -> StaticResponse {
     static_response!("manifest")
 }
 
+#[get("/service-worker.js")]
+fn sw() -> StaticResponse {
+    static_response!("sw")
+}
+
 #[get("/favicon.ico")]
 fn favicon() -> StaticResponse {
     static_response!("favicon")
@@ -30,6 +35,11 @@ fn favicon() -> StaticResponse {
 #[get("/static/app.css")]
 fn css() -> StaticResponse {
     static_response!("css")
+}
+
+#[get("/static/app.js")]
+fn js() -> StaticResponse {
+    static_response!("js")
 }
 
 #[get("/static/icon-192x192.png")]
@@ -74,8 +84,12 @@ fn main() {
                 "frontend/favicon.ico",
                 "manifest",
                 "frontend/manifest.json",
+                "sw",
+                "frontend/service-worker.js",
                 "css",
                 "frontend/static/app.css",
+                "js",
+                "frontend/static/app.js",
                 "icon-192",
                 "frontend/static/icon-192x192.png",
                 "icon-384",
@@ -104,7 +118,7 @@ fn main() {
         .mount("/", routes![articles, article])
         .mount(
             "/",
-            routes![favicon, manifest, css, icon_192, icon_384, icon_512],
+            routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
         )
         .launch();
 }
