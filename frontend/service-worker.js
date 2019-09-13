@@ -1,10 +1,18 @@
-const cacheName = `isg-pwa-v2`;
+const cacheName = `isg-pwa-v2-{{last_commit_hash}}`;
 
 const expectedCaches = [
   cacheName,
 ];
 
 const cacheFiles = [
+    // TODO: Add index and articles once those are able to refresh with new additions
+    // '/',
+    // '/avvisi',
+    '/info',
+    '/static/app.css',
+    '/static/app.js',
+    '/static/vendored/pdf-js/pdf.js',
+    '/static/vendored/pdf-js/pdf.worker.js',
     '/favicon.ico'
 ];
 

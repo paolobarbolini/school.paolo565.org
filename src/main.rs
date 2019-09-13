@@ -141,7 +141,7 @@ fn main() {
                 "manifest",
                 "frontend/manifest.json",
                 "sw",
-                "frontend/service-worker.js",
+                "frontend/service-worker.build.js",
                 "css",
                 "frontend/static/app.css",
                 "js",
