@@ -6,18 +6,8 @@
         <!--<span>aggiornato X ore fa</span>-->
     </div>
     <div class="container clear-container">
-        <!--
-        <ul class="highlighted-schedules">
-            <column-item
-            v-for="item in highlightedSchedules"
-            :key="item.name"
-            :name="item.name"
-            :filter="searchQuery"
-            :to="{ name: 'schedule',
-                    params: { type: item.type, name: item.name }}"
-            />
+        <ul id="highlighted-schedules" class="hidden">
         </ul>
-        -->
 
         <div class="list-columns-wrapper">
             <div class="list-columns">

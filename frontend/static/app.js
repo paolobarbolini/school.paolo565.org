@@ -77,6 +77,63 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================ */
+/* Frequently Searched Hours */
+/* ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const titleElement = document.querySelector('.schedule-page h1');
+    if (!titleElement) {
+        const highlightsElement = document.querySelector('#highlighted-schedules');
+        if (!highlightsElement) return;
+
+        // We are in the schedules page
+        const previous = JSON.parse(localStorage.getItem('schedule-searches') || '[]');
+        if (previous.length === 0) return;
+
+        let bests = previous.sort((a, b) => {
+            return a.loads < b.loads ? -1 : (a.loads > b.loads ? 1 : 0);
+        }).slice(0, 3);
+        for (const best of bests) {
+            const a = document.createElement('a');
+            a.setAttribute('href', best.pathname);
+            a.innerText = best.title;
+
+            const li = document.createElement('li');
+            li.classList.add('column-item');
+            li.appendChild(a);
+            highlightsElement.appendChild(li);
+        }
+
+        highlightsElement.classList.remove('hidden');
+    } else {
+        // We are in the schedule page
+        const title = titleElement.innerText;
+        const pathname = window.location.pathname;
+        let found = false;
+        
+        let previous = JSON.parse(localStorage.getItem('schedule-searches') || '[]');
+        for (let i = 0; i < previous.length; i++) {
+            const prev = previous[i];
+            if (prev.pathname.toLowerCase() !== pathname.toLowerCase()) continue;
+
+            previous[i].loads += 1;
+            found = true;
+            break;
+        }
+
+        if (!found) {
+            const loads = 1;
+            previous.push({
+                title,
+                pathname,
+                loads,
+            });
+        }
+        localStorage.setItem('schedule-searches', JSON.stringify(previous));
+    }
+});
+
+/* ============================================================ */
 /* PDF Preview */
 /* ============================================================ */
 
