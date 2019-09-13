@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Search
     searchInput.addEventListener('input', (event) => {
-        const value = event.target.value;
+        const value = event.target.value.toLowerCase();
         const elements = document.querySelectorAll('.column-item');
 
         for (const element of elements) {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 continue;
             }
 
-            if (element.innerText.includes(value)) {
+            if (element.innerText.toLowerCase().includes(value)) {
                 element.classList.remove('hidden');
             } else {
                 element.classList.add('hidden');
