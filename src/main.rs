@@ -80,7 +80,7 @@ fn icon_512() -> StaticResponse {
 #[get("/")]
 fn index() -> HandlebarsResponse {
     let hours = match hours::full_load_hour().unwrap() {
-        Some(hours) => hours,
+        Some((_, hours)) => hours,
         None => panic!("no hours"),
     };
 
@@ -88,6 +88,81 @@ fn index() -> HandlebarsResponse {
     map.insert("hours", json!(hours));
     map.insert("is_index", json!(true));
     handlebars_response!(disable_minify "index", &map)
+}
+
+#[get("/classi/<name>")]
+fn classes(name: String) -> HandlebarsResponse {
+    let (base, hours) = match hours::full_load_hour().unwrap() {
+        Some((base, hours)) => (base, hours),
+        None => panic!("no hours"),
+    };
+    let mut h = None;
+    for hour in &hours.classes {
+        if hour.title.to_lowercase() == name.to_lowercase() {
+            h = Some(hour);
+            break;
+        }
+    }
+    let h = h.unwrap();
+
+    let html = h.html(&base).unwrap();
+
+    let mut map = HashMap::new();
+    map.insert("hour", json!(h));
+    map.insert("hour_html", json!(html));
+    map.insert("path", json!(format!("/classi/{}", h.title)));
+    map.insert("is_index", json!(true));
+    handlebars_response!(disable_minify "hour", &map)
+}
+
+#[get("/docenti/<name>")]
+fn teachers(name: String) -> HandlebarsResponse {
+    let (base, hours) = match hours::full_load_hour().unwrap() {
+        Some((base, hours)) => (base, hours),
+        None => panic!("no hours"),
+    };
+    let mut h = None;
+    for hour in &hours.teachers {
+        if hour.title.to_lowercase() == name.to_lowercase() {
+            h = Some(hour);
+            break;
+        }
+    }
+    let h = h.unwrap();
+
+    let html = h.html(&base).unwrap();
+
+    let mut map = HashMap::new();
+    map.insert("hour", json!(h));
+    map.insert("hour_html", json!(html));
+    map.insert("path", json!(format!("/docenti/{}", h.title)));
+    map.insert("is_index", json!(true));
+    handlebars_response!(disable_minify "hour", &map)
+}
+
+#[get("/aule/<name>")]
+fn classrooms(name: String) -> HandlebarsResponse {
+    let (base, hours) = match hours::full_load_hour().unwrap() {
+        Some((base, hours)) => (base, hours),
+        None => panic!("no hours"),
+    };
+    let mut h = None;
+    for hour in &hours.classrooms {
+        if hour.title.to_lowercase() == name.to_lowercase() {
+            h = Some(hour);
+            break;
+        }
+    }
+    let h = h.unwrap();
+
+    let html = h.html(&base).unwrap();
+
+    let mut map = HashMap::new();
+    map.insert("hour", json!(h));
+    map.insert("hour_html", json!(html));
+    map.insert("path", json!(format!("/aule/{}", h.title)));
+    map.insert("is_index", json!(true));
+    handlebars_response!(disable_minify "hour", &map)
 }
 
 #[get("/avvisi")]
@@ -171,6 +246,8 @@ fn main() {
                 handlebars,
                 "index",
                 "views/index.hbs",
+                "hour",
+                "views/hour.hbs",
                 "article",
                 "views/article.hbs",
                 "articles",
@@ -189,11 +266,9 @@ fn main() {
         }))
         .mount(
             "/",
-            routes![index, articles, article, pdf, pdf_js, pdf_js_worker, about],
+            routes![index, classes, teachers, classrooms, articles, article, pdf, about],
         )
-        .mount(
-            "/",
-            routes![favicon, manifest, sw, css, js, icon_192, icon_384, icon_512],
-        )
+        .mount("/", routes![favicon, css, js, pdf_js, pdf_js_worker,])
+        .mount("/", routes![manifest, sw, icon_192, icon_384, icon_512])
         .launch();
 }

@@ -4,7 +4,7 @@ use crate::hour::{load_hour, Hour};
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn full_load_hour() -> Result<Option<Hour>> {
+pub fn full_load_hour() -> Result<Option<(String, Hour)>> {
     let article = match load_hours_article()? {
         Some(article) => article,
         None => return Ok(None),
@@ -16,8 +16,8 @@ pub fn full_load_hour() -> Result<Option<Hour>> {
         None => return Ok(None),
     };
 
-    let hour = load_hour(hours)?;
-    Ok(Some(hour))
+    let hour = load_hour(hours.clone())?;
+    Ok(Some((hours, hour)))
 }
 
 pub fn load_hours_article() -> Result<Option<String>> {
