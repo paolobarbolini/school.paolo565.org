@@ -14,7 +14,7 @@ and then built using Cargo
 
     $ cargo build --release
 
-The executable will be placed at `target/release/school_paolo565_org`
+The executable will be available at `target/release/school_paolo565_org`
 
 ## Third party dependencies
 [PDF.js][pdfjs] by Mozilla Labs, Apache 2.0 license
