@@ -5,9 +5,57 @@
         <h1>Orari</h1> 
         <!--<span>aggiornato X ore fa</span>-->
     </div>
-    <div class="container text-container">
-        <p>Sto lavorando per aggiornare questa pagina per aggiungere gli orari delle lezioni che sono stati pubblicati oggi (Venerdì 13 Settembre 2019) sul sito ufficiale della scuola.</p>
-        <p>Nel frattempo dai un'occhiata alla <a href="/avvisi">pagina degli avvisi</a>!</p>
+    <div class="container clear-container">
+        <!--
+        <ul class="highlighted-schedules">
+            <column-item
+            v-for="item in highlightedSchedules"
+            :key="item.name"
+            :name="item.name"
+            :filter="searchQuery"
+            :to="{ name: 'schedule',
+                    params: { type: item.type, name: item.name }}"
+            />
+        </ul>
+        -->
+
+        <div class="list-columns-wrapper">
+            <div class="list-columns">
+                <div class="schedule-column">
+                    <h2 class="center">Classi</h2>
+
+                    <ul>
+                        {{#each hours.classes}}
+                        <li class="column-item">
+                            <a href="/classi/{{this.title}}">{{this.title}}</a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="schedule-column">
+                    <h2 class="center">Docenti</h2>
+
+                    <ul>
+                        {{#each hours.teachers}}
+                        <li class="column-item">
+                            <a href="/docenti/{{this.title}}">{{this.title}}</a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="schedule-column">
+                    <h2 class="center">Aule</h2>
+
+                    <ul>
+                        {{#each hours.classrooms}}
+                        <li class="column-item">
+                            <a href="/aule/{{this.title}}">{{this.title}}</a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

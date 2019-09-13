@@ -269,6 +269,66 @@ h2 {
 }
 
 /* ============================================================ */
+/* Hours Page */
+/* ============================================================ */
+
+.highlighted-schedules {
+    list-style: none;
+    margin: 0 0 10px 0;
+    padding: 0;
+    display: flex;
+}
+  
+.highlighted-schedules .column-item {
+    display: inline-block;
+    width: 100%;
+    margin: 0 10px;
+}
+
+.list-columns-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    display: inline-flex;
+}
+
+.list-columns {
+    display: flex;
+    width: 100%;
+}
+
+.schedule-column {
+    min-width: 33%;
+}
+  
+@media (max-width: 320px) {
+    .schedule-column {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .schedule-column {
+        min-width: 50%;
+    }
+}
+  
+.schedule-column h2 {
+    margin-top: 0;
+}
+  
+.schedule-column ul {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+    list-style: none;
+}
+
+.schedule-column ul:last-of-type {
+    margin-right: 10px;
+}  
+
+/* ============================================================ */
 /* Articles Page */
 /* ============================================================ */
 

@@ -3,11 +3,15 @@ use serde::ser::{Serialize, SerializeStruct, Serializer};
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn load_article(id: i64) -> Result<Article> {
+pub fn load_article_id(id: i64) -> Result<Article> {
     let url = format!(
         "http://www.istitutogobetti.it/index.php?option=com_content&view=article&id={}",
         id
     );
+    load_article(url)
+}
+
+pub fn load_article(url: String) -> Result<Article> {
     let text = reqwest::get(&url)?.text()?;
 
     let article = Article::from_html(&text)?;
@@ -45,6 +49,18 @@ impl Article {
         }
 
         urls
+    }
+
+    pub fn hours_url(&self) -> Option<String> {
+        let urls = self.urls();
+        for u in urls {
+            let url = u.href.to_lowercase();
+            if url.starts_with("/weborario") || url.starts_with("/web_orario") {
+                return Some(u.abs_url());
+            }
+        }
+
+        None
     }
 
     pub fn pdfs(&self) -> Vec<ArticleUrl> {

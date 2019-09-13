@@ -24,6 +24,8 @@ use std::io::Cursor;
 mod article;
 mod articles;
 mod error;
+mod hour;
+mod hours;
 
 #[get("/manifest.json")]
 fn manifest() -> StaticResponse {
@@ -77,7 +79,13 @@ fn icon_512() -> StaticResponse {
 
 #[get("/")]
 fn index() -> HandlebarsResponse {
+    let hours = match hours::full_load_hour().unwrap() {
+        Some(hours) => hours,
+        None => panic!("no hours"),
+    };
+
     let mut map = HashMap::new();
+    map.insert("hours", json!(hours));
     map.insert("is_index", json!(true));
     handlebars_response!(disable_minify "index", &map)
 }
@@ -94,7 +102,7 @@ fn articles() -> HandlebarsResponse {
 
 #[get("/avvisi/<id>")]
 fn article(id: i64) -> HandlebarsResponse {
-    let art = article::load_article(id).unwrap();
+    let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
 
     let mut map = HashMap::new();
@@ -107,7 +115,7 @@ fn article(id: i64) -> HandlebarsResponse {
 
 #[get("/avvisi/<id>/pdf/<i>")]
 fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, Status> {
-    let art = article::load_article(id).unwrap();
+    let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
     let body = pdfs[i - 1].body().unwrap();
 
