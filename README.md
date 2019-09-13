@@ -3,6 +3,19 @@ _A progressive web app which improves the interaction with my school's school ho
 
 Try it here: [school.paolo565.org][website].
 
+## Building
+school.paolo565.org requires Rust Nightly 1.39 or later to build. The latest release can be installed via [rustup][rustup]
+
+Once the Rust build environment is setup, the source code can be fetched using git:
+
+    $ git clone https://github.com/paolobarbolini/school.paolo565.org.git
+
+and then built using Cargo
+
+    $ cargo build --release
+
+The executable will be placed at `target/release/school_paolo565_org`
+
 ## Third party dependencies
 [PDF.js][pdfjs] by Mozilla Labs, Apache 2.0 license
 
@@ -20,3 +33,4 @@ App icon made by [Freepik][freepik] from
 [cc]: http://creativecommons.org/licenses/by/3.0/
 [gitlab]: https://gitlab.com/paolobarbolini/school.paolo565.org
 [gitlabbadge]: https://gitlab.com/paolobarbolini/school.paolo565.org/badges/v2/pipeline.svg
+[rustup]: https://rustup.rs
