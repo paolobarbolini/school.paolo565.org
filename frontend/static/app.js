@@ -134,6 +134,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================ */
+/* Hours Auto Scrolling */
+/* ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const schedule = document.querySelector('.schedule-page .schedule');
+    if (!schedule) return; // aren't we in the schedule page?
+    if (!schedule.scrollTo) return; // unsupported scrollTo
+
+    const i = new Date().getDay() + 1;
+    const leftEl = document.querySelector('td:nth-child(1)');
+    const destEl = document.querySelector(`td:nth-child(${i})`);
+    if (!destEl) return;
+
+    const x = destEl.offsetLeft - leftEl.scrollWidth;
+    const y = leftEl.scrollHeight;
+    schedule.scrollTo(x, y);
+
+});
+
+/* ============================================================ */
 /* PDF Preview */
 /* ============================================================ */
 
