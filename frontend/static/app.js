@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (previous.length === 0) return;
 
         let bests = previous.sort((a, b) => {
-            return a.loads < b.loads ? -1 : (a.loads > b.loads ? 1 : 0);
-        }).slice(0, 3);
+            return a.loads - b.loads;
+        }).reverse().slice(0, 3);
         for (const best of bests) {
             const a = document.createElement('a');
             a.setAttribute('href', best.pathname);
