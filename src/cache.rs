@@ -4,9 +4,9 @@ use std::sync::Mutex;
 
 lazy_static! {
     static ref STRING_CACHE: Mutex<TimedCache<String, Option<String>>> =
-        Mutex::new(TimedCache::with_lifespan(60 * 20));
+        Mutex::new(TimedCache::with_lifespan_and_capacity(60 * 20, 200));
     static ref DATA_CACHE: Mutex<TimedCache<String, Option<Vec<u8>>>> =
-        Mutex::new(TimedCache::with_lifespan(60 * 20));
+        Mutex::new(TimedCache::with_lifespan_and_capacity(60 * 60 * 24, 25));
 }
 
 pub fn reqwest_text(url: String) -> Option<String> {
