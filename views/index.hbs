@@ -5,6 +5,12 @@
         <h1>Orari</h1> 
         <!--<span>aggiornato X ore fa</span>-->
     </div>
+    {{#if no_hours}}
+    <div class="container text-container">
+        <p>Si è verificato un problema nel caricamento degli orari.</p>
+        <p>Riprova più tardi.</p>
+    </div>
+    {{else}}
     <div class="container clear-container">
         <ul id="highlighted-schedules" class="hidden">
         </ul>
@@ -47,6 +53,7 @@
             </div>
         </div>
     </div>
+    {{/if}}
 </div>
 
 {{>footer}}

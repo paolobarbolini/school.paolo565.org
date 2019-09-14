@@ -85,7 +85,12 @@ fn icon_512() -> StaticResponse {
 fn index() -> HandlebarsResponse {
     let hours = match hours::full_load_hour().unwrap() {
         Some((_, hours)) => hours,
-        None => panic!("no hours"),
+        None => {
+            let mut map = HashMap::new();
+            map.insert("no_hours", json!(true));
+            map.insert("is_index", json!(true));
+            return handlebars_response!(disable_minify "index", &map);
+        }
     };
 
     let mut map = HashMap::new();
@@ -98,7 +103,12 @@ fn index() -> HandlebarsResponse {
 fn classes(name: String) -> HandlebarsResponse {
     let (base, hours) = match hours::full_load_hour().unwrap() {
         Some((base, hours)) => (base, hours),
-        None => panic!("no hours"),
+        None => {
+            let mut map = HashMap::new();
+            map.insert("no_hours", json!(true));
+            map.insert("is_index", json!(true));
+            return handlebars_response!(disable_minify "index", &map);
+        }
     };
     let mut h = None;
     for hour in &hours.classes {
@@ -123,7 +133,12 @@ fn classes(name: String) -> HandlebarsResponse {
 fn teachers(name: String) -> HandlebarsResponse {
     let (base, hours) = match hours::full_load_hour().unwrap() {
         Some((base, hours)) => (base, hours),
-        None => panic!("no hours"),
+        None => {
+            let mut map = HashMap::new();
+            map.insert("no_hours", json!(true));
+            map.insert("is_index", json!(true));
+            return handlebars_response!(disable_minify "index", &map);
+        }
     };
     let mut h = None;
     for hour in &hours.teachers {
@@ -148,7 +163,12 @@ fn teachers(name: String) -> HandlebarsResponse {
 fn classrooms(name: String) -> HandlebarsResponse {
     let (base, hours) = match hours::full_load_hour().unwrap() {
         Some((base, hours)) => (base, hours),
-        None => panic!("no hours"),
+        None => {
+            let mut map = HashMap::new();
+            map.insert("no_hours", json!(true));
+            map.insert("is_index", json!(true));
+            return handlebars_response!(disable_minify "index", &map);
+        }
     };
     let mut h = None;
     for hour in &hours.classrooms {
