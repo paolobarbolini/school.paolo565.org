@@ -24,6 +24,9 @@ use rocket_include_static_resources::StaticResponse;
 use std::collections::HashMap;
 use std::io::Cursor;
 
+#[macro_use]
+mod macros;
+
 mod article;
 mod articles;
 mod cache;
@@ -83,15 +86,7 @@ fn icon_512() -> StaticResponse {
 
 #[get("/")]
 fn index() -> HandlebarsResponse {
-    let hours = match hours::full_load_hour().unwrap() {
-        Some((_, hours)) => hours,
-        None => {
-            let mut map = HashMap::new();
-            map.insert("no_hours", json!(true));
-            map.insert("is_index", json!(true));
-            return handlebars_response!(disable_minify "index", &map);
-        }
-    };
+    let (_, hours) = load_hours!();
 
     let mut map = HashMap::new();
     map.insert("hours", json!(hours));
@@ -101,15 +96,7 @@ fn index() -> HandlebarsResponse {
 
 #[get("/classi/<name>")]
 fn classes(name: String) -> HandlebarsResponse {
-    let (base, hours) = match hours::full_load_hour().unwrap() {
-        Some((base, hours)) => (base, hours),
-        None => {
-            let mut map = HashMap::new();
-            map.insert("no_hours", json!(true));
-            map.insert("is_index", json!(true));
-            return handlebars_response!(disable_minify "index", &map);
-        }
-    };
+    let (base, hours) = load_hours!();
     let mut h = None;
     for hour in &hours.classes {
         if hour.title.to_lowercase() == name.to_lowercase() {
@@ -131,15 +118,7 @@ fn classes(name: String) -> HandlebarsResponse {
 
 #[get("/docenti/<name>")]
 fn teachers(name: String) -> HandlebarsResponse {
-    let (base, hours) = match hours::full_load_hour().unwrap() {
-        Some((base, hours)) => (base, hours),
-        None => {
-            let mut map = HashMap::new();
-            map.insert("no_hours", json!(true));
-            map.insert("is_index", json!(true));
-            return handlebars_response!(disable_minify "index", &map);
-        }
-    };
+    let (base, hours) = load_hours!();
     let mut h = None;
     for hour in &hours.teachers {
         if hour.title.to_lowercase() == name.to_lowercase() {
@@ -161,15 +140,7 @@ fn teachers(name: String) -> HandlebarsResponse {
 
 #[get("/aule/<name>")]
 fn classrooms(name: String) -> HandlebarsResponse {
-    let (base, hours) = match hours::full_load_hour().unwrap() {
-        Some((base, hours)) => (base, hours),
-        None => {
-            let mut map = HashMap::new();
-            map.insert("no_hours", json!(true));
-            map.insert("is_index", json!(true));
-            return handlebars_response!(disable_minify "index", &map);
-        }
-    };
+    let (base, hours) = load_hours!();
     let mut h = None;
     for hour in &hours.classrooms {
         if hour.title.to_lowercase() == name.to_lowercase() {
