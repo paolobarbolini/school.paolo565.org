@@ -5,9 +5,8 @@ const expectedCaches = [
 ];
 
 const cacheFiles = [
-    // TODO: Add index and articles once those are able to refresh with new additions
-    // '/',
-    // '/avvisi',
+    '/',
+    '/avvisi',
     '/info',
     '/static/app.css',
     '/static/app.js',
@@ -49,6 +48,23 @@ const handleActivate = async () => {
 
 const handleFetch = async (request) => {
     const cache = await caches.open(cacheName);
+
+    const url = new URL(request.url);
+    if (url.pathname === '/' || url.pathname === '/avvisi'
+        || url.pathname.startsWith('/classi/') || url.pathname.startsWith('/docenti/')
+        || url.pathname.startsWith('/aule/') || url.pathname.startsWith('/avvisi/')) {
+        try {
+            const resp = await fetch(request);
+            cache.put(request, resp.clone());
+            return resp;
+        } catch (e) {
+            const resp = await cache.match(request);
+            if (resp) return resp;
+
+            return await cache.match('/offline');
+        }
+    }
+
     const resp = await cache.match(request);
     if (resp) return resp;
 
