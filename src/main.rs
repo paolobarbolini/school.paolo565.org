@@ -17,7 +17,7 @@ extern crate lazy_static;
 
 use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};
-use rocket::Response;
+use rocket::{Request, Response};
 use rocket_etag_if_none_match::{EntityTag, EtagIfNoneMatch};
 use rocket_include_handlebars::HandlebarsResponse;
 use rocket_include_static_resources::StaticResponse;
@@ -33,6 +33,18 @@ mod cache;
 mod error;
 mod hour;
 mod hours;
+
+#[catch(404)]
+fn not_found(_req: &Request) -> HandlebarsResponse {
+    let map: HashMap<String, String> = HashMap::new();
+    handlebars_response!(disable_minify "404", &map)
+}
+
+#[catch(500)]
+fn server_error(_req: &Request) -> HandlebarsResponse {
+    let map: HashMap<String, String> = HashMap::new();
+    handlebars_response!(disable_minify "500", &map)
+}
 
 #[get("/manifest.json")]
 fn manifest() -> StaticResponse {
@@ -212,13 +224,21 @@ fn main() {
                 "views/partials/article_item.hbs",
                 "footer",
                 "views/partials/footer.hbs",
+                "404",
+                "views/404.hbs",
+                "500",
+                "views/500.hbs",
             );
         }))
         .mount(
             "/",
             routes![index, classes, teachers, classrooms, articles, article, pdf, about],
         )
-        .mount("/", routes![favicon, css, js, pdf_js, pdf_js_worker,])
+        .mount(
+            "/",
+            routes![favicon, css, js, pdf_js, pdf_js_worker],
+        )
         .mount("/", routes![manifest, sw, icon_192, icon_384, icon_512])
+        .register(catchers![not_found, server_error])
         .launch();
 }
