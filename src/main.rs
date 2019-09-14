@@ -106,14 +106,7 @@ fn classes(name: String) -> HandlebarsResponse {
     }
     let h = h.unwrap();
 
-    let html = h.html(&base).unwrap();
-
-    let mut map = HashMap::new();
-    map.insert("hour", json!(h));
-    map.insert("hour_html", json!(html));
-    map.insert("path", json!(format!("/classi/{}", h.title)));
-    map.insert("is_index", json!(true));
-    handlebars_response!(disable_minify "hour", &map)
+    render_hour!(base, "classi", h);
 }
 
 #[get("/docenti/<name>")]
@@ -128,14 +121,7 @@ fn teachers(name: String) -> HandlebarsResponse {
     }
     let h = h.unwrap();
 
-    let html = h.html(&base).unwrap();
-
-    let mut map = HashMap::new();
-    map.insert("hour", json!(h));
-    map.insert("hour_html", json!(html));
-    map.insert("path", json!(format!("/docenti/{}", h.title)));
-    map.insert("is_index", json!(true));
-    handlebars_response!(disable_minify "hour", &map)
+    render_hour!(base, "docenti", h);
 }
 
 #[get("/aule/<name>")]
@@ -150,14 +136,7 @@ fn classrooms(name: String) -> HandlebarsResponse {
     }
     let h = h.unwrap();
 
-    let html = h.html(&base).unwrap();
-
-    let mut map = HashMap::new();
-    map.insert("hour", json!(h));
-    map.insert("hour_html", json!(html));
-    map.insert("path", json!(format!("/aule/{}", h.title)));
-    map.insert("is_index", json!(true));
-    handlebars_response!(disable_minify "hour", &map)
+    render_hour!(base, "aule", h);
 }
 
 #[get("/avvisi")]
