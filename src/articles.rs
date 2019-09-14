@@ -1,3 +1,4 @@
+use crate::cache::reqwest_text;
 use crate::error::Result;
 use serde::ser::{Serialize, SerializeStruct, Serializer};
 use std::collections::HashMap;
@@ -6,7 +7,7 @@ use url::Url;
 
 pub fn load_articles() -> Result<Vec<ArticleItem>> {
     let url = "http://www.istitutogobetti.it/?option=com_content&view=category&id=20&Itemid=111&limit=250";
-    let text = reqwest::get(url)?.text()?;
+    let text = reqwest_text(url.to_owned()).unwrap();
 
     let parsed = ArticleItems::from_html(&text)?;
     Ok(parsed.articles)

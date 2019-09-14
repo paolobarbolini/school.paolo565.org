@@ -1,3 +1,4 @@
+use crate::cache::{reqwest_data, reqwest_text};
 use crate::error::Result;
 use serde::ser::{Serialize, SerializeStruct, Serializer};
 use unhtml::FromHtml;
@@ -12,7 +13,7 @@ pub fn load_article_id(id: i64) -> Result<Article> {
 }
 
 pub fn load_article(url: String) -> Result<Article> {
-    let text = reqwest::get(&url)?.text()?;
+    let text = reqwest_text(url.to_owned()).unwrap();
 
     let article = Article::from_html(&text)?;
     Ok(article)
@@ -156,10 +157,8 @@ impl ArticleUrl {
 
     pub fn body(&self) -> Result<Vec<u8>> {
         let url = self.abs_url();
-        let mut resp = reqwest::get(&url)?;
-        let mut buf: Vec<u8> = vec![];
-        resp.copy_to(&mut buf)?;
-        Ok(buf)
+        let data = reqwest_data(url.to_owned()).unwrap();
+        Ok(data)
     }
 }
 

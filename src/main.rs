@@ -12,6 +12,9 @@ extern crate rocket_include_handlebars;
 #[macro_use]
 extern crate serde_json;
 
+#[macro_use]
+extern crate lazy_static;
+
 use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};
 use rocket::Response;
@@ -23,6 +26,7 @@ use std::io::Cursor;
 
 mod article;
 mod articles;
+mod cache;
 mod error;
 mod hour;
 mod hours;

@@ -1,4 +1,5 @@
 use crate::article::load_article;
+use crate::cache::reqwest_text;
 use crate::error::Result;
 use crate::hour::{load_hour, Hour};
 use unhtml::FromHtml;
@@ -22,7 +23,7 @@ pub fn full_load_hour() -> Result<Option<(String, Hour)>> {
 
 pub fn load_hours_article() -> Result<Option<String>> {
     let url = "http://www.istitutogobetti.it";
-    let text = reqwest::get(url)?.text()?;
+    let text = reqwest_text(url.to_owned()).unwrap();
 
     let parsed = Hours::from_html(&text)?;
     Ok(parsed.find_hours())
