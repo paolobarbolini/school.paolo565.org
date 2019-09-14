@@ -63,13 +63,33 @@ impl HourItem {
         let text = reqwest_text(url.to_owned()).unwrap();
         let fragment = Html::parse_document(&text);
 
-        let selector = Selector::parse("center:nth-of-type(2)").unwrap();
-        let mut table = fragment.select(&selector);
+        let table_selector = Selector::parse("center:nth-of-type(2)").unwrap();
+        let mut table = fragment.select(&table_selector);
         let table = table.next().unwrap();
 
         // TODO: prettify table
-        // TODO: update HREFs
 
-        Ok(table.inner_html())
+        let mut replacer = Vec::new();
+        let a_selector = Selector::parse("a").unwrap();
+        for a in table.select(&a_selector) {
+            let href = a.value().attr("href");
+            if let Some(original_href) = href {
+                if !original_href.starts_with("../") || !original_href.ends_with(".html") {
+                    continue;
+                }
+
+                let href = &original_href[3..original_href.len() - ".html".len()];
+                let i = href.find('/').unwrap();
+                let href = format!("/{}{}", &href[..i].to_lowercase(), &href[i..]);
+                replacer.push((original_href, href));
+            }
+        }
+
+        // TODO: is there a better way of updating the href?
+        let mut html = table.inner_html();
+        for replace in replacer {
+            html = html.replace(&replace.0, &replace.1);
+        }
+        Ok(html)
     }
 }

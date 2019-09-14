@@ -234,10 +234,7 @@ fn main() {
             "/",
             routes![index, classes, teachers, classrooms, articles, article, pdf, about],
         )
-        .mount(
-            "/",
-            routes![favicon, css, js, pdf_js, pdf_js_worker],
-        )
+        .mount("/", routes![favicon, css, js, pdf_js, pdf_js_worker])
         .mount("/", routes![manifest, sw, icon_192, icon_384, icon_512])
         .register(catchers![not_found, server_error])
         .launch();
