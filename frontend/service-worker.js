@@ -13,7 +13,8 @@ const cacheFiles = [
     '/static/app.js',
     '/static/vendored/pdf-js/pdf.js',
     '/static/vendored/pdf-js/pdf.worker.js',
-    '/favicon.ico'
+    '/favicon.ico',
+    '/offline',
 ];
 
 self.addEventListener('install', (event) => {
@@ -51,5 +52,10 @@ const handleFetch = async (request) => {
     const resp = await cache.match(request);
     if (resp) return resp;
 
-    return await fetch(request);
+    try {
+        const resp = await fetch(request);
+        return resp;
+    } catch (e) {
+        return await cache.match('/offline');
+    }
 }

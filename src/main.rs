@@ -81,6 +81,12 @@ fn pdf_js_worker() -> StaticResponse {
     static_response!("pdf-js-worker")
 }
 
+#[get("/offline")]
+fn offline() -> HandlebarsResponse {
+    let map: HashMap<String, String> = HashMap::new();
+    handlebars_response!(disable_minify "offline", &map)
+}
+
 #[get("/static/icon-192x192.png")]
 fn icon_192() -> StaticResponse {
     static_response!("icon-192")
@@ -228,6 +234,8 @@ fn main() {
                 "views/404.hbs",
                 "500",
                 "views/500.hbs",
+                "offline",
+                "views/offline.hbs",
             );
         }))
         .mount(
@@ -235,7 +243,10 @@ fn main() {
             routes![index, classes, teachers, classrooms, articles, article, pdf, about],
         )
         .mount("/", routes![favicon, css, js, pdf_js, pdf_js_worker])
-        .mount("/", routes![manifest, sw, icon_192, icon_384, icon_512])
+        .mount(
+            "/",
+            routes![manifest, sw, offline, icon_192, icon_384, icon_512],
+        )
         .register(catchers![not_found, server_error])
         .launch();
 }
