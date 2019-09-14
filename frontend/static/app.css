@@ -433,7 +433,7 @@ table p {
 }
 
 #pdf-preview {
-    width: 100%;
+    width: calc(100% - 40px);
     max-width: 720px;
     margin: 20px auto 80px auto;
     background: #494949;
