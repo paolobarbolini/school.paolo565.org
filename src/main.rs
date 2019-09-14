@@ -97,46 +97,22 @@ fn index() -> HandlebarsResponse {
 #[get("/classi/<name>")]
 fn classes(name: String) -> HandlebarsResponse {
     let (base, hours) = load_hours!();
-    let mut h = None;
-    for hour in &hours.classes {
-        if hour.title.to_lowercase() == name.to_lowercase() {
-            h = Some(hour);
-            break;
-        }
-    }
-    let h = h.unwrap();
-
-    render_hour!(base, "classi", h);
+    let classes = hours.classes;
+    render_hour!(base, "classi", classes, name);
 }
 
 #[get("/docenti/<name>")]
 fn teachers(name: String) -> HandlebarsResponse {
     let (base, hours) = load_hours!();
-    let mut h = None;
-    for hour in &hours.teachers {
-        if hour.title.to_lowercase() == name.to_lowercase() {
-            h = Some(hour);
-            break;
-        }
-    }
-    let h = h.unwrap();
-
-    render_hour!(base, "docenti", h);
+    let teachers = hours.teachers;
+    render_hour!(base, "docenti", teachers, name);
 }
 
 #[get("/aule/<name>")]
 fn classrooms(name: String) -> HandlebarsResponse {
     let (base, hours) = load_hours!();
-    let mut h = None;
-    for hour in &hours.classrooms {
-        if hour.title.to_lowercase() == name.to_lowercase() {
-            h = Some(hour);
-            break;
-        }
-    }
-    let h = h.unwrap();
-
-    render_hour!(base, "aule", h);
+    let classrooms = hours.classrooms;
+    render_hour!(base, "aule", classrooms, name);
 }
 
 #[get("/avvisi")]

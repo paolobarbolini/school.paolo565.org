@@ -13,14 +13,20 @@ macro_rules! load_hours {
 }
 
 macro_rules! render_hour {
-    ($base: ident, $kind: tt, $hour: ident) => {
-        let html = $hour.html(&$base).unwrap();
+    ($base: ident, $kind: tt, $hours: ident, $matching: tt) => {
+        for hour in &$hours {
+            if hour.title.to_lowercase() == $matching.to_lowercase() {
+                let html = hour.html(&$base).unwrap();
 
-        let mut map = HashMap::new();
-        map.insert("hour", json!($hour));
-        map.insert("hour_html", json!(html));
-        map.insert("path", json!(format!("/{}/{}", $kind, $hour.title)));
-        map.insert("is_index", json!(true));
-        return handlebars_response!(disable_minify "hour", &map);
+                let mut map = HashMap::new();
+                map.insert("hour", json!(hour));
+                map.insert("hour_html", json!(html));
+                map.insert("path", json!(format!("/{}/{}", $kind, hour.title)));
+                map.insert("is_index", json!(true));
+                return handlebars_response!(disable_minify "hour", &map);
+            }
+        }
+
+        panic!("hour not found");
     };
 }
