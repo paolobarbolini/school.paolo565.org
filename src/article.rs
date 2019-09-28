@@ -138,7 +138,7 @@ impl Serialize for ArticleContent {
 
 #[derive(FromHtml, Clone, Debug)]
 pub struct ArticleUrl {
-    #[html(attr = "href")]
+    #[html(attr = "href", default = "")]
     href: String,
 
     #[html(attr = "inner")]
