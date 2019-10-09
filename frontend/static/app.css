@@ -30,14 +30,6 @@ body {
     text-align: center;
 }
 
-.bold {
-    font-weight: bold;
-}
-
-.nowrap {
-    white-space: nowrap;
-}
-
 h2 {
     margin: 12px 0;
     font-size: 1.4em;
