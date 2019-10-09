@@ -230,6 +230,8 @@ fn main() {
                 "views/partials/article_item.hbs",
                 "footer",
                 "views/partials/footer.hbs",
+                "commithash",
+                "views/partials/commithash.hbs",
                 "404",
                 "views/404.hbs",
                 "500",

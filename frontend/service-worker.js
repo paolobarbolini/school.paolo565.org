@@ -1,4 +1,5 @@
-const cacheName = `isg-pwa-v2-{{last_commit_hash}}`;
+const commitHash = '{{last_commit_hash}}';
+const cacheName = `isg-pwa-v2-${commitHash}`;
 
 const expectedCaches = [
   cacheName,
@@ -8,8 +9,8 @@ const cacheFiles = [
     '/',
     '/avvisi',
     '/info',
-    '/static/app.css',
-    '/static/app.js',
+    `/static/app.css?v=${commitHash}`,
+    `/static/app.js?v=${commitHash}`,
     '/static/vendored/pdf-js/pdf.js',
     '/static/vendored/pdf-js/pdf.worker.js',
     '/favicon.ico',
