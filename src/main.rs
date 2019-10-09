@@ -66,6 +66,11 @@ fn css() -> StaticResponse {
     static_response!("css")
 }
 
+#[get("/static/app.print.css")]
+fn css_print() -> StaticResponse {
+    static_response!("css-print")
+}
+
 #[get("/static/app.js")]
 fn js() -> StaticResponse {
     static_response!("js")
@@ -195,6 +200,8 @@ fn main() {
                 "frontend/service-worker.build.js",
                 "css",
                 "frontend/static/app.css",
+                "css-print",
+                "frontend/static/app.print.css",
                 "js",
                 "frontend/static/app.js",
                 "pdf-js",
@@ -244,7 +251,10 @@ fn main() {
             "/",
             routes![index, classes, teachers, classrooms, articles, article, pdf, about],
         )
-        .mount("/", routes![favicon, css, js, pdf_js, pdf_js_worker])
+        .mount(
+            "/",
+            routes![favicon, css, css_print, js, pdf_js, pdf_js_worker],
+        )
         .mount(
             "/",
             routes![manifest, sw, offline, icon_192, icon_384, icon_512],

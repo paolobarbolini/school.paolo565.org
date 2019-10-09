@@ -1,0 +1,13 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #000;
+}
+
+@page {
+    size: A4 landscape;
+
+}
+
+.no-print {
+    display: none;
+}
