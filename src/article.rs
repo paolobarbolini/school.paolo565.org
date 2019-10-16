@@ -13,7 +13,7 @@ pub fn load_article_id(id: i64) -> Result<Article> {
 }
 
 pub fn load_article(url: String) -> Result<Article> {
-    let text = reqwest_text(url.to_owned()).unwrap();
+    let text = reqwest_text(url).unwrap();
 
     let article = Article::from_html(&text)?;
     Ok(article)
@@ -157,7 +157,7 @@ impl ArticleUrl {
 
     pub fn body(&self) -> Result<Vec<u8>> {
         let url = self.abs_url();
-        let data = reqwest_data(url.to_owned()).unwrap();
+        let data = reqwest_data(url).unwrap();
         Ok(data)
     }
 }
