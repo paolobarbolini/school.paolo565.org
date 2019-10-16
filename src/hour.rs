@@ -67,8 +67,7 @@ impl HourItem {
         let mut table = fragment.select(&table_selector);
         let table = table.next().unwrap();
 
-        // TODO: prettify table
-
+        // fix table hrefs
         let mut replacer = Vec::new();
         let a_selector = Selector::parse("a").unwrap();
         for a in table.select(&a_selector) {
@@ -90,6 +89,35 @@ impl HourItem {
         for replace in replacer {
             html = html.replace(&replace.0, &replace.1);
         }
+
+        // hide empty table lines
+        let tr_selector = Selector::parse("tr").unwrap();
+        let empty_td_selector = Selector::parse("td[bgcolor='#FFFFFF']").unwrap();
+        let mut i = 1;
+        let mut empty_lines = Vec::new();
+        for tr in table.select(&tr_selector) {
+            let mut tds = 0;
+            for _ in tr.select(&empty_td_selector) {
+                tds += 1;
+            }
+
+            if tds == 6 {
+                empty_lines.push(i);
+            }
+
+            i += 1;
+        }
+
+        if !empty_lines.is_empty() {
+            html += "<style>";
+            for line in empty_lines {
+                html += &format!("tr:nth-child({}), ", line);
+            }
+            html = html[..html.len() - 2].to_owned();
+            html += " { display: none; }";
+            html += "</style>";
+        }
+
         Ok(html)
     }
 }
