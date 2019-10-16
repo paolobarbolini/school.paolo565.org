@@ -11,3 +11,16 @@ body {
 .no-print {
     display: none;
 }
+
+.app-container,
+.last-container:last-of-type,
+.container:last-of-type {
+    margin-bottom: 0;
+}
+
+.app-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
