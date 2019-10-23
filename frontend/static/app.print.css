@@ -7,6 +7,12 @@
     overflow: visible !important;
 }
 
+html,
+body {
+    width: auto;
+    height: auto;
+}
+
 body {
     background: #fff;
 }
