@@ -121,7 +121,8 @@ h2 {
     text-decoration: none;
 }
   
-.top-navigation #search {
+.top-navigation #search,
+.top-navigation #print {
     color: white;
     margin-left: auto;
 }

@@ -77,6 +77,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================ */
+/* Printing */
+/* ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const print = document.querySelector('#print');
+    if (!print) return;
+    print.classList.remove('hidden');
+
+    print.addEventListener('click', () => {
+        window.print();
+    });
+});
+
+/* ============================================================ */
 /* Frequently Searched Hours */
 /* ============================================================ */
 
