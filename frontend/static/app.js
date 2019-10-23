@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!window.print);
+
     const print = document.querySelector('#print');
     if (!print) return;
     print.classList.remove('hidden');
