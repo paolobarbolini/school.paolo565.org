@@ -118,6 +118,22 @@ impl HourItem {
             html += "</style>";
         }
 
+        html = html.replace("width=\"15%\"", "");
+        html = html.replace("rowspan=\"1\"", "");
+        html = html.replace("colspan=\"1\"", "");
+        html = html.replace("cellspacing=\"4\"", "");
+        html = html.replace("cellpadding=\"4\"", "");
+        html = html.replace("cellspacing=\"0\"", "");
+        html = html.replace("valign=\"MIDDLE\"", "");
+        html = html.replace("border=\"2\"", "");
+        html = html.replace("align=\"CENTER\"", "");
+        html = html.replace("nowrap=\"\"", "");
+        html = html.replace("width=\"80%\"", "");
+
+        html = html.replace("id=\"mathema\"", "class=\"mathema-empty\"");
+        html = html.replace("id=\"nodecBlack\"", "class=\"nodecBlack-inner\"");
+        html = html.replace("id=\"nodecWhite\"", "class=\"nodecWhite-inner\"");
+
         Ok(html)
     }
 }

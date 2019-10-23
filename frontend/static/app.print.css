@@ -1,11 +1,14 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #000;
-}
-
 @page {
     size: A4 landscape;
 
+}
+
+* {
+    overflow: visible !important;
+}
+
+body {
+    background: #fff;
 }
 
 .no-print {
@@ -18,9 +21,7 @@ body {
     margin-bottom: 0;
 }
 
-.app-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+.schedule table {
+    width: 100%;
 }

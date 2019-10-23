@@ -44,6 +44,7 @@ h2 {
 .container {
     max-width: 720px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .last-container:last-of-type,
@@ -94,6 +95,7 @@ h2 {
 
 .app-container {
     margin-bottom: 80px;
+    width: 100%;
 }
 
 /* ============================================================ */
@@ -273,6 +275,10 @@ h2 {
 /* Hours Page */
 /* ============================================================ */
 
+.schedule-page {
+    width: 100%;
+}
+
 #highlighted-schedules {
     list-style: none;
     margin: 0 0 10px 0;
@@ -335,16 +341,9 @@ h2 {
 
 .schedule {
     overflow-y: auto;
-    width: calc(100vw - 40px);
     max-width: 1500px;
-    margin: 10px auto;
-}
-  
-@media (max-width: 1200px) {
-    .schedule {
-        width: 100vw;
-        margin-bottom: 0;
-    }
+    margin: 16px auto;
+    width: 100%;
 }
   
 .schedule table {
@@ -359,51 +358,53 @@ h2 {
 }
   
 /* table fixes */
-table * {
+.schedule table {
+    border-collapse: collapse;
+}
+
+.schedule table * {
     font-weight: bold;
     text-decoration: none;
     text-transform: uppercase;
     text-align: center;
-    font-family: 'Designosaur';
     font-size: 9pt;
 }
 
-table .nodecBlack {
+.schedule table .nodecBlack {
     color: #000000;
 }
 
-table .nodecWhite {
+.schedule table .nodecWhite {
     color: #FFFFFF;
 }
 
-table td {
+.schedule table td {
     padding: 10px;
     white-space: nowrap;
 }
 
-table table,
-table tr,
-table td {
-    border: 1px solid black;
-    border-collapse: collapse;
+.schedule table,
+.schedule table tr,
+.schedule table td {
+    border: 2px solid black;
 }
 
-table .mathema p,
-table #mathema {
+.schedule table .mathema p,
+.schedule table .mathema-empty {
     display: none;
 }
 
-table .nodecBlack,
-table .nodecWhite {
+.schedule table .nodecBlack,
+.schedule table .nodecWhite {
     max-height: 20px;
 }
 
-table #nodecBlack,
-table #nodecWhite {
+.schedule table .nodecBlack-inner,
+.schedule table .nodecWhite-inner {
     height: 10px;
 }
 
-table p {
+.schedule table p {
     margin: 0;
     padding: 0;
     margin-top: 5px;
