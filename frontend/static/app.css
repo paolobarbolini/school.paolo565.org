@@ -355,6 +355,7 @@ h2 {
     left: 0;
     background-color: #e9e9e9;
     width: 30px;
+    outline: 2px solid black;
 }
   
 /* table fixes */
