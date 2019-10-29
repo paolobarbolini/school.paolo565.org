@@ -13,7 +13,7 @@ extern crate rocket_include_handlebars;
 extern crate serde_json;
 
 #[macro_use]
-extern crate lazy_static;
+extern crate cached;
 
 use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};
