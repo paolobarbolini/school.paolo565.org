@@ -21,7 +21,6 @@ use rocket::{Request, Response};
 use rocket_etag_if_none_match::{EntityTag, EtagIfNoneMatch};
 use rocket_include_handlebars::HandlebarsResponse;
 use rocket_include_static_resources::StaticResponse;
-use std::collections::HashMap;
 use std::io::Cursor;
 
 #[macro_use]
@@ -36,14 +35,12 @@ mod hours;
 
 #[catch(404)]
 fn not_found(_req: &Request) -> HandlebarsResponse {
-    let map: HashMap<String, String> = HashMap::new();
-    handlebars_response!(disable_minify "404", &map)
+    handlebars_response!(disable_minify "404", json!({}))
 }
 
 #[catch(500)]
 fn server_error(_req: &Request) -> HandlebarsResponse {
-    let map: HashMap<String, String> = HashMap::new();
-    handlebars_response!(disable_minify "500", &map)
+    handlebars_response!(disable_minify "500", json!({}))
 }
 
 #[get("/manifest.json")]
@@ -88,8 +85,7 @@ fn pdf_js_worker() -> StaticResponse {
 
 #[get("/offline")]
 fn offline() -> HandlebarsResponse {
-    let map: HashMap<String, String> = HashMap::new();
-    handlebars_response!(disable_minify "offline", &map)
+    handlebars_response!(disable_minify "offline", json!({}))
 }
 
 #[get("/static/icon-192x192.png")]
@@ -111,41 +107,35 @@ fn icon_512() -> StaticResponse {
 fn index() -> HandlebarsResponse {
     let (_, hours) = load_hours!();
 
-    let mut map = HashMap::new();
-    map.insert("hours", json!(hours));
-    map.insert("is_index", json!(true));
-    handlebars_response!(disable_minify "index", &map)
+    handlebars_response!(disable_minify "index", json!({
+        "hours": hours,
+        "is_index": true,
+    }))
 }
 
 #[get("/classi/<name>")]
 fn classes(name: String) -> HandlebarsResponse {
-    let (base, hours) = load_hours!();
-    let classes = hours.classes;
-    render_hour!(base, "classi", classes, name);
+    load_render_hour!(classes, "classi", name);
 }
 
 #[get("/docenti/<name>")]
 fn teachers(name: String) -> HandlebarsResponse {
-    let (base, hours) = load_hours!();
-    let teachers = hours.teachers;
-    render_hour!(base, "docenti", teachers, name);
+    load_render_hour!(teachers, "docenti", name);
 }
 
 #[get("/aule/<name>")]
 fn classrooms(name: String) -> HandlebarsResponse {
-    let (base, hours) = load_hours!();
-    let classrooms = hours.classrooms;
-    render_hour!(base, "aule", classrooms, name);
+    load_render_hour!(classrooms, "aule", name);
 }
 
 #[get("/avvisi")]
 fn articles() -> HandlebarsResponse {
     let arts = articles::load_articles().unwrap();
 
-    let mut map = HashMap::new();
-    map.insert("articles", json!(arts));
-    map.insert("is_articles", json!(true));
-    handlebars_response!(disable_minify "articles", &map)
+    handlebars_response!(disable_minify "articles", json!({
+        "articles": arts,
+        "is_articles": true,
+    }))
 }
 
 #[get("/avvisi/<id>")]
@@ -153,12 +143,12 @@ fn article(id: i64) -> HandlebarsResponse {
     let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
 
-    let mut map = HashMap::new();
-    map.insert("article", json!(art));
-    map.insert("path", json!(format!("/avvisi/{}", id)));
-    map.insert("is_articles", json!(true));
-    map.insert("has_pdf", json!(pdfs.len() == 1));
-    handlebars_response!(disable_minify "article", &map)
+    handlebars_response!(disable_minify "article", json!({
+        "article": art,
+        "path": format!("/avvisi/{}", id),
+        "is_articles": true,
+        "has_pdf": pdfs.len() == 1,
+    }))
 }
 
 #[get("/avvisi/<id>/pdf/<i>")]
@@ -182,9 +172,9 @@ fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, S
 
 #[get("/info")]
 fn about() -> HandlebarsResponse {
-    let mut map = HashMap::new();
-    map.insert("is_about", json!(true));
-    handlebars_response!(disable_minify "about", &map)
+    handlebars_response!(disable_minify "about", json!({
+        "is_about": true,
+    }))
 }
 
 fn main() {
