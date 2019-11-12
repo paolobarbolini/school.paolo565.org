@@ -7,7 +7,6 @@ license = "Apache-2.0"
 
 [dependencies]
 rocket = "0.4.2"
-handlebars = "2.0.2"
 rocket-include-handlebars = "0.12.5"
 rocket-etag-if-none-match = "0.3.3"
 md5 = "0.7.0"

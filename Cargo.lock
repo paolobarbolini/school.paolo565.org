@@ -1532,7 +1532,6 @@ name = "school_paolo565_org"
 version = "2.0.0"
 dependencies = [
  "cached 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "handlebars 2.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "md5 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest 0.9.22 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
