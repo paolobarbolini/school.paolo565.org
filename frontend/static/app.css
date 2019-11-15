@@ -93,6 +93,7 @@ h2 {
 }
 
 .app-container {
+    margin-top: 47px;
     margin-bottom: 80px;
     width: 100%;
 }
@@ -102,13 +103,16 @@ h2 {
 /* ============================================================ */
 
 .top-navigation {
+    top: 0;
+    position: fixed;
+    z-index: 999;
     height: 47px;
+    width: 100%;
     padding: 0 16px;
     background-color: #3F51B5;
     box-shadow: 0 0 12px 0 #b5b5b5;
     display: flex;
     align-items: center;
-    position: relative;
 }
   
 .top-navigation .fa-icon {
@@ -124,6 +128,15 @@ h2 {
 .top-navigation #print {
     color: white;
     margin-left: auto;
+    height: 16px;
+    right: 0;
+}
+
+.top-navigation #search .fa-icon,
+.top-navigation #print .fa-icon {
+    position: relative;
+    right: 32px;
+    display: block;
 }
   
 .top-navigation #search-bar {
