@@ -1,32 +1,30 @@
 use crate::article::load_article;
 use crate::cache::reqwest_text;
-use crate::error::Result;
+use crate::error::{Error, Result};
 use crate::hour::{load_hour, Hour};
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn full_load_hour() -> Result<Option<(String, Hour)>> {
-    let article = match load_hours_article()? {
-        Some(article) => article,
-        None => return Ok(None),
-    };
-
+pub fn full_load_hour() -> Result<(String, Hour)> {
+    let article = load_hours_article()?;
     let article = load_article(article)?;
     let hours = match article.hours_url() {
         Some(hours) => hours,
-        None => return Ok(None),
+        None => return Err(Error::UrlNotFound),
     };
-
     let hour = load_hour(hours.clone())?;
-    Ok(Some((hours, hour)))
+    Ok((hours, hour))
 }
 
-pub fn load_hours_article() -> Result<Option<String>> {
+pub fn load_hours_article() -> Result<String> {
     let url = "http://www.istitutogobetti.it";
-    let text = reqwest_text(url.to_owned()).unwrap();
+    let text = reqwest_text(url.to_owned())?;
 
     let parsed = Hours::from_html(&text)?;
-    Ok(parsed.find_hours())
+    match parsed.find_hours() {
+        Some(article) => Ok(article),
+        None => Err(Error::UrlNotFound),
+    }
 }
 
 #[derive(FromHtml, Debug)]

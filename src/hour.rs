@@ -5,7 +5,7 @@ use unhtml::FromHtml;
 use url::Url;
 
 pub fn load_hour(url: String) -> Result<Hour> {
-    let text = reqwest_text(url.to_owned()).unwrap();
+    let text = reqwest_text(url.to_owned())?;
 
     let mut urls = Hour::from_html(&text)?;
     urls.classes = url_to_abs(urls.classes, &url);
@@ -20,7 +20,7 @@ fn url_to_abs(items: Vec<HourItem>, base: &str) -> Vec<HourItem> {
         let url = u.abs_url(base);
         new_items.push(HourItem {
             title: u.title.clone(),
-            url,
+            url: url.to_owned(),
         });
     }
     new_items

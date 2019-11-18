@@ -43,6 +43,11 @@ fn server_error(_req: &Request) -> HandlebarsResponse {
     handlebars_response!(disable_minify "500", json!({}))
 }
 
+#[get("/offline")]
+fn offline() -> HandlebarsResponse {
+    handlebars_response!(disable_minify "offline", json!({}))
+}
+
 #[get("/manifest.json")]
 fn manifest() -> StaticResponse {
     static_response!("manifest")
@@ -83,11 +88,6 @@ fn pdf_js_worker() -> StaticResponse {
     static_response!("pdf-js-worker")
 }
 
-#[get("/offline")]
-fn offline() -> HandlebarsResponse {
-    handlebars_response!(disable_minify "offline", json!({}))
-}
-
 #[get("/static/icon-192x192.png")]
 fn icon_192() -> StaticResponse {
     static_response!("icon-192")
@@ -104,51 +104,60 @@ fn icon_512() -> StaticResponse {
 }
 
 #[get("/")]
-fn index() -> HandlebarsResponse {
+fn index() -> Result<HandlebarsResponse, Status> {
     let (_, hours) = load_hours!();
 
-    handlebars_response!(disable_minify "index", json!({
-        "hours": hours,
-        "is_index": true,
-    }))
+    handlebars_render!(
+        "index",
+        json!({
+            "hours": hours,
+            "is_index": true,
+        })
+    )
 }
 
 #[get("/classi/<name>")]
-fn classes(name: String) -> HandlebarsResponse {
+fn classes(name: String) -> Result<HandlebarsResponse, Status> {
     load_render_hour!(classes, "classi", name);
 }
 
 #[get("/docenti/<name>")]
-fn teachers(name: String) -> HandlebarsResponse {
+fn teachers(name: String) -> Result<HandlebarsResponse, Status> {
     load_render_hour!(teachers, "docenti", name);
 }
 
 #[get("/aule/<name>")]
-fn classrooms(name: String) -> HandlebarsResponse {
+fn classrooms(name: String) -> Result<HandlebarsResponse, Status> {
     load_render_hour!(classrooms, "aule", name);
 }
 
 #[get("/avvisi")]
-fn articles() -> HandlebarsResponse {
-    let arts = articles::load_articles().unwrap();
+fn articles() -> Result<HandlebarsResponse, Status> {
+    let arts = try_status!(articles::load_articles());
 
-    handlebars_response!(disable_minify "articles", json!({
-        "articles": arts,
-        "is_articles": true,
-    }))
+    handlebars_render!(
+        "articles",
+        json!({
+            "articles": arts,
+            "is_articles": true,
+        })
+    )
 }
 
 #[get("/avvisi/<id>")]
-fn article(id: i64) -> HandlebarsResponse {
+fn article(id: i64) -> Result<HandlebarsResponse, Status> {
     let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
 
-    handlebars_response!(disable_minify "article", json!({
-        "article": art,
-        "path": format!("/avvisi/{}", id),
-        "is_articles": true,
-        "has_pdf": pdfs.len() == 1,
-    }))
+    handlebars_render!(
+        "article",
+        json!({
+            "article": art,
+            "path": format!("/avvisi/{}", id),
+            "is_articles": true,
+            "has_pdf": pdfs.len() == 1,
+        })
+    )
 }
 
 #[get("/avvisi/<id>/pdf/<i>")]
@@ -174,7 +183,8 @@ fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, S
 fn about() -> HandlebarsResponse {
     handlebars_response!(disable_minify "about", json!({
         "is_about": true,
-    }))
+        })
+    )
 }
 
 fn main() {

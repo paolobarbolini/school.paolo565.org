@@ -13,7 +13,7 @@ pub fn load_article_id(id: i64) -> Result<Article> {
 }
 
 pub fn load_article(url: String) -> Result<Article> {
-    let text = reqwest_text(url).unwrap();
+    let text = reqwest_text(url)?;
 
     let article = Article::from_html(&text)?;
     Ok(article)
