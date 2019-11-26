@@ -69,6 +69,11 @@ h2 {
     box-shadow: none;
 }
 
+.about-container {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .text-container {
     line-height: 1.1;
 }
