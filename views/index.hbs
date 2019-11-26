@@ -1,58 +1,53 @@
 {{>header title="Orari" path="/" search=true}}
 
-<div class="article-page">
-    <div class="top-heading base-container no-print">
-        <h1>Orari</h1> 
-    </div>
-    {{#if no_hours}}
-    <div class="container text-container">
-        <p>Si è verificato un problema nel caricamento degli orari.</p>
-        <p>Riprova più tardi.</p>
-    </div>
-    {{else}}
-    <div class="container clear-container">
-        <ul id="highlighted-schedules" class="hidden">
-        </ul>
+{{#if no_hours}}
+<div class="container text-container">
+    <p>Si è verificato un problema nel caricamento degli orari.</p>
+    <p>Riprova più tardi.</p>
+</div>
+{{else}}
+<div class="container clear-container">
+    <ul id="highlighted-schedules" class="hidden">
+    </ul>
 
-        <div class="list-columns-wrapper">
-            <div class="list-columns">
-                <div class="schedule-column">
-                    <h2 class="center">Classi</h2>
+    <div class="list-columns-wrapper">
+        <div class="list-columns">
+            <div class="schedule-column">
+                <h2 class="center">Classi</h2>
 
-                    <ul>
-                        {{#each hours.classes}}
-                        <li class="column-item">
-                            <a href="/classi/{{this.title}}">{{this.title}}</a>
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
-                <div class="schedule-column">
-                    <h2 class="center">Docenti</h2>
+                <ul>
+                    {{#each hours.classes}}
+                    <li class="column-item">
+                        <a href="/classi/{{this.title}}">{{this.title}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="schedule-column">
+                <h2 class="center">Docenti</h2>
 
-                    <ul>
-                        {{#each hours.teachers}}
-                        <li class="column-item">
-                            <a href="/docenti/{{this.title}}">{{this.title}}</a>
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
-                <div class="schedule-column">
-                    <h2 class="center">Aule</h2>
+                <ul>
+                    {{#each hours.teachers}}
+                    <li class="column-item">
+                        <a href="/docenti/{{this.title}}">{{this.title}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="schedule-column">
+                <h2 class="center">Aule</h2>
 
-                    <ul>
-                        {{#each hours.classrooms}}
-                        <li class="column-item">
-                            <a href="/aule/{{this.title}}">{{this.title}}</a>
-                        </li>
-                        {{/each}}
-                    </ul>
-                </div>
+                <ul>
+                    {{#each hours.classrooms}}
+                    <li class="column-item">
+                        <a href="/aule/{{this.title}}">{{this.title}}</a>
+                    </li>
+                    {{/each}}
+                </ul>
             </div>
         </div>
     </div>
-    {{/if}}
 </div>
+{{/if}}
 
 {{>footer}}

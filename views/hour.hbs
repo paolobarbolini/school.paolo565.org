@@ -1,15 +1,13 @@
 {{>header title=hour.title path=path print=true}}
 
-<div class="schedule-page">
-    <div class="top-heading base-container no-print">
-        <h1>{{hour.title}}</h1> 
-    </div>
+<div class="top-heading base-container no-print">
+    <h1 id="hour-title">{{hour.title}}</h1>
+</div>
 
-    <div class="last-container">
-      <div class="schedule">
-        {{{hour_html}}}
-      </div>
-    </div>
+<div class="last-container">
+  <div class="schedule">
+    {{{hour_html}}}
+  </div>
 </div>
 
 {{>footer}}

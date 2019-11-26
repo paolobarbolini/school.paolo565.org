@@ -1,17 +1,12 @@
 {{>header title="Avvisi" path="/avvisi" search=true}}
 
-<div class="articles-page">
-    <div class="top-heading base-container no-print">
-        <h1>Avvisi</h1> 
-    </div>
-    <div class="container clear-container">
-        <div class="article-columns">
-            <ul>
-                {{#each articles}}
-                    {{>article_item article=.}}
-                {{/each}}
-            </ul>
-        </div>
+<div class="container clear-container">
+    <div class="article-columns">
+        <ul>
+            {{#each articles}}
+                {{>article_item article=.}}
+            {{/each}}
+        </ul>
     </div>
 </div>
 

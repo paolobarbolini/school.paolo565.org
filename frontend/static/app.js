@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const titleElement = document.querySelector('.schedule-page h1');
+    const titleElement = document.querySelector('#hour-title');
     if (!titleElement) {
         const highlightsElement = document.querySelector('#highlighted-schedules');
         if (!highlightsElement) return;
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const schedule = document.querySelector('.schedule-page .schedule');
+    const schedule = document.querySelector('.schedule');
     if (!schedule) return; // aren't we in the schedule page?
     if (!schedule.scrollTo) return; // unsupported scrollTo
 

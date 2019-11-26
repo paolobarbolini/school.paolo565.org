@@ -67,7 +67,6 @@ h2 {
 .clear-container {
     background-color: transparent;
     box-shadow: none;
-    padding: 0;
 }
 
 .text-container {
@@ -287,10 +286,6 @@ h2 {
 /* Hours Page */
 /* ============================================================ */
 
-.schedule-page {
-    width: 100%;
-}
-
 #highlighted-schedules {
     list-style: none;
     margin: 0 0 10px 0;
@@ -426,10 +421,6 @@ h2 {
 /* ============================================================ */
 /* Articles Page */
 /* ============================================================ */
-
-.articles-page .top-heading {
-    max-width: 512px;
-}
 
 .article-columns {
     max-width: 512px;
