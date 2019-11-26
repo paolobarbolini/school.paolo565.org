@@ -46,11 +46,6 @@ h2 {
     margin: 0 auto;
 }
 
-.last-container:last-of-type,
-.container:last-of-type {
-    margin-bottom: 60px;
-}
-
 .container {
     background-color: white;
     padding: 16px;
@@ -123,9 +118,9 @@ h2 {
     cursor: pointer;
 }
   
-.top-navigation a {
+.top-navigation h1 {
     color: white;
-    text-decoration: none;
+    font-size: 13pt;
 }
   
 .top-navigation #search,
@@ -179,30 +174,13 @@ h2 {
 }
 
 /* ============================================================ */
-/* Top Heading */
+/* Text Heading */
 /* ============================================================ */
 
-.top-heading {
+.text-heading {
+    margin: 12px 0 12px 16px;
+    font-size: 1.4em;
     color: #696969;
-    display: flex;
-    align-items: center;
-    padding: 0 0 0 16px;
-}
-  
-.top-heading h1 {
-    font-weight: bold;
-    font-size: 100%;
-    margin-right: .3rem;
-    white-space: normal;
-}
-  
-.top-heading span {
-    font-size: .8rem;
-}
-
-.top-heading span:before {
-    content: '-';
-    margin-right: .3rem;
 }
 
 /* ============================================================ */
@@ -355,6 +333,7 @@ h2 {
     overflow-y: auto;
     max-width: 1500px;
     margin: 16px auto;
+    padding-top: 24px;
     width: 100%;
 }
   

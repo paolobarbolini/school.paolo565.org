@@ -1,8 +1,5 @@
-{{>header title=article.title path=path}}
+{{>header title=article.title top_title=article.title path=path}}
 
-<div class="top-heading base-container no-print">
-    <h1>{{article.title}}</h1>
-</div>
 <div class="container text-container">
     {{#each article.contents}}
         <p style="padding-left: {{this.padding}}px">{{this.text}}</p>
