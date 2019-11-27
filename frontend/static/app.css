@@ -113,6 +113,7 @@ h2 {
     box-shadow: 0 0 12px 0 #b5b5b5;
     display: flex;
     align-items: center;
+    user-select: none;
 }
   
 .top-navigation .fa-icon {
@@ -199,6 +200,7 @@ h2 {
     background-color: white;
     box-shadow: 0 0 8px 2px #b5b5b5;
     border-bottom: #757575 solid 1px;
+    user-select: none;
 }
   
 .bottom-navigation ul {
