@@ -122,6 +122,10 @@ h2 {
 .top-navigation h1 {
     color: white;
     font-size: 13pt;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: calc(100% - 32px);
 }
   
 .top-navigation #search,
