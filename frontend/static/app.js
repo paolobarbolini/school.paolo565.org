@@ -16,10 +16,11 @@ if (navigator.share) {
     document.addEventListener('DOMContentLoaded', () => {
         const share = document.querySelector('#web-share');
         share.addEventListener('click', () => {
+            const i = document.title.indexOf(' | ISG PWA');
+            const title = i ? document.title.substring(0, i) : document.title;
             navigator.share({
-                title: document.title,
-                text: 'Controlla con facilità gli orari e gli avvisi dell\'Istituto Gobetti',
-                url: window.location.href ,
+                title: title,
+                url: '',
             });          
         });
         
