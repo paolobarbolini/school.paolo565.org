@@ -10,7 +10,7 @@ pub fn load_articles() -> Result<Vec<ArticleItem>> {
     let text = reqwest_text(url.to_owned()).unwrap();
 
     let parsed = ArticleItems::from_html(&text)?;
-    Ok(parsed.articles)
+    Ok(parsed.relevant_articles())
 }
 
 #[derive(FromHtml, Serialize, Debug)]
@@ -20,7 +20,22 @@ pub struct ArticleItems {
     articles: Vec<ArticleItem>,
 }
 
-#[derive(FromHtml, Debug)]
+impl ArticleItems {
+    fn relevant_articles(&self) -> Vec<ArticleItem> {
+        for (i, article) in self.articles.iter().enumerate() {
+            let article = article.clone();
+            if article.title.starts_with("Circ. 1 ") {
+                let mut articles = self.articles.clone();
+                articles.truncate(i + 1);
+                return articles;
+            }
+        }
+
+        self.articles.clone()
+    }
+}
+
+#[derive(FromHtml, Clone, Debug)]
 pub struct ArticleItem {
     #[html(attr = "inner")]
     title: String,
