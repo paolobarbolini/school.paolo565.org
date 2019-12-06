@@ -8,7 +8,7 @@ school.paolo565.org requires Rust Nightly 1.40 or later to build. The latest rel
 
 Once the Rust build environment is setup, the source code can be fetched using git:
 
-    $ git clone https://github.com/paolobarbolini/school.paolo565.org.git
+    $ git clone -b v2 https://github.com/paolobarbolini/school.paolo565.org.git
 
 and then built using Cargo
 
