@@ -98,11 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const titleElement = document.querySelector('#hour-title');
-    if (!titleElement) {
-        const highlightsElement = document.querySelector('#highlighted-schedules');
-        if (!highlightsElement) return;
-
+    const highlightsElement = document.querySelector('#highlighted-schedules');
+    if (highlightsElement) {
         // We are in the schedules page
         const previous = JSON.parse(localStorage.getItem('schedule-searches') || '[]');
         if (previous.length === 0) return;
@@ -122,8 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         highlightsElement.classList.remove('hidden');
-    } else {
+    } else if (document.querySelector('.schedule')) {
         // We are in the schedule page
+        const titleElement = document.querySelector('h1');
         const title = titleElement.innerText;
         const pathname = window.location.pathname;
         let found = false;
