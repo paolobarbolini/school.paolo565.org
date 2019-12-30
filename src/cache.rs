@@ -1,11 +1,11 @@
 use crate::error::{Error, Result};
 use cached::TimedCache;
-use reqwest::Response;
+use reqwest::blocking::Response;
 
 cached! {
     STRING_CACHE: TimedCache<String, Result<String>> = TimedCache::with_lifespan_and_capacity(60 * 20, 200);
     fn reqwest_text(url: String) -> Result<String> = {
-        let mut resp = request(url)?;
+        let resp = request(url)?;
         let text = resp.text()?;
         Ok(text)
     }
@@ -23,7 +23,7 @@ cached! {
 }
 
 fn request(url: String) -> Result<Response> {
-    let resp = reqwest::get(&url)?;
+    let resp = reqwest::blocking::get(&url)?;
     if !resp.status().is_success() {
         return Err(Error::UnexpectedStatusCode {
             status: resp.status(),
