@@ -1,23 +1,18 @@
 use crate::error::Result;
 use cached::TimedCache;
-use reqwest::{
-    blocking::{Client, ClientBuilder, Response},
-    header::{HeaderMap, HeaderValue, USER_AGENT},
-};
+use reqwest::blocking::{Client, ClientBuilder, Response};
+
+static APP_USER_AGENT: &str = concat!(
+    env!("CARGO_PKG_NAME"),
+    "/",
+    env!("CARGO_PKG_VERSION"),
+    " (",
+    env!("CARGO_PKG_REPOSITORY"),
+    ")"
+);
 
 lazy_static::lazy_static! {
-    static ref HTTP_CLIENT: Client = ClientBuilder::new()
-        .default_headers({
-            let mut headers = HeaderMap::new();
-            headers.insert(
-                USER_AGENT,
-                HeaderValue::from_static(concat!(
-                    "school.paolo565.org/2.0",
-                    " (https://github.com/paolobarbolini/school.paolo565.org)"
-                )),
-            );
-            headers
-        })
+    static ref HTTP_CLIENT: Client = ClientBuilder::new().user_agent(APP_USER_AGENT)
         .build()
         .unwrap();
 }

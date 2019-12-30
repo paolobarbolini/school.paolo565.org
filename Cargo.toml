@@ -4,6 +4,7 @@ version = "2.0.0"
 authors = ["Paolo Barbolini <paolo@paolo565.org>"]
 edition = "2018"
 license = "Apache-2.0"
+repository = "https://github.com/paolobarbolini/school.paolo565.org"
 
 [dependencies]
 rocket = "0.4.2"
