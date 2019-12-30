@@ -1,4 +1,3 @@
-use reqwest::StatusCode;
 use std::error::Error as StdError;
 use std::fmt;
 
@@ -9,7 +8,6 @@ pub enum Error {
     Reqwest { description: String },
     Unhtml { description: String },
     UrlNotFound,
-    UnexpectedStatusCode { status: StatusCode },
 }
 
 impl Error {
@@ -18,9 +16,6 @@ impl Error {
             Error::Reqwest { .. } => false,
             Error::Unhtml { .. } => false,
             Error::UrlNotFound => true,
-            Error::UnexpectedStatusCode { status } => {
-                status == &StatusCode::NOT_FOUND || status == &StatusCode::GONE
-            }
         }
     }
 }
@@ -31,9 +26,6 @@ impl fmt::Display for Error {
             Error::Reqwest { description } => write!(f, "{}", description),
             Error::Unhtml { description } => write!(f, "{}", description),
             Error::UrlNotFound => write!(f, "url not found"),
-            Error::UnexpectedStatusCode { status } => {
-                write!(f, "Unexpected status code: {}", status)
-            }
         }
     }
 }
@@ -44,7 +36,6 @@ impl StdError for Error {
             Error::Reqwest { description } => &description,
             Error::Unhtml { description } => &description,
             Error::UrlNotFound => &"url not found",
-            Error::UnexpectedStatusCode { .. } => &"unexpected status code",
         }
     }
 }

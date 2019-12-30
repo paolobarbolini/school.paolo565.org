@@ -1,4 +1,4 @@
-use crate::error::{Error, Result};
+use crate::error::Result;
 use cached::TimedCache;
 use reqwest::{
     blocking::{Client, ClientBuilder, Response},
@@ -43,12 +43,6 @@ cached! {
 }
 
 fn request(url: String) -> Result<Response> {
-    let resp = HTTP_CLIENT.get(&url).send()?;
-    if !resp.status().is_success() {
-        return Err(Error::UnexpectedStatusCode {
-            status: resp.status(),
-        });
-    }
-
+    let resp = HTTP_CLIENT.get(&url).send()?.error_for_status()?;
     Ok(resp)
 }
