@@ -30,20 +30,12 @@ impl fmt::Display for Error {
     }
 }
 
-impl StdError for Error {
-    fn description(&self) -> &str {
-        match self {
-            Error::Reqwest { description } => &description,
-            Error::Unhtml { description } => &description,
-            Error::UrlNotFound => &"url not found",
-        }
-    }
-}
+impl StdError for Error {}
 
 impl From<reqwest::Error> for Error {
     fn from(err: reqwest::Error) -> Error {
         Error::Reqwest {
-            description: err.description().to_owned(),
+            description: err.to_string(),
         }
     }
 }
@@ -51,7 +43,7 @@ impl From<reqwest::Error> for Error {
 impl From<unhtml::Error> for Error {
     fn from(err: unhtml::Error) -> Error {
         Error::Unhtml {
-            description: err.description().to_owned(),
+            description: err.to_string(),
         }
     }
 }
