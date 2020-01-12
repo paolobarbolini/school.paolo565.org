@@ -7,7 +7,7 @@ fn main() {
     let out_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let in_path = Path::new(&out_dir).join("frontend/service-worker.js");
     let out_path = Path::new(&out_dir).join("frontend/service-worker.build.js");
-    let hash_path = Path::new(&out_dir).join("views/partials/commithash.hbs");
+    let hash_path = Path::new(&out_dir).join("templates/commithash.html");
 
     let out = Command::new("git")
         .args(&["rev-parse", "HEAD"])
@@ -21,5 +21,5 @@ fn main() {
     let content = content.replace("{{last_commit_hash}}", &hash);
 
     fs::write(out_path, content).expect("unable to write to service-worker.build.js");
-    fs::write(hash_path, hash).expect("unable to write to views/partials/commithash.hbs");
+    fs::write(hash_path, hash).expect("unable to write to templates/commithash.html");
 }

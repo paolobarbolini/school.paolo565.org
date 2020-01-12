@@ -7,21 +7,19 @@ extern crate rocket;
 extern crate rocket_include_static_resources;
 
 #[macro_use]
-extern crate rocket_include_handlebars;
-
-#[macro_use]
-extern crate serde_json;
-
-#[macro_use]
 extern crate cached;
 
+use askama::Template;
 use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};
 use rocket::{Request, Response};
 use rocket_etag_if_none_match::{EntityTag, EtagIfNoneMatch};
-use rocket_include_handlebars::HandlebarsResponse;
 use rocket_include_static_resources::StaticResponse;
 use std::io::Cursor;
+
+use self::article::Article;
+use self::articles::ArticleItem;
+use self::hour::{Hour, HourItem};
 
 #[macro_use]
 mod macros;
@@ -33,19 +31,63 @@ mod error;
 mod hour;
 mod hours;
 
+#[derive(Template)]
+#[template(path = "index.html")]
+struct IndexTemplate {
+    hours: Option<Hour>,
+}
+
+#[derive(Template)]
+#[template(path = "hour.html")]
+struct HourTemplate {
+    hour: HourItem,
+    hour_html: String,
+    path: String,
+}
+
+#[derive(Template)]
+#[template(path = "articles.html")]
+struct ArticlesTemplate {
+    articles: Vec<ArticleItem>,
+}
+
+#[derive(Template)]
+#[template(path = "article.html")]
+struct ArticleTemplate {
+    id: u64,
+    article: Article,
+    has_pdf: bool,
+}
+
+#[derive(Template)]
+#[template(path = "about.html")]
+struct AboutTemplate {}
+
+#[derive(Template)]
+#[template(path = "404.html")]
+struct NotFoundTemplate {}
+
+#[derive(Template)]
+#[template(path = "500.html")]
+struct InternalServerErrorTemplate {}
+
+#[derive(Template)]
+#[template(path = "offline.html")]
+struct OfflineTemplate {}
+
 #[catch(404)]
-fn not_found(_req: &Request) -> HandlebarsResponse {
-    handlebars_response!(disable_minify "404", json!({}))
+fn not_found(_req: &Request) -> NotFoundTemplate {
+    NotFoundTemplate {}
 }
 
 #[catch(500)]
-fn server_error(_req: &Request) -> HandlebarsResponse {
-    handlebars_response!(disable_minify "500", json!({}))
+fn server_error(_req: &Request) -> InternalServerErrorTemplate {
+    InternalServerErrorTemplate {}
 }
 
 #[get("/offline")]
-fn offline() -> HandlebarsResponse {
-    handlebars_response!(disable_minify "offline", json!({}))
+fn offline() -> OfflineTemplate {
+    OfflineTemplate {}
 }
 
 #[get("/manifest.json")]
@@ -104,64 +146,54 @@ fn icon_512() -> StaticResponse {
 }
 
 #[get("/")]
-fn index() -> Result<HandlebarsResponse, Status> {
-    let (_, hours) = load_hours!();
+fn index() -> Result<IndexTemplate, Status> {
+    let (_, hours) = match hours::full_load_hour() {
+        Ok((base, hours)) => (base, hours),
+        Err(err) if err.not_found() => {
+            return Ok(IndexTemplate { hours: None });
+        }
+        Err(_) => return Err(Status::InternalServerError),
+    };
 
-    handlebars_render!(
-        "index",
-        json!({
-            "hours": hours,
-            "is_index": true,
-        })
-    )
+    Ok(IndexTemplate { hours: Some(hours) })
 }
 
 #[get("/classi/<name>")]
-fn classes(name: String) -> Result<HandlebarsResponse, Status> {
+fn classes<'r>(name: String) -> Result<Response<'r>, Status> {
     load_render_hour!(classes, "classi", name);
 }
 
 #[get("/docenti/<name>")]
-fn teachers(name: String) -> Result<HandlebarsResponse, Status> {
+fn teachers<'r>(name: String) -> Result<Response<'r>, Status> {
     load_render_hour!(teachers, "docenti", name);
 }
 
 #[get("/aule/<name>")]
-fn classrooms(name: String) -> Result<HandlebarsResponse, Status> {
+fn classrooms<'r>(name: String) -> Result<Response<'r>, Status> {
     load_render_hour!(classrooms, "aule", name);
 }
 
 #[get("/avvisi")]
-fn articles() -> Result<HandlebarsResponse, Status> {
-    let arts = try_status!(articles::load_articles());
+fn articles() -> Result<ArticlesTemplate, Status> {
+    let articles = try_status!(articles::load_articles());
 
-    handlebars_render!(
-        "articles",
-        json!({
-            "articles": arts,
-            "is_articles": true,
-        })
-    )
+    Ok(ArticlesTemplate { articles })
 }
 
 #[get("/avvisi/<id>")]
-fn article(id: i64) -> Result<HandlebarsResponse, Status> {
-    let art = article::load_article_id(id).unwrap();
-    let pdfs = art.pdfs();
+fn article(id: u64) -> Result<ArticleTemplate, Status> {
+    let article = article::load_article_id(id).unwrap();
+    let pdfs = article.pdfs();
 
-    handlebars_render!(
-        "article",
-        json!({
-            "article": art,
-            "path": format!("/avvisi/{}", id),
-            "is_articles": true,
-            "has_pdf": pdfs.len() == 1,
-        })
-    )
+    Ok(ArticleTemplate {
+        id,
+        article,
+        has_pdf: pdfs.len() == 1,
+    })
 }
 
 #[get("/avvisi/<id>/pdf/<i>")]
-fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, Status> {
+fn pdf(etag: &EtagIfNoneMatch, id: u64, i: usize) -> Result<Response<'static>, Status> {
     let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
     let body = pdfs[i - 1].body().unwrap();
@@ -180,11 +212,8 @@ fn pdf(etag: &EtagIfNoneMatch, id: i64, i: usize) -> Result<Response<'static>, S
 }
 
 #[get("/info")]
-fn about() -> HandlebarsResponse {
-    handlebars_response!(disable_minify "about", json!({
-        "is_about": true,
-        })
-    )
+fn about() -> AboutTemplate {
+    AboutTemplate {}
 }
 
 fn main() {
@@ -214,37 +243,6 @@ fn main() {
                 "frontend/static/icon-384x384.png",
                 "icon-512",
                 "frontend/static/icon-512x512.png",
-            );
-        }))
-        .attach(HandlebarsResponse::fairing(|handlebars| {
-            handlebars_resources_initialize!(
-                handlebars,
-                "index",
-                "views/index.hbs",
-                "hour",
-                "views/hour.hbs",
-                "article",
-                "views/article.hbs",
-                "articles",
-                "views/articles.hbs",
-                "about",
-                "views/about.hbs",
-                "header",
-                "views/partials/header.hbs",
-                "top_navigation",
-                "views/partials/top_navigation.hbs",
-                "article_item",
-                "views/partials/article_item.hbs",
-                "footer",
-                "views/partials/footer.hbs",
-                "commithash",
-                "views/partials/commithash.hbs",
-                "404",
-                "views/404.hbs",
-                "500",
-                "views/500.hbs",
-                "offline",
-                "views/offline.hbs",
             );
         }))
         .mount(

@@ -1,10 +1,12 @@
-{{>header title="Sei Offline"}}
+{% extends "base.html" %}
 
+{% block title %}Sei Offline{% endblock %}
+
+{% block body %}
 <div class="container clear-container full-width-container">
     <div class="container text-container center">
         <p>Stai cercando di aprire una pagina nuova, ma in questo momento risulti offline.</p>
         <p>Riprova più tardi o <a href="/">torna alla pagina principale</a></p>
     </div>
 </div>
-
-{{>footer}}
+{% endblock %}

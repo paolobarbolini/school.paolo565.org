@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block top_title %}{{ article.title }}{% endblock %}
+
+{% block path %}/avvisi/{{ id }}{% endblock %}
+
+{% block articles_active %}class = "active"{% endblock %}
+
+{% block body %}
+<div class="container text-container">
+    {% for line in article.contents %}
+        <p style="padding-left: {{ line.padding() }}px">{{ line.text }}</p>
+    {% endfor %}
+    {% for url in article.urls() %}
+        <a href="{{ url.href }}">{{ url.text }}</a>
+    {% endfor %}
+</div>
+
+{% if has_pdf %}
+<div id="pdf-preview" class="hidden">
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts_before %}
+{% if has_pdf %}
+<script src="/static/vendored/pdf-js/pdf.js"></script>
+{% endif %}
+{% endblock %}

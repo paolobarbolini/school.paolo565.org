@@ -1,5 +1,12 @@
-{{>header title="Info" path="/info"}}
+{% extends "base.html" %}
 
+{% block title %}Info{% endblock %}
+
+{% block path %}/info{% endblock %}
+
+{% block about_active %}class = "active"{% endblock %}
+
+{% block body %}
 <div class="container clear-container full-width-container">
     <div class="container text-container">
         <p>ISG PWA è un app creata da <a href="https://www.paolo565.org">Paolo Barbolini</a></p>
@@ -23,5 +30,4 @@
         <p>Icona dell'app fornita da <a href="https://www.freepik.com/">Freepik</a> tramite <a href="https://www.flaticon.com/">flaticon.com</a> sotto licenza <a href="https://creativecommons.org/licenses/by/3.0/deed.it">CC BY 3.0</a></p>
     </div>
 </div>
-
-{{>footer}}
+{% endblock %}

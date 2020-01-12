@@ -8,14 +8,12 @@ repository = "https://github.com/paolobarbolini/school.paolo565.org"
 
 [dependencies]
 rocket = "0.4.2"
-rocket-include-handlebars = "0.12.5"
 rocket-etag-if-none-match = "0.3.3"
-md5 = "0.7.0"
 rocket-include-static-resources = "0.9.3"
+askama = { version = "0.8.0", features = ["with-rocket"] }
+md5 = "0.7.0"
 reqwest = { version = "0.10.0", features = ["blocking"] }
 unhtml = { version = "0.7.5", features = ["derive"] }
 url = "2.1.0"
 cached = "0.11.0"
-serde = { version = "1.0.104", features = ["derive"] }
-serde_json = "1.0.44"
 lazy_static = "1.4.0"

@@ -26,7 +26,7 @@ fn url_to_abs(items: Vec<HourItem>, base: &str) -> Vec<HourItem> {
     new_items
 }
 
-#[derive(FromHtml, Clone, Serialize, Debug)]
+#[derive(FromHtml, Clone, Debug)]
 #[html(selector = "center:nth-of-type(2) table")]
 pub struct Hour {
     #[html(selector = "td:nth-of-type(1) a")]
@@ -39,7 +39,7 @@ pub struct Hour {
     pub classrooms: Vec<HourItem>,
 }
 
-#[derive(FromHtml, Clone, Serialize, Debug)]
+#[derive(FromHtml, Clone, Debug)]
 pub struct HourItem {
     #[html(attr = "inner")]
     pub title: String,

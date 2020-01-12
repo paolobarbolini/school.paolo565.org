@@ -3,11 +3,8 @@ macro_rules! load_hours {
         match hours::full_load_hour() {
             Ok((base, hours)) => (base, hours),
             Err(err) if err.not_found() => {
-                return handlebars_render!("index", json!({
-                    "no_hours": true,
-                    "is_index": true,
-                }));
-            },
+                return askama::rocket::respond(&IndexTemplate { hours: None }, "html");
+            }
             Err(_) => return Err(Status::InternalServerError),
         };
     };
@@ -17,17 +14,19 @@ macro_rules! render_hour {
     ($base: ident, $kind: tt, $hours: ident, $matching: tt) => {
         for hour in &$hours {
             if hour.title.to_lowercase() == $matching.to_lowercase() {
-                let html = match hour.html(&$base){
+                let html = match hour.html(&$base) {
                     Ok(html) => html,
                     Err(_) => return Err(Status::InternalServerError),
                 };
 
-                return handlebars_render!("hour", json!({
-                    "hour": hour,
-                    "hour_html": html,
-                    "path": format!("/{}/{}", $kind, hour.title),
-                    "is_index": true,
-                }));
+                return askama::rocket::respond(
+                    &HourTemplate {
+                        hour: hour.clone(),
+                        hour_html: html,
+                        path: format!("/{}/{}", $kind, hour.title),
+                    },
+                    "html",
+                );
             }
         }
 
@@ -40,12 +39,6 @@ macro_rules! load_render_hour {
         let (base, hours) = load_hours!();
         let $kind = hours.$kind;
         render_hour!(base, $path_kind, $kind, $matching);
-    };
-}
-
-macro_rules! handlebars_render {
-    ($name:expr, $data:expr) => {
-        Ok(handlebars_response!(disable_minify $name, $data));
     };
 }
 

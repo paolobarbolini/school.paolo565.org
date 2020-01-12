@@ -1,5 +1,8 @@
-{{>header title="Errore 404"}}
+{% extends "base.html" %}
 
+{% block title %}Errore 404{% endblock %}
+
+{% block body %}
 <div class="container clear-container full-width-container">
     <div class="container text-container center">
         <p>Non siamo riusciti a trovare questa pagina.</p>
@@ -16,5 +19,4 @@
         <p><i>Aspetta. Questa è una pagina! L'ho ritrovata!!!</i></p>
     </div>
 </div>
-
-{{>footer}}
+{% endblock %}

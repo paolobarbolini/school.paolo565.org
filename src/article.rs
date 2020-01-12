@@ -1,10 +1,9 @@
 use crate::cache::{reqwest_data, reqwest_text};
 use crate::error::Result;
-use serde::ser::{Serialize, SerializeStruct, Serializer};
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn load_article_id(id: i64) -> Result<Article> {
+pub fn load_article_id(id: u64) -> Result<Article> {
     let url = format!(
         "http://www.istitutogobetti.it/index.php?option=com_content&view=article&id={}",
         id
@@ -23,10 +22,10 @@ pub fn load_article(url: String) -> Result<Article> {
 #[html(selector = "#jsn-mainbody")]
 pub struct Article {
     #[html(selector = ".contentheading", attr = "inner")]
-    title: String,
+    pub title: String,
 
     #[html(selector = ".jsn-article-content p")]
-    contents: Vec<ArticleContent>,
+    pub contents: Vec<ArticleContent>,
 }
 
 impl Article {
@@ -77,23 +76,10 @@ impl Article {
     }
 }
 
-impl Serialize for Article {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut s = serializer.serialize_struct("Article", 3)?;
-        s.serialize_field("title", &self.title)?;
-        s.serialize_field("contents", &self.texts())?;
-        s.serialize_field("urls", &self.urls())?;
-        s.end()
-    }
-}
-
 #[derive(FromHtml, Clone, Debug)]
 pub struct ArticleContent {
     #[html(attr = "inner")]
-    text: String,
+    pub text: String,
 
     #[html(attr = "style")]
     style: Option<String>,
@@ -124,25 +110,13 @@ impl ArticleContent {
     }
 }
 
-impl Serialize for ArticleContent {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut s = serializer.serialize_struct("ArticleContent", 2)?;
-        s.serialize_field("text", &self.text)?;
-        s.serialize_field("padding", &self.padding())?;
-        s.end()
-    }
-}
-
 #[derive(FromHtml, Clone, Debug)]
 pub struct ArticleUrl {
     #[html(attr = "href", default = "")]
-    href: String,
+    pub href: String,
 
     #[html(attr = "inner")]
-    text: String,
+    pub text: String,
 }
 
 impl ArticleUrl {
@@ -159,17 +133,5 @@ impl ArticleUrl {
         let url = self.abs_url();
         let data = reqwest_data(url).unwrap();
         Ok(data)
-    }
-}
-
-impl Serialize for ArticleUrl {
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut s = serializer.serialize_struct("ArticleUrl", 2)?;
-        s.serialize_field("url", &self.abs_url())?;
-        s.serialize_field("text", &self.text)?;
-        s.end()
     }
 }

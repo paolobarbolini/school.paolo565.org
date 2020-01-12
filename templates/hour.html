@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ hour.title }}{% endblock %}
+
+{% block top_title %}{{ hour.title }}{% endblock %}
+
+{% block path %}{{ path }}{% endblock %}
+
+{% block top_navigation %}
+{% include "navigation_print.html" %}
+{% endblock %}
+
+{% block body %}
+<div class="schedule">
+  {{ hour_html|safe }}
+</div>
+{% endblock %}

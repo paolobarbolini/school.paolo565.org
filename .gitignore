@@ -1,4 +1,4 @@
 /target/
 **/*.rs.bk
 /frontend/service-worker.build.js
-/views/partials/commithash.hbs
+/templates/commithash.html

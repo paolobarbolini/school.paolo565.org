@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Orari{% endblock %}
+
+{% block path %}/{% endblock %}
+
+{% block index_active %}class = "active"{% endblock %}
+
+{% block top_navigation %}
+{% include "navigation_search.html" %}
+{% endblock %}
+
+{% block body %}
+{% match hours %}
+{% when Some with (hours) %}
+<div class="container clear-container">
+    <ul id="highlighted-schedules" class="hidden">
+    </ul>
+
+    <div class="list-columns-wrapper">
+        <div class="list-columns">
+            <div class="schedule-column">
+                <h2 class="center">Classi</h2>
+
+                <ul>
+                    {% for hour in hours.classes %}
+                    <li class="column-item">
+                        <a href="/classi/{{ hour.title }}">{{ hour.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="schedule-column">
+                <h2 class="center">Docenti</h2>
+
+                <ul>
+                    {% for hour in hours.teachers %}
+                    <li class="column-item">
+                        <a href="/docenti/{{ hour.title }}">{{ hour.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="schedule-column">
+                <h2 class="center">Aule</h2>
+
+                <ul>
+                    {% for hour in hours.classrooms %}
+                    <li class="column-item">
+                        <a href="/aule/{{ hour.title }}">{{ hour.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% when None %}
+<div class="container text-container">
+    <p>Si è verificato un problema nel caricamento degli orari.</p>
+    <p>Riprova più tardi.</p>
+</div>
+{% endmatch %}
+{% endblock %}
