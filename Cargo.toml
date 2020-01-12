@@ -12,8 +12,8 @@ rocket-etag-if-none-match = "0.3.3"
 rocket-include-static-resources = "0.9.3"
 askama = { version = "0.8.0", features = ["with-rocket"] }
 md5 = "0.7.0"
-reqwest = { version = "0.10.0", features = ["blocking"] }
+reqwest = { version = "0.10.1", features = ["blocking"] }
 unhtml = { version = "0.7.5", features = ["derive"] }
-url = "2.1.0"
+url = "2.1.1"
 cached = "0.11.0"
 lazy_static = "1.4.0"
