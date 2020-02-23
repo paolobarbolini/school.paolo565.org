@@ -7,10 +7,8 @@ extern crate rocket;
 extern crate rocket_include_static_resources;
 
 use askama::Template;
-use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};
 use rocket::{Request, Response};
-use rocket_etag_if_none_match::{EntityTag, EtagIfNoneMatch};
 use rocket_include_static_resources::StaticResponse;
 use std::io::Cursor;
 
@@ -190,22 +188,15 @@ fn article(id: u64) -> Result<ArticleTemplate, Status> {
 }
 
 #[get("/avvisi/<id>/pdf/<i>")]
-fn pdf(etag: &EtagIfNoneMatch, id: u64, i: usize) -> Result<Response<'static>, Status> {
+fn pdf(id: u64, i: usize) -> Result<Response<'static>, Status> {
     let art = article::load_article_id(id).unwrap();
     let pdfs = art.pdfs();
     let body = pdfs[i - 1].body().unwrap();
 
-    let digest = md5::compute(&body);
-    let generated_etag = EntityTag::new(false, format!("{:x}", digest));
-    if etag.strong_eq(&generated_etag) {
-        Response::build().status(Status::NotModified).ok()
-    } else {
-        Response::build()
-            .header(ETag(generated_etag))
-            .header(ContentType::PDF)
-            .sized_body(Cursor::new(body))
-            .ok()
-    }
+    Response::build()
+        .header(ContentType::PDF)
+        .sized_body(Cursor::new(body))
+        .ok()
 }
 
 #[get("/info")]
