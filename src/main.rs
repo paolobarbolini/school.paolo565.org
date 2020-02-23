@@ -6,9 +6,6 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_include_static_resources;
 
-#[macro_use]
-extern crate cached;
-
 use askama::Template;
 use rocket::http::hyper::header::ETag;
 use rocket::http::{ContentType, Status};

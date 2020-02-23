@@ -1,11 +1,12 @@
 use crate::cache::reqwest_text;
 use crate::error::Result;
+use std::time::Duration;
 use unhtml::scraper::{Html, Selector};
 use unhtml::FromHtml;
 use url::Url;
 
 pub fn load_hour(url: String) -> Result<Hour> {
-    let text = reqwest_text(url.to_owned())?;
+    let text = reqwest_text(url.to_owned(), Duration::from_secs(20 * 60))?;
 
     let mut urls = Hour::from_html(&text)?;
     urls.classes = url_to_abs(urls.classes, &url);
@@ -60,7 +61,7 @@ impl HourItem {
 
     pub fn html(&self, base: &str) -> Result<String> {
         let url = self.abs_url(base);
-        let text = reqwest_text(url).unwrap();
+        let text = reqwest_text(url, Duration::from_secs(60 * 20)).unwrap();
         let fragment = Html::parse_document(&text);
 
         let table_selector = Selector::parse("center:nth-of-type(2)").unwrap();

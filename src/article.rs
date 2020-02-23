@@ -1,5 +1,6 @@
 use crate::cache::{reqwest_data, reqwest_text};
 use crate::error::Result;
+use std::time::Duration;
 use unhtml::FromHtml;
 use url::Url;
 
@@ -12,7 +13,7 @@ pub fn load_article_id(id: u64) -> Result<Article> {
 }
 
 pub fn load_article(url: String) -> Result<Article> {
-    let text = reqwest_text(url)?;
+    let text = reqwest_text(url, Duration::from_secs(60 * 60))?;
 
     let article = Article::from_html(&text)?;
     Ok(article)
@@ -131,7 +132,7 @@ impl ArticleUrl {
 
     pub fn body(&self) -> Result<Vec<u8>> {
         let url = self.abs_url();
-        let data = reqwest_data(url).unwrap();
+        let data = reqwest_data(url, Duration::from_secs(24 * 60 * 60)).unwrap();
         Ok(data)
     }
 }
