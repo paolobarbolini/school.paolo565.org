@@ -20,10 +20,7 @@ pub enum Error {
 impl Error {
     pub fn not_found(&self) -> bool {
         match &self {
-            Error::Reqwest {
-                description: _,
-                not_found,
-            } => *not_found,
+            Error::Reqwest { not_found, .. } => *not_found,
             Error::Unhtml { .. } => false,
             Error::UrlNotFound => true,
         }
@@ -33,10 +30,7 @@ impl Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Error::Reqwest {
-                description,
-                not_found: _,
-            } => write!(f, "{}", description),
+            Error::Reqwest { description, .. } => write!(f, "{}", description),
             Error::Unhtml { description } => write!(f, "{}", description),
             Error::UrlNotFound => write!(f, "url not found"),
         }
