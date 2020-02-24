@@ -25,7 +25,7 @@
                 <ul>
                     {% for hour in hours.classes %}
                     <li class="column-item">
-                        <a href="/classi/{{ hour.title }}">{{ hour.title }}</a>
+                        <a href="/classi/{{ hour.url_title() }}">{{ hour.title }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -36,7 +36,7 @@
                 <ul>
                     {% for hour in hours.teachers %}
                     <li class="column-item">
-                        <a href="/docenti/{{ hour.title }}">{{ hour.title }}</a>
+                        <a href="/docenti/{{ hour.url_title() }}">{{ hour.title }}</a>
                     </li>
                     {% endfor %}
                 </ul>
@@ -47,7 +47,7 @@
                 <ul>
                     {% for hour in hours.classrooms %}
                     <li class="column-item">
-                        <a href="/aule/{{ hour.title }}">{{ hour.title }}</a>
+                        <a href="/aule/{{ hour.url_title() }}">{{ hour.title }}</a>
                     </li>
                     {% endfor %}
                 </ul>

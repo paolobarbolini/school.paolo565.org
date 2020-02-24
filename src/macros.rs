@@ -12,8 +12,9 @@ macro_rules! load_hours {
 
 macro_rules! render_hour {
     ($base: ident, $kind: tt, $hours: ident, $matching: tt) => {
+        let matching = $matching.to_lowercase().replace("+", " ");
         for hour in &$hours {
-            if hour.title.to_lowercase() == $matching.to_lowercase() {
+            if hour.title.to_lowercase().replace("+", "") == matching {
                 let html = match hour.html(&$base).await {
                     Ok(html) => html,
                     Err(err) => return Err(warp::reject::custom(err)),

@@ -59,6 +59,10 @@ impl HourItem {
         self.parsed_url(base).into_string()
     }
 
+    pub fn url_title(&self) -> String {
+        self.title.replace("+", "").replace(" ", "+")
+    }
+
     pub async fn html(&self, base: &str) -> Result<String> {
         let url = self.abs_url(base);
         let text = reqwest_text(url, Duration::from_secs(60 * 20))
