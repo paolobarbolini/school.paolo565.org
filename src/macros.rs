@@ -5,7 +5,7 @@ macro_rules! load_hours {
             Err(err) if err.not_found() => {
                 return Ok(askama_warp::reply(&IndexTemplate { hours: None }, "html"));
             }
-            Err(_) => unimplemented!("500 error"),
+            Err(err) => return Err(warp::reject::custom(err)),
         };
     };
 }
@@ -16,7 +16,7 @@ macro_rules! render_hour {
             if hour.title.to_lowercase() == $matching.to_lowercase() {
                 let html = match hour.html(&$base).await {
                     Ok(html) => html,
-                    Err(_) => unimplemented!("500 error"),
+                    Err(err) => return Err(warp::reject::custom(err)),
                 };
 
                 return Ok(askama_warp::reply(
@@ -30,7 +30,7 @@ macro_rules! render_hour {
             }
         }
 
-        unimplemented!("404 error");
+        return Err(warp::reject::not_found());
     };
 }
 
@@ -46,8 +46,7 @@ macro_rules! try_status {
     ($result: expr) => {
         match $result {
             Ok(result) => result,
-            Err(err) if err.not_found() => unimplemented!("404 error"),
-            Err(_) => unimplemented!("500 error"),
+            Err(err) => return Err(warp::reject::custom(err)),
         }
     };
 }

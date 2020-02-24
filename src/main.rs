@@ -1,16 +1,16 @@
-use std::borrow::Cow;
 use std::convert::Infallible;
 
 use askama::Template;
 use rust_embed::RustEmbed;
 use warp::http::header::HeaderValue;
-use warp::http::Response;
+use warp::http::{Response, StatusCode};
 use warp::hyper::Body;
 use warp::path::Tail;
-use warp::{Filter, Reply};
+use warp::{Filter, Rejection, Reply};
 
 use self::article::Article;
 use self::articles::ArticleItem;
+use self::error::Error;
 use self::hour::{Hour, HourItem};
 
 #[macro_use]
@@ -27,19 +27,16 @@ mod hours;
 #[folder = "frontend/"]
 struct Asset;
 
-fn serve(path: &str) -> impl Reply {
+fn serve(path: &str) -> Result<impl Reply, Rejection> {
     let mime = mime_guess::from_path(path).first_or_octet_stream();
 
-    let asset: Option<Cow<'static, [u8]>> = Asset::get(path);
-
-    //let file = asset.ok_or_else(warp::reject::not_found)?;
-    let file = asset.unwrap(); // TODO: 404 handling
-    let mut res = Response::new(Body::from(file));
+    let asset = Asset::get(path).ok_or_else(warp::reject::not_found)?;
+    let mut res = Response::new(Body::from(asset));
     res.headers_mut().insert(
         "Content-Type",
         HeaderValue::from_str(&mime.to_string()).unwrap(),
     );
-    res
+    Ok(res)
 }
 
 #[derive(Template)]
@@ -86,44 +83,62 @@ struct InternalServerErrorTemplate {}
 #[template(path = "offline.html")]
 struct OfflineTemplate {}
 
-async fn not_found() -> Result<impl Reply, Infallible> {
-    Ok(NotFoundTemplate {})
+async fn server_error(err: Rejection) -> Result<impl Reply, Infallible> {
+    let not_found = if err.is_not_found() {
+        true
+    } else if let Some(err) = err.find::<Error>() {
+        err.not_found()
+    } else {
+        false
+    };
+
+    if not_found {
+        return Ok(warp::reply::with_status(
+            askama_warp::reply(&NotFoundTemplate {}, "html"),
+            StatusCode::NOT_FOUND,
+        ));
+    }
+
+    Ok(warp::reply::with_status(
+        askama_warp::reply(&InternalServerErrorTemplate {}, "html"),
+        StatusCode::INTERNAL_SERVER_ERROR,
+    ))
 }
 
 async fn offline() -> Result<impl Reply, Infallible> {
     Ok(OfflineTemplate {})
 }
 
-async fn index() -> Result<impl Reply, Infallible> {
+async fn index() -> Result<impl Reply, Rejection> {
     let (_, hours) = match hours::full_load_hour().await {
         Ok((base, hours)) => (base, hours),
         Err(err) if err.not_found() => return Ok(IndexTemplate { hours: None }),
-        Err(_) => unimplemented!("500 error"),
+        Err(err) => return Err(warp::reject::custom(err)),
     };
 
     Ok(IndexTemplate { hours: Some(hours) })
 }
 
-async fn classes(name: String) -> Result<impl Reply, Infallible> {
+async fn classes(name: String) -> Result<impl Reply, Rejection> {
     load_render_hour!(classes, "classi", name);
 }
 
-async fn teachers(name: String) -> Result<impl Reply, Infallible> {
+async fn teachers(name: String) -> Result<impl Reply, Rejection> {
     load_render_hour!(teachers, "docenti", name);
 }
 
-async fn classrooms(name: String) -> Result<impl Reply, Infallible> {
+async fn classrooms(name: String) -> Result<impl Reply, Rejection> {
     load_render_hour!(classrooms, "aule", name);
 }
 
-async fn articles() -> Result<impl Reply, Infallible> {
+async fn articles() -> Result<impl Reply, Rejection> {
     let articles = try_status!(articles::load_articles().await);
 
     Ok(ArticlesTemplate { articles })
 }
 
-async fn article(id: u64) -> Result<impl Reply, Infallible> {
-    let article = article::load_article_id(id).await.unwrap();
+async fn article(id: u64) -> Result<impl Reply, Rejection> {
+    let article = try_status!(article::load_article_id(id).await);
     let pdfs = article.pdfs();
 
     Ok(ArticleTemplate {
@@ -133,10 +148,10 @@ async fn article(id: u64) -> Result<impl Reply, Infallible> {
     })
 }
 
-async fn pdf(id: u64, i: usize) -> Result<impl Reply, Infallible> {
-    let art = article::load_article_id(id).await.unwrap();
+async fn pdf(id: u64, i: usize) -> Result<impl Reply, Rejection> {
+    let art = try_status!(article::load_article_id(id).await);
     let pdfs = art.pdfs();
-    let body = pdfs[i - 1].body().await.unwrap();
+    let body = try_status!(pdfs[i - 1].body().await);
 
     let mut res = Response::new(Body::from(body));
     res.headers_mut()
@@ -161,32 +176,47 @@ async fn main() {
 
     let about = warp::path!("info").and_then(about);
 
+    async fn serve_static(tail: Tail) -> Result<impl Reply, Rejection> {
+        serve(&format!("static/{}", tail.as_str()))
+    }
+
+    async fn serve_manifest() -> Result<impl Reply, Rejection> {
+        serve("manifest.json")
+    }
+
+    async fn asset_sw() -> Result<impl Reply, Rejection> {
+        serve("serivce-worker.build.js")
+    }
+
+    async fn asset_ico() -> Result<impl Reply, Rejection> {
+        serve("favicon.ico")
+    }
+
     let assets = warp::path("static")
         .and(warp::path::tail())
-        .map(|tail: Tail| serve(&format!("static/{}", tail.as_str())));
-    let asset_manifest = warp::path!("manifest.json").map(|| serve("manifest.json"));
-    let asset_sw = warp::path!("service-worker.js").map(|| serve("service-worker.build.js"));
-    let asset_ico = warp::path!("favicon.ico").map(|| serve("favicon.ico"));
+        .and_then(serve_static);
+    let asset_manifest = warp::path!("manifest.json").and_then(serve_manifest);
+    let asset_sw = warp::path!("service-worker.js").and_then(asset_sw);
+    let asset_ico = warp::path!("favicon.ico").and_then(asset_ico);
 
-    let not_found = warp::any().and_then(not_found);
     let offline = warp::path!("offline").and_then(offline);
-    // TODO: 500 page
 
-    let routes = warp::get().and(
-        index
-            .or(classes)
-            .or(teachers)
-            .or(classrooms)
-            .or(articles)
-            .or(article)
-            .or(pdf)
-            .or(about)
-            .or(assets)
-            .or(asset_manifest)
-            .or(asset_sw)
-            .or(asset_ico)
-            .or(offline)
-            .or(not_found),
-    );
+    let routes = warp::get()
+        .and(
+            index
+                .or(classes)
+                .or(teachers)
+                .or(classrooms)
+                .or(articles)
+                .or(article)
+                .or(pdf)
+                .or(about)
+                .or(assets)
+                .or(asset_manifest)
+                .or(asset_sw)
+                .or(asset_ico)
+                .or(offline)
+        )
+        .recover(server_error);
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }
