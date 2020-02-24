@@ -215,7 +215,7 @@ async fn main() {
                 .or(asset_manifest)
                 .or(asset_sw)
                 .or(asset_ico)
-                .or(offline)
+                .or(offline),
         )
         .recover(server_error);
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
