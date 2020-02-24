@@ -30,17 +30,6 @@ pub struct Article {
 }
 
 impl Article {
-    pub fn texts(&self) -> Vec<ArticleContent> {
-        let mut contents: Vec<ArticleContent> = Vec::new();
-        for c in self.contents.clone() {
-            if c.urls.is_empty() {
-                contents.push(c);
-            }
-        }
-
-        contents
-    }
-
     pub fn urls(&self) -> Vec<ArticleUrl> {
         let mut urls: Vec<ArticleUrl> = Vec::new();
         for c in &self.contents {

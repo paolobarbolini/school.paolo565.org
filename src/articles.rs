@@ -59,8 +59,4 @@ impl ArticleItem {
         let id = &id[..id.find(':').unwrap()];
         id.parse().unwrap()
     }
-
-    pub fn abs_url(&self) -> String {
-        self.parsed_url().into_string()
-    }
 }
