@@ -86,7 +86,11 @@ impl HourItem {
 
                 let href = &original_href[3..original_href.len() - ".html".len()];
                 let i = href.find('/').unwrap();
-                let href = format!("/{}{}", &href[..i].to_lowercase(), &href[i..]);
+                let href = format!(
+                    "/{}{}",
+                    &href[..i].to_lowercase(),
+                    &href[i..].replace("+", "").replace(" ", "+")
+                );
                 replacer.push((original_href, href));
             }
         }
