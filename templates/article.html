@@ -14,7 +14,7 @@
         <p style="padding-left: {{ line.padding() }}px">{{ line.text }}</p>
     {% endfor %}
     {% for url in article.urls() %}
-        <a href="{{ url.href }}">{{ url.text }}</a>
+        <a href="{{ url.abs_url() }}">{{ url.text }}</a>
     {% endfor %}
 </div>
 
