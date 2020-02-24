@@ -16,10 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Install Rust (nightly)
+      - name: Install Rust (stable)
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           override: true
           components: rustfmt
 
@@ -37,10 +37,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Install Rust (nightly)
+      - name: Install Rust (stable)
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           override: true
 
       - name: cargo clippy --all

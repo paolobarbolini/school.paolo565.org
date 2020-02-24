@@ -1601,9 +1601,9 @@ dependencies = [
 
 [[package]]
 name = "unhtml_derive"
-version = "0.7.4"
+version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f7940703733f1a027c5bf06ff66c0446dfde8c7f18318ad55ab792f8c8d0810"
+checksum = "dfee30025292ae12895a65dcabc2e449a1980af744d27e2d49b711e36ba427f0"
 dependencies = [
  "proc-macro2",
  "quote",
