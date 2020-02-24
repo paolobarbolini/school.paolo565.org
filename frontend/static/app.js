@@ -109,7 +109,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }).reverse().slice(0, 3);
         for (const best of bests) {
             // pathname migration since switching from rocket to warp
-            const href = best.pathname.includes(' ') ? best.pathname.replace('+', '').replace(' ', '+') : best.pathname;
+            const pathname = best.pathname.replace('%20', ' ');
+            const href = pathname.includes(' ') ? pathname.replace('+', '').replace(' ', '+') : pathname;
 
             const a = document.createElement('a');
             a.setAttribute('href', href);
