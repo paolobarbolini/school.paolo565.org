@@ -2,10 +2,10 @@ use std::convert::Infallible;
 
 use askama::Template;
 use rust_embed::RustEmbed;
-use warp::http::header::HeaderValue;
-use warp::http::{Response, StatusCode};
-use warp::hyper::Body;
+use warp::http::header::{HeaderValue, CONTENT_TYPE};
+use warp::http::StatusCode;
 use warp::path::Tail;
+use warp::reply::Response;
 use warp::{Filter, Rejection, Reply};
 
 use self::article::Article;
@@ -28,14 +28,12 @@ mod hours;
 struct Asset;
 
 fn serve(path: &str) -> Result<impl Reply, Rejection> {
+    let asset = Asset::get(path).ok_or_else(warp::reject::not_found)?;
     let mime = mime_guess::from_path(path).first_or_octet_stream();
 
-    let asset = Asset::get(path).ok_or_else(warp::reject::not_found)?;
-    let mut res = Response::new(Body::from(asset));
-    res.headers_mut().insert(
-        "Content-Type",
-        HeaderValue::from_str(&mime.to_string()).unwrap(),
-    );
+    let mut res = Response::new(asset.into());
+    res.headers_mut()
+        .insert(CONTENT_TYPE, HeaderValue::from_str(mime.as_ref()).unwrap());
     Ok(res)
 }
 
@@ -153,9 +151,9 @@ async fn pdf(id: u64, i: usize) -> Result<impl Reply, Rejection> {
     let pdfs = art.pdfs();
     let body = try_status!(pdfs[i - 1].body().await);
 
-    let mut res = Response::new(Body::from(body));
+    let mut res = Response::new(body.into());
     res.headers_mut()
-        .insert("Content-Type", HeaderValue::from_static("application/pdf"));
+        .insert(CONTENT_TYPE, HeaderValue::from_static("application/pdf"));
     Ok(res)
 }
 
