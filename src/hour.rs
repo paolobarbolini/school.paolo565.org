@@ -5,8 +5,8 @@ use unhtml::scraper::{Html, Selector};
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn load_hour(url: String) -> Result<Hour> {
-    let text = reqwest_text(url.to_owned(), Duration::from_secs(20 * 60))?;
+pub async fn load_hour(url: String) -> Result<Hour> {
+    let text = reqwest_text(url.to_owned(), Duration::from_secs(20 * 60)).await?;
 
     let mut urls = Hour::from_html(&text)?;
     urls.classes = url_to_abs(urls.classes, &url);
@@ -59,9 +59,11 @@ impl HourItem {
         self.parsed_url(base).into_string()
     }
 
-    pub fn html(&self, base: &str) -> Result<String> {
+    pub async fn html(&self, base: &str) -> Result<String> {
         let url = self.abs_url(base);
-        let text = reqwest_text(url, Duration::from_secs(60 * 20)).unwrap();
+        let text = reqwest_text(url, Duration::from_secs(60 * 20))
+            .await
+            .unwrap();
         let fragment = Html::parse_document(&text);
 
         let table_selector = Selector::parse("center:nth-of-type(2)").unwrap();

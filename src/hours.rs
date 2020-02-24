@@ -6,20 +6,20 @@ use std::time::Duration;
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn full_load_hour() -> Result<(String, Hour)> {
-    let article = load_hours_article()?;
-    let article = load_article(article)?;
+pub async fn full_load_hour() -> Result<(String, Hour)> {
+    let article = load_hours_article().await?;
+    let article = load_article(article).await?;
     let hours = match article.hours_url() {
         Some(hours) => hours,
         None => return Err(Error::UrlNotFound),
     };
-    let hour = load_hour(hours.clone())?;
+    let hour = load_hour(hours.clone()).await?;
     Ok((hours, hour))
 }
 
-pub fn load_hours_article() -> Result<String> {
+pub async fn load_hours_article() -> Result<String> {
     let url = "http://www.istitutogobetti.it";
-    let text = reqwest_text(url.to_owned(), Duration::from_secs(60 * 20))?;
+    let text = reqwest_text(url.to_owned(), Duration::from_secs(60 * 20)).await?;
 
     let parsed = Hours::from_html(&text)?;
     match parsed.find_hours() {

@@ -1,16 +1,13 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
-#[macro_use]
-extern crate rocket;
-
-#[macro_use]
-extern crate rocket_include_static_resources;
+use std::borrow::Cow;
+use std::convert::Infallible;
 
 use askama::Template;
-use rocket::http::{ContentType, Status};
-use rocket::{Request, Response};
-use rocket_include_static_resources::StaticResponse;
-use std::io::Cursor;
+use rust_embed::RustEmbed;
+use warp::http::header::HeaderValue;
+use warp::http::Response;
+use warp::hyper::Body;
+use warp::path::Tail;
+use warp::{Filter, Reply};
 
 use self::article::Article;
 use self::articles::ArticleItem;
@@ -25,6 +22,25 @@ mod cache;
 mod error;
 mod hour;
 mod hours;
+
+#[derive(RustEmbed)]
+#[folder = "frontend/"]
+struct Asset;
+
+fn serve(path: &str) -> impl Reply {
+    let mime = mime_guess::from_path(path).first_or_octet_stream();
+
+    let asset: Option<Cow<'static, [u8]>> = Asset::get(path);
+
+    //let file = asset.ok_or_else(warp::reject::not_found)?;
+    let file = asset.unwrap(); // TODO: 404 handling
+    let mut res = Response::new(Body::from(file));
+    res.headers_mut().insert(
+        "Content-Type",
+        HeaderValue::from_str(&mime.to_string()).unwrap(),
+    );
+    res
+}
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -70,114 +86,44 @@ struct InternalServerErrorTemplate {}
 #[template(path = "offline.html")]
 struct OfflineTemplate {}
 
-#[catch(404)]
-fn not_found(_req: &Request) -> NotFoundTemplate {
-    NotFoundTemplate {}
+async fn not_found() -> Result<impl Reply, Infallible> {
+    Ok(NotFoundTemplate {})
 }
 
-#[catch(500)]
-fn server_error(_req: &Request) -> InternalServerErrorTemplate {
-    InternalServerErrorTemplate {}
+async fn offline() -> Result<impl Reply, Infallible> {
+    Ok(OfflineTemplate {})
 }
 
-#[get("/offline")]
-fn offline() -> OfflineTemplate {
-    OfflineTemplate {}
-}
-
-#[get("/manifest.json")]
-fn manifest() -> StaticResponse {
-    static_response!("manifest")
-}
-
-#[get("/service-worker.js")]
-fn sw() -> StaticResponse {
-    static_response!("sw")
-}
-
-#[get("/favicon.ico")]
-fn favicon() -> StaticResponse {
-    static_response!("favicon")
-}
-
-#[get("/static/app.css")]
-fn css() -> StaticResponse {
-    static_response!("css")
-}
-
-#[get("/static/app.print.css")]
-fn css_print() -> StaticResponse {
-    static_response!("css-print")
-}
-
-#[get("/static/app.js")]
-fn js() -> StaticResponse {
-    static_response!("js")
-}
-
-#[get("/static/vendored/pdf-js/pdf.js")]
-fn pdf_js() -> StaticResponse {
-    static_response!("pdf-js")
-}
-
-#[get("/static/vendored/pdf-js/pdf.worker.js")]
-fn pdf_js_worker() -> StaticResponse {
-    static_response!("pdf-js-worker")
-}
-
-#[get("/static/icon-192x192.png")]
-fn icon_192() -> StaticResponse {
-    static_response!("icon-192")
-}
-
-#[get("/static/icon-384x384.png")]
-fn icon_384() -> StaticResponse {
-    static_response!("icon-384")
-}
-
-#[get("/static/icon-512x512.png")]
-fn icon_512() -> StaticResponse {
-    static_response!("icon-512")
-}
-
-#[get("/")]
-fn index() -> Result<IndexTemplate, Status> {
-    let (_, hours) = match hours::full_load_hour() {
+async fn index() -> Result<impl Reply, Infallible> {
+    let (_, hours) = match hours::full_load_hour().await {
         Ok((base, hours)) => (base, hours),
-        Err(err) if err.not_found() => {
-            return Ok(IndexTemplate { hours: None });
-        }
-        Err(_) => return Err(Status::InternalServerError),
+        Err(err) if err.not_found() => return Ok(IndexTemplate { hours: None }),
+        Err(_) => unimplemented!("500 error"),
     };
 
     Ok(IndexTemplate { hours: Some(hours) })
 }
 
-#[get("/classi/<name>")]
-fn classes<'r>(name: String) -> Result<Response<'r>, Status> {
+async fn classes(name: String) -> Result<impl Reply, Infallible> {
     load_render_hour!(classes, "classi", name);
 }
 
-#[get("/docenti/<name>")]
-fn teachers<'r>(name: String) -> Result<Response<'r>, Status> {
+async fn teachers(name: String) -> Result<impl Reply, Infallible> {
     load_render_hour!(teachers, "docenti", name);
 }
 
-#[get("/aule/<name>")]
-fn classrooms<'r>(name: String) -> Result<Response<'r>, Status> {
+async fn classrooms(name: String) -> Result<impl Reply, Infallible> {
     load_render_hour!(classrooms, "aule", name);
 }
 
-#[get("/avvisi")]
-fn articles() -> Result<ArticlesTemplate, Status> {
-    let articles = try_status!(articles::load_articles());
+async fn articles() -> Result<impl Reply, Infallible> {
+    let articles = try_status!(articles::load_articles().await);
 
     Ok(ArticlesTemplate { articles })
 }
 
-#[get("/avvisi/<id>")]
-fn article(id: u64) -> Result<ArticleTemplate, Status> {
-    let article = article::load_article_id(id).unwrap();
+async fn article(id: u64) -> Result<impl Reply, Infallible> {
+    let article = article::load_article_id(id).await.unwrap();
     let pdfs = article.pdfs();
 
     Ok(ArticleTemplate {
@@ -187,64 +133,60 @@ fn article(id: u64) -> Result<ArticleTemplate, Status> {
     })
 }
 
-#[get("/avvisi/<id>/pdf/<i>")]
-fn pdf(id: u64, i: usize) -> Result<Response<'static>, Status> {
-    let art = article::load_article_id(id).unwrap();
+async fn pdf(id: u64, i: usize) -> Result<impl Reply, Infallible> {
+    let art = article::load_article_id(id).await.unwrap();
     let pdfs = art.pdfs();
-    let body = pdfs[i - 1].body().unwrap();
+    let body = pdfs[i - 1].body().await.unwrap();
 
-    Response::build()
-        .header(ContentType::PDF)
-        .sized_body(Cursor::new(body))
-        .ok()
+    let mut res = Response::new(Body::from(body));
+    res.headers_mut()
+        .insert("Content-Type", HeaderValue::from_static("application/pdf"));
+    Ok(res)
 }
 
-#[get("/info")]
-fn about() -> AboutTemplate {
-    AboutTemplate {}
+async fn about() -> Result<impl Reply, Infallible> {
+    Ok(AboutTemplate {})
 }
 
-fn main() {
-    rocket::ignite()
-        .attach(StaticResponse::fairing(|resources| {
-            static_resources_initialize!(
-                resources,
-                "favicon",
-                "frontend/favicon.ico",
-                "manifest",
-                "frontend/manifest.json",
-                "sw",
-                "frontend/service-worker.build.js",
-                "css",
-                "frontend/static/app.css",
-                "css-print",
-                "frontend/static/app.print.css",
-                "js",
-                "frontend/static/app.js",
-                "pdf-js",
-                "frontend/static/vendored/pdf-js/pdf.js",
-                "pdf-js-worker",
-                "frontend/static/vendored/pdf-js/pdf.worker.js",
-                "icon-192",
-                "frontend/static/icon-192x192.png",
-                "icon-384",
-                "frontend/static/icon-384x384.png",
-                "icon-512",
-                "frontend/static/icon-512x512.png",
-            );
-        }))
-        .mount(
-            "/",
-            routes![index, classes, teachers, classrooms, articles, article, pdf, about],
-        )
-        .mount(
-            "/",
-            routes![favicon, css, css_print, js, pdf_js, pdf_js_worker],
-        )
-        .mount(
-            "/",
-            routes![manifest, sw, offline, icon_192, icon_384, icon_512],
-        )
-        .register(catchers![not_found, server_error])
-        .launch();
+#[tokio::main]
+async fn main() {
+    let index = warp::path::end().and_then(index);
+    let classes = warp::path!("classi" / String).and_then(classes);
+    let teachers = warp::path!("docenti" / String).and_then(teachers);
+    let classrooms = warp::path!("aule" / String).and_then(classrooms);
+
+    let articles = warp::path!("avvisi").and_then(articles);
+    let article = warp::path!("avvisi" / u64).and_then(article);
+    let pdf = warp::path!("avvisi" / u64 / "pdf" / usize).and_then(pdf);
+
+    let about = warp::path!("info").and_then(about);
+
+    let assets = warp::path("static")
+        .and(warp::path::tail())
+        .map(|tail: Tail| serve(&format!("static/{}", tail.as_str())));
+    let asset_manifest = warp::path!("manifest.json").map(|| serve("manifest.json"));
+    let asset_sw = warp::path!("service-worker.js").map(|| serve("service-worker.build.js"));
+    let asset_ico = warp::path!("favicon.ico").map(|| serve("favicon.ico"));
+
+    let not_found = warp::any().and_then(not_found);
+    let offline = warp::path!("offline").and_then(offline);
+    // TODO: 500 page
+
+    let routes = warp::get().and(
+        index
+            .or(classes)
+            .or(teachers)
+            .or(classrooms)
+            .or(articles)
+            .or(article)
+            .or(pdf)
+            .or(about)
+            .or(assets)
+            .or(asset_manifest)
+            .or(asset_sw)
+            .or(asset_ico)
+            .or(offline)
+            .or(not_found),
+    );
+    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }

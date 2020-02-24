@@ -1,11 +1,11 @@
 macro_rules! load_hours {
     () => {
-        match hours::full_load_hour() {
+        match hours::full_load_hour().await {
             Ok((base, hours)) => (base, hours),
             Err(err) if err.not_found() => {
-                return askama::rocket::respond(&IndexTemplate { hours: None }, "html");
+                return Ok(askama_warp::reply(&IndexTemplate { hours: None }, "html"));
             }
-            Err(_) => return Err(Status::InternalServerError),
+            Err(_) => unimplemented!("500 error"),
         };
     };
 }
@@ -14,23 +14,23 @@ macro_rules! render_hour {
     ($base: ident, $kind: tt, $hours: ident, $matching: tt) => {
         for hour in &$hours {
             if hour.title.to_lowercase() == $matching.to_lowercase() {
-                let html = match hour.html(&$base) {
+                let html = match hour.html(&$base).await {
                     Ok(html) => html,
-                    Err(_) => return Err(Status::InternalServerError),
+                    Err(_) => unimplemented!("500 error"),
                 };
 
-                return askama::rocket::respond(
+                return Ok(askama_warp::reply(
                     &HourTemplate {
                         hour: hour.clone(),
                         hour_html: html,
                         path: format!("/{}/{}", $kind, hour.title),
                     },
                     "html",
-                );
+                ));
             }
         }
 
-        return Err(Status::NotFound);
+        unimplemented!("404 error");
     };
 }
 
@@ -46,8 +46,8 @@ macro_rules! try_status {
     ($result: expr) => {
         match $result {
             Ok(result) => result,
-            Err(err) if err.not_found() => return Err(Status::NotFound),
-            Err(_) => return Err(Status::InternalServerError),
+            Err(err) if err.not_found() => unimplemented!("404 error"),
+            Err(_) => unimplemented!("500 error"),
         }
     };
 }

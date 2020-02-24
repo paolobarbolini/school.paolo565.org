@@ -7,11 +7,19 @@ license = "Apache-2.0"
 repository = "https://github.com/paolobarbolini/school.paolo565.org"
 
 [dependencies]
-rocket = "0.4.2"
-rocket-include-static-resources = "0.9.3"
-askama = { version = "0.9.0", features = ["with-rocket"] }
-reqwest = { version = "0.10.1", features = ["blocking"] }
+tokio = { version = "0.2.11", features = ["macros", "sync", "rt-core", "rt-threaded"] }
+
+warp = { version = "0.2.1", default-features = false }
+# TODO: replace with a crates.io release once askama_warp is published
+askama = { git = "https://github.com/djc/askama.git" }
+askama_warp = { git = "https://github.com/djc/askama.git" }
+rust-embed = "5.3.0"
+mime_guess = "2.0.1"
+
+reqwest = "0.10.1"
 unhtml = { version = "0.7.5", features = ["derive"] }
+
 url = "2.1.1"
+
 ttl_cache = "0.5.1"
 lazy_static = "1.4.0"

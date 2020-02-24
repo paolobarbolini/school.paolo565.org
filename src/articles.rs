@@ -5,9 +5,11 @@ use std::time::Duration;
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn load_articles() -> Result<Vec<ArticleItem>> {
+pub async fn load_articles() -> Result<Vec<ArticleItem>> {
     let url = "http://www.istitutogobetti.it/?option=com_content&view=category&id=20&Itemid=111&limit=250";
-    let text = reqwest_text(url.to_owned(), Duration::from_secs(15 * 60)).unwrap();
+    let text = reqwest_text(url.to_owned(), Duration::from_secs(15 * 60))
+        .await
+        .unwrap();
 
     let parsed = ArticleItems::from_html(&text)?;
     Ok(parsed.relevant_articles())

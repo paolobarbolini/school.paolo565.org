@@ -1,7 +1,7 @@
 use crate::error::Result;
-use reqwest::blocking::{Client, ClientBuilder};
-use std::sync::RwLock;
+use reqwest::{Client, ClientBuilder};
 use std::time::Duration;
+use tokio::sync::RwLock;
 use ttl_cache::TtlCache;
 
 static APP_USER_AGENT: &str = concat!(
@@ -21,35 +21,33 @@ lazy_static::lazy_static! {
      static ref CACHE: RwLock<TtlCache<String, Result<Vec<u8>>>> = RwLock::new(TtlCache::new(50));
 }
 
-pub fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
-    let data = reqwest_data(url, expires_at)?;
+pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
+    let data = reqwest_data(url, expires_at).await?;
     Ok(String::from_utf8(data).unwrap())
 }
 
-pub fn reqwest_data(url: String, expires_at: Duration) -> Result<Vec<u8>> {
-    let cache = CACHE.read().unwrap();
+pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Vec<u8>> {
+    let cache = CACHE.read().await;
 
     match cache.get(&url) {
         Some(entry) => entry.clone(),
         None => {
             drop(cache);
 
-            let (resp, expires_at) = match reqwest(&url) {
+            let (resp, expires_at) = match reqwest(&url).await {
                 Ok(resp) => (Ok(resp), expires_at),
                 Err(err) => (Err(err), Duration::from_secs(5 * 60)),
             };
 
-            let mut cache = CACHE.write().unwrap();
+            let mut cache = CACHE.write().await;
             cache.insert(url, resp.clone(), expires_at);
             resp
         }
     }
 }
 
-fn reqwest(url: &str) -> Result<Vec<u8>> {
-    let mut resp = HTTP_CLIENT.get(url).send()?.error_for_status()?;
-    let mut buf: Vec<u8> = vec![];
-    resp.copy_to(&mut buf)?;
-
-    Ok(buf)
+async fn reqwest(url: &str) -> Result<Vec<u8>> {
+    let resp = HTTP_CLIENT.get(url).send().await?.error_for_status()?;
+    let bytes = resp.bytes().await?;
+    Ok(bytes.to_vec())
 }

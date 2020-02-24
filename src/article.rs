@@ -4,16 +4,16 @@ use std::time::Duration;
 use unhtml::FromHtml;
 use url::Url;
 
-pub fn load_article_id(id: u64) -> Result<Article> {
+pub async fn load_article_id(id: u64) -> Result<Article> {
     let url = format!(
         "http://www.istitutogobetti.it/index.php?option=com_content&view=article&id={}",
         id
     );
-    load_article(url)
+    load_article(url).await
 }
 
-pub fn load_article(url: String) -> Result<Article> {
-    let text = reqwest_text(url, Duration::from_secs(60 * 60))?;
+pub async fn load_article(url: String) -> Result<Article> {
+    let text = reqwest_text(url, Duration::from_secs(60 * 60)).await?;
 
     let article = Article::from_html(&text)?;
     Ok(article)
@@ -130,9 +130,11 @@ impl ArticleUrl {
         self.parsed_url().into_string()
     }
 
-    pub fn body(&self) -> Result<Vec<u8>> {
+    pub async fn body(&self) -> Result<Vec<u8>> {
         let url = self.abs_url();
-        let data = reqwest_data(url, Duration::from_secs(24 * 60 * 60)).unwrap();
+        let data = reqwest_data(url, Duration::from_secs(24 * 60 * 60))
+            .await
+            .unwrap();
         Ok(data)
     }
 }
