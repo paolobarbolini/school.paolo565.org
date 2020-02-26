@@ -183,7 +183,7 @@ async fn main() {
     }
 
     async fn asset_sw() -> Result<impl Reply, Rejection> {
-        serve("serivce-worker.build.js")
+        serve("service-worker.build.js")
     }
 
     async fn asset_ico() -> Result<impl Reply, Rejection> {
