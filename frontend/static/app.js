@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!window.print);
+    if (!window.print) return;
 
     const print = document.querySelector('#print');
     if (!print) return;
