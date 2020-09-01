@@ -1,10 +1,12 @@
+use std::time::Duration;
+
+use unhtml::FromHtml;
+use url::Url;
+
 use crate::article::load_article;
 use crate::cache::reqwest_text;
 use crate::error::{Error, Result};
 use crate::hour::{load_hour, Hour};
-use std::time::Duration;
-use unhtml::FromHtml;
-use url::Url;
 
 pub async fn full_load_hour() -> Result<(String, Hour)> {
     let article = load_hours_article().await?;

@@ -1,9 +1,11 @@
-use crate::cache::reqwest_text;
-use crate::error::Result;
 use std::collections::HashMap;
 use std::time::Duration;
+
 use unhtml::FromHtml;
 use url::Url;
+
+use crate::cache::reqwest_text;
+use crate::error::Result;
 
 pub async fn load_articles() -> Result<Vec<ArticleItem>> {
     let url = "http://www.istitutogobetti.it/?option=com_content&view=category&id=20&Itemid=111&limit=250";

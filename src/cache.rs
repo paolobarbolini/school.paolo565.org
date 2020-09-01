@@ -1,8 +1,10 @@
-use crate::error::Result;
-use reqwest::{Client, ClientBuilder};
 use std::time::Duration;
+
+use reqwest::{Client, ClientBuilder};
 use tokio::sync::RwLock;
 use ttl_cache::TtlCache;
+
+use crate::error::Result;
 
 static APP_USER_AGENT: &str = concat!(
     env!("CARGO_PKG_NAME"),

@@ -1,9 +1,11 @@
-use crate::cache::reqwest_text;
-use crate::error::Result;
 use std::time::Duration;
+
 use unhtml::scraper::{Html, Selector};
 use unhtml::FromHtml;
 use url::Url;
+
+use crate::cache::reqwest_text;
+use crate::error::Result;
 
 pub async fn load_hour(url: String) -> Result<Hour> {
     let text = reqwest_text(url.to_owned(), Duration::from_secs(20 * 60)).await?;
