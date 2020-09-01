@@ -13,18 +13,19 @@ macro_rules! load_hours {
 macro_rules! render_hour {
     ($base: ident, $kind: tt, $hours: ident, $matching: tt) => {
         let matching = $matching.to_lowercase().replace("+", " ");
-        for hour in &$hours {
+        for hour in $hours {
             if hour.title.to_lowercase().replace("+", "") == matching {
                 let html = match hour.html(&$base).await {
                     Ok(html) => html,
                     Err(err) => return Err(warp::reject::custom(err)),
                 };
 
+                let path = format!("/{}/{}", $kind, hour.title);
                 return Ok(askama_warp::reply(
                     &HourTemplate {
-                        hour: hour.clone(),
+                        hour,
                         hour_html: html,
-                        path: format!("/{}/{}", $kind, hour.title),
+                        path,
                     },
                     "html",
                 ));

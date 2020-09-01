@@ -132,21 +132,26 @@ async fn article(id: u64) -> Result<impl Reply, Rejection> {
     let article = article::load_article_id(id)
         .await
         .map_err(warp::reject::custom)?;
-    let pdfs = article.pdfs();
+    let has_pdf = article.pdfs().count() == 1;
 
     Ok(ArticleTemplate {
         id,
         article,
-        has_pdf: pdfs.len() == 1,
+        has_pdf,
     })
 }
 
 async fn pdf(id: u64, i: usize) -> Result<impl Reply, Rejection> {
-    let art = article::load_article_id(id)
+    let article = article::load_article_id(id)
         .await
         .map_err(warp::reject::custom)?;
-    let pdfs = art.pdfs();
-    let body = pdfs[i - 1].body().await.map_err(warp::reject::custom)?;
+    let body = article
+        .pdfs()
+        .nth(i - 1)
+        .ok_or_else(warp::reject::not_found)?
+        .body()
+        .await
+        .map_err(warp::reject::custom)?;
 
     let mut res = Response::new(body.into());
     res.headers_mut()

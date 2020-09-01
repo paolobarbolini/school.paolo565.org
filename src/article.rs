@@ -33,39 +33,29 @@ pub struct Article {
 }
 
 impl Article {
-    pub fn urls(&self) -> Vec<ArticleUrl> {
-        let mut urls: Vec<ArticleUrl> = Vec::new();
-        for c in &self.contents {
-            if !c.text.is_empty() && !c.urls.is_empty() {
-                urls.extend_from_slice(c.urls.as_slice());
-            }
-        }
+    pub fn urls(&self) -> impl Iterator<Item = &ArticleUrl> {
+        self.contents
+            .iter()
+            .filter(|c| !c.text.is_empty())
+            .flat_map(|c| c.urls.iter())
+    }
 
-        urls
+    // making askama happy
+    pub fn urls_collected(&self) -> Vec<&ArticleUrl> {
+        self.urls().collect()
     }
 
     pub fn hours_url(&self) -> Option<String> {
-        let urls = self.urls();
-        for u in urls {
-            let url = u.href.to_lowercase();
-            if url.starts_with("/weborario") || url.starts_with("/web_orario") {
-                return Some(u.abs_url());
-            }
-        }
-
-        None
+        self.urls()
+            .find(|au| {
+                let url = au.href.to_lowercase();
+                url.starts_with("/weborario") || url.starts_with("/web_orario")
+            })
+            .map(|au| au.abs_url())
     }
 
-    pub fn pdfs(&self) -> Vec<ArticleUrl> {
-        let mut u: Vec<ArticleUrl> = Vec::new();
-        let urls = self.urls();
-        for url in urls {
-            if url.abs_url().ends_with(".pdf") {
-                u.push(url);
-            }
-        }
-
-        u
+    pub fn pdfs(&self) -> impl Iterator<Item = &ArticleUrl> {
+        self.urls().filter(|url| url.abs_url().ends_with(".pdf"))
     }
 }
 
@@ -83,23 +73,14 @@ pub struct ArticleContent {
 
 impl ArticleContent {
     pub fn padding(&self) -> usize {
-        match self.style.clone() {
-            Some(style) => {
-                let i = style.find("padding-left:");
-                match i {
-                    Some(i) => {
-                        let padding = &style[i + "padding-left:".len()..];
-                        let i = padding.find("px").unwrap();
-                        let padding = &padding[..i];
-                        let padding: String =
-                            padding.chars().filter(|c| !c.is_whitespace()).collect();
-                        padding.parse::<usize>().unwrap_or(0)
-                    }
-                    None => 0,
-                }
-            }
-            None => 0,
-        }
+        self.style
+            .as_ref()
+            .and_then(|style| {
+                let padding = style.split("padding-left:").nth(1)?;
+                let padding = padding.split("px").next()?;
+                padding.trim().parse::<usize>().ok()
+            })
+            .unwrap_or(0)
     }
 }
 

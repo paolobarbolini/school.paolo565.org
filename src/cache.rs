@@ -30,23 +30,21 @@ pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
 }
 
 pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Bytes> {
-    let cache = CACHE.read().await;
-
-    match cache.get(&url) {
-        Some(entry) => entry.clone(),
-        None => {
-            drop(cache);
-
-            let (resp, expires_at) = match reqwest(&url).await {
-                Ok(resp) => (Ok(resp), expires_at),
-                Err(err) => (Err(err), Duration::from_secs(5 * 60)),
-            };
-
-            let mut cache = CACHE.write().await;
-            cache.insert(url, resp.clone(), expires_at);
-            resp
+    {
+        let cache = CACHE.read().await;
+        if let Some(entry) = cache.get(&url) {
+            return entry.clone();
         }
     }
+
+    let (resp, expires_at) = match reqwest(&url).await {
+        Ok(resp) => (Ok(resp), expires_at),
+        Err(err) => (Err(err), Duration::from_secs(5 * 60)),
+    };
+
+    let mut cache = CACHE.write().await;
+    cache.insert(url, resp.clone(), expires_at);
+    resp
 }
 
 async fn reqwest(url: &str) -> Result<Bytes> {

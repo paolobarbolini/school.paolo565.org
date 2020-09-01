@@ -9,7 +9,7 @@ use crate::error::Result;
 
 pub async fn load_articles() -> Result<Vec<ArticleItem>> {
     let url = "http://www.istitutogobetti.it/?option=com_content&view=category&id=20&Itemid=111&limit=250";
-    let text = reqwest_text(url.to_owned(), Duration::from_secs(15 * 60)).await?;
+    let text = reqwest_text(url.into(), Duration::from_secs(15 * 60)).await?;
 
     let parsed = ArticleItems::from_html(&text)?;
     Ok(parsed.relevant_articles())
@@ -25,7 +25,6 @@ pub struct ArticleItems {
 impl ArticleItems {
     fn relevant_articles(&self) -> Vec<ArticleItem> {
         for (i, article) in self.articles.iter().enumerate() {
-            let article = article.clone();
             if article.title.starts_with("Circ. 1 ") {
                 let mut articles = self.articles.clone();
                 articles.truncate(i + 1);

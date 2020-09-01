@@ -13,7 +13,7 @@
     {% for line in article.contents %}
         <p style="padding-left: {{ line.padding() }}px">{{ line.text }}</p>
     {% endfor %}
-    {% for url in article.urls() %}
+    {% for url in article.urls_collected() %}
         <a href="{{ url.abs_url() }}">{{ url.text }}</a>
     {% endfor %}
 </div>

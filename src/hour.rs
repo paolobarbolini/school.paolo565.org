@@ -8,7 +8,7 @@ use crate::cache::reqwest_text;
 use crate::error::Result;
 
 pub async fn load_hour(url: String) -> Result<Hour> {
-    let text = reqwest_text(url.to_owned(), Duration::from_secs(20 * 60)).await?;
+    let text = reqwest_text(url.clone(), Duration::from_secs(20 * 60)).await?;
 
     let mut urls = Hour::from_html(&text)?;
     urls.classes = url_to_abs(urls.classes, &url);
@@ -18,12 +18,12 @@ pub async fn load_hour(url: String) -> Result<Hour> {
 }
 
 fn url_to_abs(items: Vec<HourItem>, base: &str) -> Vec<HourItem> {
-    let mut new_items = Vec::new();
-    for u in &items {
+    let mut new_items = Vec::with_capacity(items.len());
+    for u in items {
         let url = u.abs_url(base);
         new_items.push(HourItem {
-            title: u.title.clone(),
-            url: url.to_owned(),
+            title: u.title,
+            url,
         });
     }
     new_items
@@ -126,7 +126,7 @@ impl HourItem {
             for line in empty_lines {
                 html += &format!("tr:nth-child({}), ", line);
             }
-            html = html[..html.len() - 2].to_owned();
+            html = html[..html.len() - 2].into();
             html += " { display: none; }";
             html += "</style>";
         }
