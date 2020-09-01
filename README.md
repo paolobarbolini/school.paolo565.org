@@ -8,7 +8,7 @@ school.paolo565.org requires Rust 1.42 or later to build. The latest release can
 
 Once the Rust build environment is setup, the source code can be fetched using git:
 
-    $ git clone -b v2 https://github.com/paolobarbolini/school.paolo565.org.git
+    $ git clone https://github.com/paolobarbolini/school.paolo565.org.git
 
 and then built using Cargo
 
