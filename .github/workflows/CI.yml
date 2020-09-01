@@ -9,8 +9,8 @@ env:
   RUST_BACKTRACE: full
 
 jobs:
-  style:
-    name: Check Style
+  rustfmt:
+    name: rustfmt / linux / stable
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,8 +31,8 @@ jobs:
           args: --all -- --check
 
 
-  clippy_check:
-    name: Check Clippy
+  clippy:
+    name: clippy / linux / stable
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,8 +46,8 @@ jobs:
           profile: minimal
           override: true
 
-      - name: cargo clippy --all
+      - name: cargo clippy
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all
+          args: --all -- -D warnings
