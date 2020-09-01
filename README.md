@@ -4,7 +4,7 @@ _A progressive web app which improves the interaction with my school's school ho
 Try it here: [school.paolo565.org][website].
 
 ## Building
-school.paolo565.org requires Rust 1.41 or later to build. The latest release can be installed via [rustup][rustup]
+school.paolo565.org requires Rust 1.42 or later to build. The latest release can be installed via [rustup][rustup]
 
 Once the Rust build environment is setup, the source code can be fetched using git:
 
