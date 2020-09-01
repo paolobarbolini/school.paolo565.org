@@ -1,4 +1,3 @@
 /target/
-**/*.rs.bk
 /public/service-worker.build.js
 /templates/commithash.html
