@@ -4,6 +4,9 @@ use std::path::Path;
 use std::process::Command;
 
 fn main() {
+    println!("cargo:rerun-if-changed=.git/HEAD");
+    println!("cargo:rerun-if-changed=.git/index");
+
     let out_dir = env::var_os("CARGO_MANIFEST_DIR").unwrap();
     let in_path = Path::new(&out_dir).join("public/service-worker.js");
     let out_path = Path::new(&out_dir).join("public/service-worker.build.js");
