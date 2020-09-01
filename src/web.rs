@@ -15,7 +15,7 @@ use crate::hour::{Hour, HourItem};
 use crate::hours;
 
 #[derive(RustEmbed)]
-#[folder = "frontend/"]
+#[folder = "public/"]
 struct Asset;
 
 fn serve(path: &str) -> Result<impl Reply, Rejection> {

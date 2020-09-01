@@ -1,4 +1,4 @@
 /target/
 **/*.rs.bk
-/frontend/service-worker.build.js
+/public/service-worker.build.js
 /templates/commithash.html
