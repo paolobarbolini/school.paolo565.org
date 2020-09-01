@@ -121,13 +121,17 @@ async fn classrooms(name: String) -> Result<impl Reply, Rejection> {
 }
 
 async fn articles() -> Result<impl Reply, Rejection> {
-    let articles = try_status!(articles::load_articles().await);
+    let articles = articles::load_articles()
+        .await
+        .map_err(warp::reject::custom)?;
 
     Ok(ArticlesTemplate { articles })
 }
 
 async fn article(id: u64) -> Result<impl Reply, Rejection> {
-    let article = try_status!(article::load_article_id(id).await);
+    let article = article::load_article_id(id)
+        .await
+        .map_err(warp::reject::custom)?;
     let pdfs = article.pdfs();
 
     Ok(ArticleTemplate {
@@ -138,9 +142,11 @@ async fn article(id: u64) -> Result<impl Reply, Rejection> {
 }
 
 async fn pdf(id: u64, i: usize) -> Result<impl Reply, Rejection> {
-    let art = try_status!(article::load_article_id(id).await);
+    let art = article::load_article_id(id)
+        .await
+        .map_err(warp::reject::custom)?;
     let pdfs = art.pdfs();
-    let body = try_status!(pdfs[i - 1].body().await);
+    let body = pdfs[i - 1].body().await.map_err(warp::reject::custom)?;
 
     let mut res = Response::new(body.into());
     res.headers_mut()

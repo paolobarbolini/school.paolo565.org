@@ -42,12 +42,3 @@ macro_rules! load_render_hour {
         render_hour!(base, $path_kind, $kind, $matching);
     };
 }
-
-macro_rules! try_status {
-    ($result: expr) => {
-        match $result {
-            Ok(result) => result,
-            Err(err) => return Err(warp::reject::custom(err)),
-        }
-    };
-}
