@@ -7,19 +7,22 @@ license = "Apache-2.0"
 repository = "https://github.com/paolobarbolini/school.paolo565.org"
 
 [dependencies]
+# async
 tokio = { version = "0.2.22", features = ["macros", "sync", "rt-core", "rt-threaded"] }
 
+# web
 warp = { version = "0.2.5", default-features = false }
 askama = "0.10.3"
 askama_warp = "0.10.0"
 rust-embed = "5.6.0"
 mime_guess = "2.0.3"
 
+# scraper
 reqwest = "0.10.8"
 # we don't really need to import this from git, it's just to reduce the number of duplicate dependencies
 unhtml = { git = "https://github.com/Hexilee/unhtml.rs.git", version = "0.7.5", features = ["derive"] }
-
 url = "2.1.1"
 
+# cache
 ttl_cache = "0.5.1"
 lazy_static = "1.4.0"
