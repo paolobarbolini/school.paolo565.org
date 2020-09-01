@@ -1,13 +1,13 @@
-use std::time::Duration;
+use std::time::{Duration, SystemTime};
 
 use bytes::Bytes;
+use lru_time_cache::LruCache;
 use reqwest::{Client, ClientBuilder};
-use tokio::sync::RwLock;
-use ttl_cache::TtlCache;
+use tokio::sync::Mutex;
 
 use crate::error::Result;
 
-static APP_USER_AGENT: &str = concat!(
+const APP_USER_AGENT: &str = concat!(
     env!("CARGO_PKG_NAME"),
     "/",
     env!("CARGO_PKG_VERSION"),
@@ -21,7 +21,28 @@ lazy_static::lazy_static! {
         .build()
         .unwrap();
 
-     static ref CACHE: RwLock<TtlCache<String, Result<Bytes>>> = RwLock::new(TtlCache::new(50));
+    static ref CACHE: Mutex<LruCache<String, CachedItem<Result<Bytes>>>> = Mutex::new(LruCache::with_capacity(100));
+}
+
+#[derive(Debug, Clone)]
+struct CachedItem<T> {
+    item: T,
+    expires_at: SystemTime,
+}
+
+impl<T> CachedItem<T> {
+    pub fn new(item: T, expires_at: Duration) -> Self {
+        let expires_at = SystemTime::now() + expires_at;
+        Self { item, expires_at }
+    }
+
+    pub fn unexpired_item(&self) -> Option<&T> {
+        if self.expires_at > SystemTime::now() {
+            Some(&self.item)
+        } else {
+            None
+        }
+    }
 }
 
 pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
@@ -31,8 +52,8 @@ pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
 
 pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Bytes> {
     {
-        let cache = CACHE.read().await;
-        if let Some(entry) = cache.get(&url) {
+        let mut cache = CACHE.lock().await;
+        if let Some(entry) = cache.get(&url).and_then(CachedItem::unexpired_item) {
             return entry.clone();
         }
     }
@@ -42,8 +63,11 @@ pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Bytes> {
         Err(err) => (Err(err), Duration::from_secs(5 * 60)),
     };
 
-    let mut cache = CACHE.write().await;
-    cache.insert(url, resp.clone(), expires_at);
+    let value = CachedItem::new(resp.clone(), expires_at);
+    {
+        let mut cache = CACHE.lock().await;
+        cache.insert(url, value);
+    }
     resp
 }
 
