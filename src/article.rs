@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+use bytes::Bytes;
 use unhtml::FromHtml;
 use url::Url;
 
@@ -121,7 +122,7 @@ impl ArticleUrl {
         self.parsed_url().into_string()
     }
 
-    pub async fn body(&self) -> Result<Vec<u8>> {
+    pub async fn body(&self) -> Result<Bytes> {
         let url = self.abs_url();
         let data = reqwest_data(url, Duration::from_secs(24 * 60 * 60))
             .await

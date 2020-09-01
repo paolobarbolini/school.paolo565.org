@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+use bytes::Bytes;
 use reqwest::{Client, ClientBuilder};
 use tokio::sync::RwLock;
 use ttl_cache::TtlCache;
@@ -20,15 +21,15 @@ lazy_static::lazy_static! {
         .build()
         .unwrap();
 
-     static ref CACHE: RwLock<TtlCache<String, Result<Vec<u8>>>> = RwLock::new(TtlCache::new(50));
+     static ref CACHE: RwLock<TtlCache<String, Result<Bytes>>> = RwLock::new(TtlCache::new(50));
 }
 
 pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
     let data = reqwest_data(url, expires_at).await?;
-    Ok(String::from_utf8(data).unwrap())
+    Ok(String::from_utf8(data.to_vec()).unwrap())
 }
 
-pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Vec<u8>> {
+pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Bytes> {
     let cache = CACHE.read().await;
 
     match cache.get(&url) {
@@ -48,8 +49,8 @@ pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Vec<u8>> 
     }
 }
 
-async fn reqwest(url: &str) -> Result<Vec<u8>> {
+async fn reqwest(url: &str) -> Result<Bytes> {
     let resp = HTTP_CLIENT.get(url).send().await?.error_for_status()?;
     let bytes = resp.bytes().await?;
-    Ok(bytes.to_vec())
+    Ok(bytes)
 }

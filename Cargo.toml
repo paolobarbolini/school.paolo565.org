@@ -21,6 +21,7 @@ mime_guess = "2.0.3"
 reqwest = "0.10.8"
 # we don't really need to import this from git, it's just to reduce the number of duplicate dependencies
 unhtml = { git = "https://github.com/Hexilee/unhtml.rs.git", version = "0.7.5", features = ["derive"] }
+bytes = "0.5.6"
 url = "2.1.1"
 
 # cache

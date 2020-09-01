@@ -1093,6 +1093,7 @@ version = "2.0.0"
 dependencies = [
  "askama",
  "askama_warp",
+ "bytes",
  "lazy_static",
  "mime_guess",
  "reqwest",
