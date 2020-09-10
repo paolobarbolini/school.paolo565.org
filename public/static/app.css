@@ -3,17 +3,43 @@
     --black: #000;
 
     --page-background-color: #ececec;
-    --background-hover-color: #E3F2FD;
+    --background-hover-color: #e3f2fd;
     --schedule-background-color: #e9e9e9;
     --pdf-preview-bg-color: #494949;
 
-    --nav-color: #696969;
     --text-color: #303030;
-    --header-color: #3F51B5;
+    --a-color: #3f51b5;
 
     --nav-background-color: #b5b5b5;
+    --nav-shadow-color: #b5b5b5;
+    --top-nav-color: #3F51B5;
     --bottom-nav-a-color: #757575;
-    --bottom-nav-a-hover-color: #3949AB;
+    --bottom-nav-a-hover-color: #3949ab;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    :root {
+        --white: hsl(0, 0%, 10%);
+        --black: hsl(0, 0%, 90%);
+
+        --page-background-color: #090e11;
+        --background-hover-color: #525252;
+        --schedule-background-color: #2b2b2b;
+        --pdf-preview-bg-color: #494949;
+
+        --text-color: #e6e6e6;
+        --a-color: #1b28e8;
+
+        --nav-background-color: #2b2b2b;
+        --nav-shadow-color: #4d4d4d;
+        --top-nav-color: #01205b;
+        --bottom-nav-a-color: #c4c4c4;
+        --bottom-nav-a-hover-color: #5391f2;
+    }
+
+    .schedule td[bgcolor="#FFFFFF"] {
+        background: transparent;
+    }
 }
 
 html,
@@ -23,7 +49,7 @@ body {
 }
 
 body {
-    background: var(--page-background-color);
+    background-color: var(--page-background-color);
 
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 13pt;
@@ -98,7 +124,7 @@ h2 {
   
 .text-container a {
     text-decoration: none;
-    color: var(--header-color);
+    color: var(--a-color);
 }
   
 .text-container span,
@@ -127,8 +153,8 @@ h2 {
     height: 47px;
     width: 100%;
     padding: 0 16px;
-    background-color: var(--header-color);
-    box-shadow: 0 0 12px 0 var(--nav-background-color);
+    background-color: var(--top-nav-color);
+    box-shadow: 0 0 12px 0 var(--nav-shadow-color);
     display: flex;
     align-items: center;
     user-select: none;
@@ -139,7 +165,7 @@ h2 {
 }
   
 .top-navigation h1 {
-    color: var(--white);
+    color: #fff;
     font-size: 13pt;
     overflow: hidden;
     white-space: nowrap;
@@ -149,7 +175,7 @@ h2 {
   
 .top-navigation #search,
 .top-navigation #print {
-    color: var(--white);
+    color: #fff;
     margin-left: auto;
     height: 16px;
     right: 0;
@@ -187,6 +213,7 @@ h2 {
     outline: 0;
     width: 100%;
     background: var(--white);
+    color: var(--black);
     line-height: normal;
     margin: 0;
     padding: 0;
@@ -215,8 +242,8 @@ h2 {
     left: 0;
     right: 0;
     padding: 16px 8px 10px 8px;
-    background-color: var(--white);
-    box-shadow: 0 0 8px 2px var(--nav-background-color);
+    background-color: var(--nav-background-color);
+    box-shadow: 0 0 8px 2px var(--nav-shadow-color);
     border-bottom: var(--bottom-nav-a-color) solid 1px;
     user-select: none;
 }
@@ -363,13 +390,17 @@ h2 {
 .schedule table {
     width: 100%;
 }
-  
+
+.schedule tr:first-of-type td {
+    background: var(--schedule-background-color);
+}
+
 .schedule td:first-of-type {
     position: sticky;
     left: 0;
     background-color: var(--schedule-background-color);
     width: 30px;
-    outline: 2px solid black;
+    outline: 2px solid var(--black);
 }
   
 /* table fixes */
@@ -401,7 +432,7 @@ h2 {
 .schedule table,
 .schedule table tr,
 .schedule table td {
-    border: 2px solid black;
+    border: 2px solid var(--black);
 }
 
 .schedule table .mathema p,
