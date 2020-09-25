@@ -1,4 +1,4 @@
-# school.paolo565.org [![AGPL 3.0 License][licensebadge]](LICENSE) [![pipeline status][cibadge]][actions]
+# school.paolo565.org [![AGPL 3.0 License][licensebadge]](COPYING) [![pipeline status][cibadge]][actions]
 _A progressive web app which improves the interaction with my school's school hours page_
 
 Try it here: [school.paolo565.org][website].
