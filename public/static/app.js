@@ -119,19 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const highlightsElement = document.querySelector('#highlighted-schedules');
     if (highlightsElement) {
         // We are in the schedules page
-        const previous = JSON.parse(localStorage.getItem('schedule-searches') || '[]');
+        const previous = JSON.parse(localStorage.getItem('schedule-searches-v2') || '[]');
         if (previous.length === 0) return;
 
         let bests = previous.sort((a, b) => {
             return a.loads - b.loads;
         }).reverse().slice(0, 3);
         for (const best of bests) {
-            // pathname migration since switching from rocket to warp
-            const pathname = best.pathname.replace('%20', ' ');
-            const href = pathname.includes(' ') ? pathname.replace('+', '').replace(' ', '+') : pathname;
-
             const a = document.createElement('a');
-            a.setAttribute('href', href);
+            a.setAttribute('href', best.pathname);
             a.innerText = best.title;
 
             const li = document.createElement('li');
@@ -148,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pathname = window.location.pathname;
         let found = false;
         
-        let previous = JSON.parse(localStorage.getItem('schedule-searches') || '[]');
+        let previous = JSON.parse(localStorage.getItem('schedule-searches-v2') || '[]');
         for (let i = 0; i < previous.length; i++) {
             const prev = previous[i];
             if (prev.pathname.toLowerCase() !== pathname.toLowerCase()) continue;
@@ -166,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loads,
             });
         }
-        localStorage.setItem('schedule-searches', JSON.stringify(previous));
+        localStorage.setItem('schedule-searches-v2', JSON.stringify(previous));
     }
 });
 
