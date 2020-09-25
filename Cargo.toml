@@ -3,8 +3,9 @@ name = "school_paolo565_org"
 version = "2.0.0"
 authors = ["Paolo Barbolini <paolo@paolo565.org>"]
 edition = "2018"
-license = "Apache-2.0"
+license = "AGPL-3.0-only"
 repository = "https://github.com/paolobarbolini/school.paolo565.org"
+publish = false
 
 [dependencies]
 # async

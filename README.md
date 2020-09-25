@@ -1,4 +1,4 @@
-# school.paolo565.org [![MIT License][licensebadge]](LICENSE) [![pipeline status][badge]][actions]
+# school.paolo565.org [![AGPL 3.0 License][licensebadge]](LICENSE) [![pipeline status][cibadge]][actions]
 _A progressive web app which improves the interaction with my school's school hours page_
 
 Try it here: [school.paolo565.org][website].
@@ -14,23 +14,29 @@ and then built using Cargo
 
     $ cargo build --release
 
-The executable will be available at `target/release/school_paolo565_org`
+The executable will be available at `target/release/school_paolo565_org`.
+
+The webserver will bind to `127.0.0.1:3030`
 
 ## Third party dependencies
-[PDF.js][pdfjs] by Mozilla Labs, Apache 2.0 license
 
-[Font Awesome 5][fa] svg icons by Dave Gandy
+Files in `school.paolo565.org` are licensed under the Affero General Public License version 3,
+the text of which can be found in COPYING.
 
-App icon made by [Freepik][freepik] from
-[Flaticon][flaticon] licensed by [CC 3.0 BY][cc]
+Licensing of components:
 
-[licensebadge]: https://img.shields.io/badge/license-Apache%202-blue
+* [PDF.js][pdfjs]: Apache 2.0
+* [Font Awesome 5 SVG Icons][fa]: CC BY 4.0
+* [Freepik][freepik] App Icon: CC BY 3.0
+
+All unmodified files from these and other sources retain their original copyright
+and license notices: see the relevant individual files.
+
+[licensebadge]: https://img.shields.io/badge/license-AGPL%203-blue
 [website]: https://school.paolo565.org
 [pdfjs]: https://github.com/mozilla/pdf.js
 [fa]: https://fontawesome.com/license/free
 [freepik]: https://www.freepik.com
-[flaticon]: https://www.flaticon.com
-[cc]: http://creativecommons.org/licenses/by/3.0/
 [actions]: https://github.com/paolobarbolini/school.paolo565.org/actions?query=workflow%3ACI
-[badge]: https://github.com/paolobarbolini/school.paolo565.org/workflows/CI/badge.svg
+[cibadge]: https://github.com/paolobarbolini/school.paolo565.org/workflows/CI/badge.svg
 [rustup]: https://rustup.rs
