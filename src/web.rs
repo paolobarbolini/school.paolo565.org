@@ -44,6 +44,24 @@ fn serve(path: &str) -> Result<impl Reply, Rejection> {
     Ok(res)
 }
 
+enum EitherReply<A, B> {
+    A(A),
+    B(B),
+}
+
+impl<A, B> Reply for EitherReply<A, B>
+where
+    A: Reply,
+    B: Reply,
+{
+    fn into_response(self) -> Response {
+        match self {
+            Self::A(a) => a.into_response(),
+            Self::B(b) => b.into_response(),
+        }
+    }
+}
+
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
@@ -98,16 +116,16 @@ async fn server_error(err: Rejection) -> Result<impl Reply, Infallible> {
     };
 
     if not_found {
-        return Ok(warp::reply::with_status(
-            askama_warp::reply(&NotFoundTemplate {}, "html"),
+        Ok(EitherReply::A(warp::reply::with_status(
+            NotFoundTemplate {},
             StatusCode::NOT_FOUND,
-        ));
+        )))
+    } else {
+        Ok(EitherReply::B(warp::reply::with_status(
+            InternalServerErrorTemplate {},
+            StatusCode::INTERNAL_SERVER_ERROR,
+        )))
     }
-
-    Ok(warp::reply::with_status(
-        askama_warp::reply(&InternalServerErrorTemplate {}, "html"),
-        StatusCode::INTERNAL_SERVER_ERROR,
-    ))
 }
 
 async fn offline() -> Result<impl Reply, Infallible> {

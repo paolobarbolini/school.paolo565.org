@@ -19,7 +19,7 @@ macro_rules! load_hours {
         match hours::full_load_hour().await {
             Ok((base, hours)) => (base, hours),
             Err(err) if err.not_found() => {
-                return Ok(askama_warp::reply(&IndexTemplate { hours: None }, "html"));
+                return Ok(EitherReply::B(IndexTemplate { hours: None }));
             }
             Err(err) => return Err(warp::reject::custom(err)),
         };
@@ -37,14 +37,11 @@ macro_rules! render_hour {
                 };
 
                 let path = format!("/{}/{}", $kind, hour.title);
-                return Ok(askama_warp::reply(
-                    &HourTemplate {
-                        hour,
-                        hour_html: html,
-                        path,
-                    },
-                    "html",
-                ));
+                return Ok(EitherReply::A(HourTemplate {
+                    hour,
+                    hour_html: html,
+                    path,
+                }));
             }
         }
 
