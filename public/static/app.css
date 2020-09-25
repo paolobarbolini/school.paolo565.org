@@ -20,6 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     --white: #fff;
     --black: #000;
 
+    /* workaround for bad table text colors when using the dark theme */
+    --black-unchanged: #000;
+
     --page-background-color: #ececec;
     --background-hover-color: #e3f2fd;
     --schedule-background-color: #e9e9e9;
@@ -435,7 +438,7 @@ h2 {
 }
 
 .schedule table .nodecBlack {
-    color: var(--black);
+    color: var(--black-unchanged);
 }
 
 .schedule table .nodecWhite {
