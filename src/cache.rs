@@ -63,7 +63,7 @@ impl<T> CachedItem<T> {
 
 pub async fn reqwest_text(url: String, expires_at: Duration) -> Result<String> {
     let data = reqwest_data(url, expires_at).await?;
-    Ok(String::from_utf8(data.to_vec()).unwrap())
+    Ok(String::from_utf8_lossy(&data).into())
 }
 
 pub async fn reqwest_data(url: String, expires_at: Duration) -> Result<Bytes> {
