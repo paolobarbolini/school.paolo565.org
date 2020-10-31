@@ -120,32 +120,34 @@ impl HourItem {
         }
 
         // hide empty table lines
-        let tr_selector = Selector::parse("tr").unwrap();
-        let empty_td_selector = Selector::parse("td[bgcolor='#FFFFFF']").unwrap();
-        let mut i = 1;
-        let mut empty_lines = Vec::new();
-        for tr in table.select(&tr_selector) {
-            let mut tds = 0;
-            for _ in tr.select(&empty_td_selector) {
-                tds += 1;
+        let line_selector = Selector::parse("tr").unwrap();
+        let empty_line_selector = Selector::parse("td[bgcolor='#FFFFFF']").unwrap();
+
+        let lines_count = table.select(&line_selector).count();
+        let lines_iter = table
+            .select(&line_selector)
+            .map(|line| line.select(&empty_line_selector).count() >= 6);
+        let empty_lines_iter = lines_iter
+            .enumerate()
+            .filter(|(_i, is_empty)| *is_empty)
+            .map(|(i, _is_empty)| i);
+
+        let mut last_non_empty_line = 1;
+        for empty_line in empty_lines_iter {
+            if (last_non_empty_line + 1) == empty_line {
+                break;
             }
 
-            if tds == 6 {
-                empty_lines.push(i);
-            }
-
-            i += 1;
+            last_non_empty_line = empty_line;
         }
 
-        if !empty_lines.is_empty() {
-            html += "<style>";
-            for line in empty_lines {
-                html += &format!("tr:nth-child({}), ", line);
-            }
-            html = html[..html.len() - 2].into();
-            html += " { display: none; }";
-            html += "</style>";
+        html += "<style>";
+        for i in last_non_empty_line + 1..=lines_count {
+            html += &format!("tr:nth-child({}), ", i);
         }
+        html = html[..html.len() - 2].into();
+        html += " { display: none; }";
+        html += "</style>";
 
         html = html.replace("width=\"15%\"", "");
         html = html.replace("rowspan=\"1\"", "");
